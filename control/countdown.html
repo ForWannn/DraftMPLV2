@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Control Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+            background-color: #F8FAFC;
+            /* Light gray-blue background */
+            color: #1E293B;
+        }
+
+        /* Card Container Styling */
+        .panel-card {
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid #E2E8F0;
+        }
+
+        /* Input styling */
+        input:focus {
+            outline: none;
+        }
+
+        input::placeholder {
+            color: #94A3B8;
+        }
+
+        /* Blue Action Buttons */
+        .btn-blue {
+            background-color: #E0F2FE;
+            color: #0284C7;
+            border: 1px solid #BAE6FD;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-blue:hover {
+            background-color: #BAE6FD;
+        }
+
+        /* White Outline Buttons */
+        .btn-outline {
+            background-color: #FFFFFF;
+            color: #334155;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-outline:hover {
+            background-color: #F1F5F9;
+        }
+
+        /* Blue Active Badge */
+        .badge-blue {
+            background-color: #3B82F6;
+            color: white;
+            border-radius: 16px;
+            padding: 2px 10px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+    </style>
+</head>
+
+<body class="p-6 md:p-10 min-h-screen">
+
+    <div class="max-w-[1600px] mx-auto">
+
+        <!-- Main Grid Layout matching the new design -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+            <!-- LEFT COLUMN (Timer & Matches) -->
+            <div class="lg:col-span-4 flex flex-col gap-6">
+
+                <!-- 1. Timer Card -->
+                <div class="panel-card p-6 flex items-center justify-between">
+                    <input type="text" id="tv" value="59:59"
+                        class="w-3/5 text-6xl md:text-7xl font-bold text-[#0284C7] bg-transparent tracking-tighter"
+                        placeholder="mm:ss" oninput="tv = this.value">
+                    <div class="w-2/5 flex flex-col gap-3">
+                        <button class="btn-blue py-2.5 text-sm w-full" id="btn-timer"
+                            onclick="handleTimerClick()">Start</button>
+                        <button class="btn-outline py-2.5 text-sm w-full" onclick="resetTimer()">Reset</button>
+                    </div>
+                </div>
+
+                <!-- 2. Match Data Card (Main & Next Matches) -->
+                <div class="panel-card p-6">
+
+                    <!-- MAIN MATCH (Live) -->
+                    <div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-4 mb-6 relative">
+                        <!-- Header Main Match -->
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="badge-blue text-[10px] cursor-pointer" onclick="setBO(0)">Best of <span
+                                    id="bo-0">7</span></div>
+                            <div class="flex items-center space-x-1.5 text-blue-600 text-xs font-semibold">
+                                <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+                                <span>Live</span>
+                            </div>
+                        </div>
+
+                        <!-- Main Match Score/VS Row -->
+                        <div class="flex items-center justify-between">
+                            <!-- Team A -->
+                            <div class="flex flex-col items-center w-1/3">
+                                <label class="w-16 h-16 mb-2 cursor-pointer relative group">
+                                    <img id="m0-logo-a" src="https://placehold.co/100x100/f8fafc/0284c7?text=TEAM"
+                                        class="w-full h-full object-contain">
+                                    <div
+                                        class="absolute inset-0 bg-black/10 rounded flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                                        <i class="fa-solid fa-pen text-white text-xs"></i>
+                                    </div>
+                                    <input type="file" accept="image/*" class="hidden"
+                                        onchange="uploadLogo(this, 0, 'a')">
+                                </label>
+                                <input type="text" id="m0-name-a" value="EVOS"
+                                    class="text-center font-bold text-sm text-slate-800 w-full uppercase"
+                                    oninput="updateState()">
+                            </div>
+
+                            <!-- VS & Score -->
+                            <div class="flex items-center justify-center space-x-3 w-1/3">
+                                <input type="number" id="m0-score-a" value="0"
+                                    class="w-10 text-3xl font-bold text-slate-700 text-center bg-transparent"
+                                    oninput="updateState()">
+                                <div class="flex flex-col items-center">
+                                    <span class="text-xl font-black italic text-[#0284C7] leading-none mb-1">VS</span>
+                                    <input type="text" id="m0-time" value="14:00"
+                                        class="w-14 text-center text-xs font-semibold text-slate-600 bg-transparent"
+                                        oninput="updateState()">
+                                    <span class="text-[9px] text-slate-400 font-semibold">WIB</span>
+                                </div>
+                                <input type="number" id="m0-score-b" value="0"
+                                    class="w-10 text-3xl font-bold text-slate-700 text-center bg-transparent"
+                                    oninput="updateState()">
+                            </div>
+
+                            <!-- Team B -->
+                            <div class="flex flex-col items-center w-1/3">
+                                <label class="w-16 h-16 mb-2 cursor-pointer relative group">
+                                    <img id="m0-logo-b" src="https://placehold.co/100x100/f8fafc/eab308?text=TEAM"
+                                        class="w-full h-full object-contain">
+                                    <div
+                                        class="absolute inset-0 bg-black/10 rounded flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                                        <i class="fa-solid fa-pen text-white text-xs"></i>
+                                    </div>
+                                    <input type="file" accept="image/*" class="hidden"
+                                        onchange="uploadLogo(this, 0, 'b')">
+                                </label>
+                                <input type="text" id="m0-name-b" value="RRQ"
+                                    class="text-center font-bold text-sm text-slate-800 w-full uppercase"
+                                    oninput="updateState()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NEXT MATCHES TITLE -->
+                    <div class="flex items-center space-x-2 text-slate-700 mb-4 px-2">
+                        <i class="fa-regular fa-clock"></i>
+                        <h3 class="font-semibold text-sm">Next Match</h3>
+                    </div>
+
+                    <!-- Next Match 1 -->
+                    <div class="bg-white border border-[#E2E8F0] rounded-xl p-3 mb-3 relative">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="bg-slate-100 text-slate-500 rounded-full px-2 py-0.5 text-[10px] font-semibold cursor-pointer"
+                                onclick="setBO(1)">Best of <span id="bo-1">7</span></div>
+                            <button class="text-slate-400 hover:text-slate-600"><i
+                                    class="fa-solid fa-pen text-xs"></i></button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex flex-col items-center w-1/3">
+                                <label
+                                    class="w-12 h-12 mb-1 cursor-pointer group relative bg-slate-100 rounded-full overflow-hidden flex items-center justify-center border border-slate-200">
+                                    <img id="m1-logo-a" src="https://placehold.co/100x100/f1f5f9/cbd5e1?text=A"
+                                        class="w-full h-full object-contain p-2 hidden">
+                                    <i id="m1-icon-a" class="fa-solid fa-shield text-slate-300 text-xl"></i>
+                                    <input type="file" accept="image/*" class="hidden"
+                                        onchange="uploadLogo(this, 1, 'a')">
+                                </label>
+                                <input type="text" id="m1-name-a" value="TEAM A"
+                                    class="text-center font-bold text-[10px] text-slate-700 w-full uppercase"
+                                    oninput="updateState()">
+                            </div>
+                            <div class="flex items-center justify-center space-x-2 w-1/3">
+                                <input type="number" id="m1-score-a" value="0"
+                                    class="w-6 text-2xl font-bold text-slate-700 text-center bg-transparent"
+                                    oninput="updateState()">
+                                <div class="flex flex-col items-center">
+                                    <span class="text-lg font-black italic text-[#0284C7] leading-none mb-1">VS</span>
+                                    <input type="text" id="m1-time" value="16:00"
+                                        class="w-10 text-center text-[10px] font-semibold text-slate-500 bg-transparent"
+                                        oninput="updateState()">
+                                    <span class="text-[8px] text-slate-400 font-semibold">WIB</span>
+                                </div>
+                                <input type="number" id="m1-score-b" value="0"
+                                    class="w-6 text-2xl font-bold text-slate-700 text-center bg-transparent"
+                                    oninput="updateState()">
+                            </div>
+                            <div class="flex flex-col items-center w-1/3">
+                                <label
+                                    class="w-12 h-12 mb-1 cursor-pointer group relative bg-slate-100 rounded-full overflow-hidden flex items-center justify-center border border-slate-200">
+                                    <img id="m1-logo-b" src="https://placehold.co/100x100/f1f5f9/cbd5e1?text=B"
+                                        class="w-full h-full object-contain p-2 hidden">
+                                    <i id="m1-icon-b" class="fa-solid fa-shield text-slate-300 text-xl"></i>
+                                    <input type="file" accept="image/*" class="hidden"
+                                        onchange="uploadLogo(this, 1, 'b')">
+                                </label>
+                                <input type="text" id="m1-name-b" value="TEAM B"
+                                    class="text-center font-bold text-[10px] text-slate-700 w-full uppercase"
+                                    oninput="updateState()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Next Match 2 -->
+                    <div class="bg-white border border-[#E2E8F0] rounded-xl p-3 relative">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="bg-slate-100 text-slate-500 rounded-full px-2 py-0.5 text-[10px] font-semibold cursor-pointer"
+                                onclick="setBO(2)">Best of <span id="bo-2">7</span></div>
+                            <button class="text-slate-400 hover:text-slate-600"><i
+                                    class="fa-solid fa-pen text-xs"></i></button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex flex-col items-center w-1/3">
+                                <label
+                                    class="w-12 h-12 mb-1 cursor-pointer group relative bg-slate-100 rounded-full overflow-hidden flex items-center justify-center border border-slate-200">
+                                    <img id="m2-logo-a" src="https://placehold.co/100x100/f1f5f9/cbd5e1?text=C"
+                                        class="w-full h-full object-contain p-2 hidden">
+                                    <i id="m2-icon-a" class="fa-solid fa-shield text-slate-300 text-xl"></i>
+                                    <input type="file" accept="image/*" class="hidden"
+                                        onchange="uploadLogo(this, 2, 'a')">
+                                </label>
+                                <input type="text" id="m2-name-a" value="TEAM C"
+                                    class="text-center font-bold text-[10px] text-slate-700 w-full uppercase"
+                                    oninput="updateState()">
+                            </div>
+                            <div class="flex items-center justify-center space-x-2 w-1/3">
+                                <input type="number" id="m2-score-a" value="0"
+                                    class="w-6 text-2xl font-bold text-slate-700 text-center bg-transparent"
+                                    oninput="updateState()">
+                                <div class="flex flex-col items-center">
+                                    <span class="text-lg font-black italic text-[#0284C7] leading-none mb-1">VS</span>
+                                    <input type="text" id="m2-time" value="18:00"
+                                        class="w-10 text-center text-[10px] font-semibold text-slate-500 bg-transparent"
+                                        oninput="updateState()">
+                                    <span class="text-[8px] text-slate-400 font-semibold">WIB</span>
+                                </div>
+                                <input type="number" id="m2-score-b" value="0"
+                                    class="w-6 text-2xl font-bold text-slate-700 text-center bg-transparent"
+                                    oninput="updateState()">
+                            </div>
+                            <div class="flex flex-col items-center w-1/3">
+                                <label
+                                    class="w-12 h-12 mb-1 cursor-pointer group relative bg-slate-100 rounded-full overflow-hidden flex items-center justify-center border border-slate-200">
+                                    <img id="m2-logo-b" src="https://placehold.co/100x100/f1f5f9/cbd5e1?text=D"
+                                        class="w-full h-full object-contain p-2 hidden">
+                                    <i id="m2-icon-b" class="fa-solid fa-shield text-slate-300 text-xl"></i>
+                                    <input type="file" accept="image/*" class="hidden"
+                                        onchange="uploadLogo(this, 2, 'b')">
+                                </label>
+                                <input type="text" id="m2-name-b" value="TEAM D"
+                                    class="text-center font-bold text-[10px] text-slate-700 w-full uppercase"
+                                    oninput="updateState()">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- CENTER COLUMN (Caster & Ads) -->
+            <div class="lg:col-span-5 flex flex-col gap-6">
+
+                <!-- 3. Caster Lineup Card -->
+                <div class="panel-card p-4 relative min-h-[160px]">
+                    <div class="flex items-center space-x-2 text-slate-700 mb-4 px-2">
+                        <i class="fa-solid fa-microphone-lines text-sm text-[#0284C7]"></i>
+                        <h3 class="font-semibold text-sm">Caster Lineup</h3>
+                    </div>
+
+                    <button
+                        class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 border border-slate-200 rounded p-1.5 bg-slate-50">
+                        <i class="fa-solid fa-pen text-xs"></i>
+                    </button>
+
+                    <div id="casters-container" class="flex items-center gap-4 px-2 overflow-x-auto">
+                        <!-- Casters Rendered Here -->
+                    </div>
+                </div>
+
+                <!-- 4. Ads Container Preview -->
+                <div class="panel-card flex-1 min-h-[400px] flex flex-col">
+                    <div
+                        class="flex-1 bg-white rounded-t-12 border-b border-slate-100 flex items-center justify-center relative overflow-hidden m-2 rounded-lg bg-slate-50">
+                        <div id="ads-placeholder" class="text-xs font-bold tracking-widest text-slate-400 uppercase">ADS
+                        </div>
+                        <video id="ads-video" class="hidden w-full h-full object-contain" controls></video>
+                        <img id="ads-image" class="hidden w-full h-full object-contain">
+                    </div>
+                    <div class="p-4 flex space-x-3 justify-center bg-white rounded-b-12">
+                        <button onclick="playAllAds()"
+                            class="btn-blue px-8 py-2 text-xs font-bold capitalize shadow-sm">Play All</button>
+                        <button class="btn-outline px-8 py-2 text-xs font-semibold capitalize shadow-sm">Pause</button>
+                        <label class="btn-blue px-8 py-2 text-xs font-bold capitalize cursor-pointer shadow-sm">
+                            Upload
+                            <input type="file" accept="image/*,video/*" multiple class="hidden"
+                                onchange="uploadAd(this)">
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN (Playlist) -->
+            <div class="lg:col-span-3">
+                <div class="panel-card h-full max-h-[850px] flex flex-col">
+                    <div class="p-4 border-b border-slate-100 flex items-center space-x-2 text-slate-700">
+                        <i class="fa-solid fa-list-ul text-[#0284C7]"></i>
+                        <h3 class="font-semibold text-sm">Playlist</h3>
+                    </div>
+
+                    <!-- Playlist Container -->
+                    <div id="playlist-container" class="flex-1 overflow-y-auto p-4 space-y-3">
+                        <!-- Ads items injected here -->
+                        <div class="text-center text-xs text-slate-400 py-10">Playlist is empty.<br>Upload media to
+                            preview.</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript Data Sync (Adapted from source 10 logic format) -->
+    <script>
+        const wsChannel = new BroadcastChannel('mlbb_countdown_channel');
+
+        // Initial State
+        let tv = '59:59';
+        let timerRunning = false;
+        let timerInterval = null;
+        let timerSeconds = 3599; // 59:59
+
+        let S = {
+            matches: [
+                { bo: 7, time: '14:00', a: { name: 'EVOS', score: 0, logo: '' }, b: { name: 'RRQ', score: 0, logo: '' } },
+                { bo: 7, time: '16:00', a: { name: 'TEAM A', score: 0, logo: '' }, b: { name: 'TEAM B', score: 0, logo: '' } },
+                { bo: 7, time: '18:00', a: { name: 'TEAM C', score: 0, logo: '' }, b: { name: 'TEAM D', score: 0, logo: '' } }
+            ],
+            casters: [
+                { name: 'RIKO', photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&fit=crop' }
+            ],
+            playlist: [],
+            activeAd: -1
+        };
+
+        // On Load
+        window.onload = () => {
+            renderCasters();
+            renderPlaylist();
+            updateState(); // send initial sync
+        };
+
+        // --- Timer Logic ---
+        function handleTimerClick() {
+            const btn = document.getElementById('btn-timer');
+            if (timerRunning) {
+                clearInterval(timerInterval);
+                timerRunning = false;
+                btn.innerText = 'Start';
+                btn.className = "btn-blue py-2.5 text-sm w-full";
+            } else {
+                const parts = document.getElementById('tv').value.split(':');
+                if (parts.length === 2) timerSeconds = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+                timerRunning = true;
+                btn.innerText = 'Pause';
+                btn.className = "btn-outline border-blue-200 text-blue-600 py-2.5 text-sm w-full";
+
+                timerInterval = setInterval(() => {
+                    if (timerSeconds > 0) {
+                        timerSeconds--;
+                        const m = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+                        const s = String(timerSeconds % 60).padStart(2, '0');
+                        document.getElementById('tv').value = `${m}:${s}`;
+                        updateState();
+                    } else {
+                        clearInterval(timerInterval);
+                        timerRunning = false;
+                        btn.innerText = 'Start';
+                    }
+                }, 1000);
+            }
+            updateState();
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            timerSeconds = 3599;
+            document.getElementById('tv').value = '59:59';
+            document.getElementById('btn-timer').innerText = 'Start';
+            document.getElementById('btn-timer').className = "btn-blue py-2.5 text-sm w-full";
+            updateState();
+        }
+
+        // --- Match Logic ---
+        function setBO(matchIndex) {
+            const current = S.matches[matchIndex].bo;
+            const next = current === 7 ? 1 : (current === 1 ? 3 : (current === 3 ? 5 : 7));
+            S.matches[matchIndex].bo = next;
+            document.getElementById(`bo-${matchIndex}`).innerText = next;
+            updateState();
+        }
+
+        function uploadLogo(input, mIndex, team) {
+            if (input.files && input.files[0]) {
+                const r = new FileReader();
+                r.onload = e => {
+                    const imgId = `m${mIndex}-logo-${team}`;
+                    const iconId = `m${mIndex}-icon-${team}`;
+                    const img = document.getElementById(imgId);
+                    img.src = e.target.result;
+                    img.classList.remove('hidden');
+
+                    const icon = document.getElementById(iconId);
+                    if (icon) icon.classList.add('hidden');
+
+                    S.matches[mIndex][team].logo = e.target.result;
+                    updateState();
+                };
+                r.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // --- Caster Logic ---
+        function renderCasters() {
+            const container = document.getElementById('casters-container');
+            container.innerHTML = '';
+
+            S.casters.forEach((c, i) => {
+                container.innerHTML += `
+                    <div class="relative bg-slate-50 border border-slate-100 rounded-lg p-2 w-28 flex flex-col items-center group">
+                        <button onclick="removeCaster(${i})" class="absolute -top-2 -right-2 bg-rose-500 text-white w-5 h-5 rounded-full text-[10px] opacity-0 group-hover:opacity-100 transition z-10">✕</button>
+                        <div class="w-16 h-16 rounded overflow-hidden mb-2 border border-slate-200 bg-white cursor-pointer relative">
+                            <img src="${c.photo}" class="w-full h-full object-cover">
+                            <input type="file" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer" onchange="updateCasterPhoto(this, ${i})">
+                        </div>
+                        <input type="text" value="${c.name}" class="w-full text-center text-xs font-bold text-slate-800 bg-transparent uppercase focus:border-b border-blue-300" oninput="updateCasterName(this, ${i})">
+                    </div>
+                `;
+            });
+
+            if (S.casters.length < 3) {
+                container.innerHTML += `
+                    <div onclick="addCaster()" class="w-12 h-12 flex items-center justify-center rounded-full border border-dashed border-slate-300 text-slate-400 hover:text-blue-500 hover:border-blue-400 cursor-pointer mx-2">
+                        <i class="fa-solid fa-plus text-sm"></i>
+                    </div>
+                `;
+            }
+        }
+
+        function addCaster() {
+            S.casters.push({ name: 'NAME', photo: 'https://placehold.co/150x150/f8fafc/94a3b8?text=PHOTO' });
+            renderCasters();
+            updateState();
+        }
+
+        function removeCaster(i) {
+            S.casters.splice(i, 1);
+            renderCasters();
+            updateState();
+        }
+
+        function updateCasterName(input, i) {
+            S.casters[i].name = input.value;
+            updateState();
+        }
+
+        function updateCasterPhoto(input, i) {
+            if (input.files && input.files[0]) {
+                const r = new FileReader();
+                r.onload = e => {
+                    S.casters[i].photo = e.target.result;
+                    renderCasters();
+                    updateState();
+                };
+                r.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // --- Ads & Playlist Logic ---
+        function uploadAd(input) {
+            if (!input.files.length) return;
+            Array.from(input.files).forEach(f => {
+                const url = URL.createObjectURL(f);
+                const isVideo = f.type.startsWith('video/');
+                S.playlist.push({ name: f.name, url: url, type: isVideo ? 'video' : 'image' });
+            });
+            renderPlaylist();
+        }
+
+        function renderPlaylist() {
+            const container = document.getElementById('playlist-container');
+            if (S.playlist.length === 0) {
+                container.innerHTML = '<div class="text-center text-xs text-slate-400 py-10">Playlist is empty.</div>';
+                return;
+            }
+
+            container.innerHTML = '';
+            S.playlist.forEach((ad, i) => {
+                const isPlaying = (S.activeAd === i);
+                const bgClass = isPlaying ? 'bg-blue-50 border-blue-200' : 'bg-[#F8FAFC] border-transparent hover:border-slate-200';
+
+                container.innerHTML += `
+                    <div class="flex items-center justify-between p-3 rounded-lg border ${bgClass} cursor-pointer transition" onclick="playAd(${i})">
+                        <div class="flex items-center space-x-3 w-3/4">
+                            <div class="text-slate-300"><i class="fa-solid fa-grip-vertical text-[10px]"></i></div>
+                            <div class="w-12 h-8 bg-slate-200 rounded overflow-hidden flex-shrink-0 relative">
+                                ${ad.type === 'video' ? `<video src="${ad.url}" class="w-full h-full object-cover"></video><div class="absolute inset-0 flex items-center justify-center bg-black/20"><i class="fa-solid fa-play text-white text-[8px]"></i></div>` : `<img src="${ad.url}" class="w-full h-full object-cover">`}
+                            </div>
+                            <div class="overflow-hidden">
+                                <div class="text-[11px] font-semibold text-slate-700 truncate w-full">${ad.name}</div>
+                                <div class="text-[9px] text-slate-400">${ad.type.toUpperCase()}</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="w-6 h-6 rounded-full ${isPlaying ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-500'} flex items-center justify-center">
+                                <i class="fa-solid fa-play text-[9px] ml-0.5"></i>
+                            </button>
+                            <button onclick="event.stopPropagation(); deleteAd(${i})" class="text-slate-400 hover:text-rose-500"><i class="fa-solid fa-trash-can text-[10px]"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function playAd(i) {
+            S.activeAd = i;
+            renderPlaylist();
+
+            const ad = S.playlist[i];
+            const vid = document.getElementById('ads-video');
+            const img = document.getElementById('ads-image');
+            document.getElementById('ads-placeholder').classList.add('hidden');
+
+            if (ad.type === 'video') {
+                img.classList.add('hidden');
+                vid.classList.remove('hidden');
+                vid.src = ad.url;
+                vid.play();
+            } else {
+                vid.classList.add('hidden');
+                img.classList.remove('hidden');
+                img.src = ad.url;
+            }
+
+            wsChannel.postMessage({ type: 'PLAY_AD', payload: ad });
+        }
+
+        function deleteAd(i) {
+            S.playlist.splice(i, 1);
+            if (S.activeAd === i) {
+                S.activeAd = -1;
+                document.getElementById('ads-placeholder').classList.remove('hidden');
+                document.getElementById('ads-video').classList.add('hidden');
+                document.getElementById('ads-image').classList.add('hidden');
+                wsChannel.postMessage({ type: 'STOP_AD' });
+            }
+            renderPlaylist();
+        }
+
+        function playAllAds() {
+            if (S.playlist.length > 0) playAd(0);
+        }
+
+        // --- Core Sync State ---
+        function updateState() {
+            // Read inputs directly for matches to avoid complex event binding
+            for (let i = 0; i < 3; i++) {
+                S.matches[i].a.name = document.getElementById(`m${i}-name-a`).value;
+                S.matches[i].b.name = document.getElementById(`m${i}-name-b`).value;
+                S.matches[i].a.score = document.getElementById(`m${i}-score-a`).value;
+                S.matches[i].b.score = document.getElementById(`m${i}-score-b`).value;
+                S.matches[i].time = document.getElementById(`m${i}-time`).value;
+            }
+
+            const tvValue = document.getElementById('tv').value;
+
+            // Broadcast to display
+            wsChannel.postMessage({
+                type: 'STATE_UPDATE',
+                payload: {
+                    timerSeconds: timerSeconds,
+                    tvDisplay: tvValue,
+                    matches: S.matches,
+                    casters: S.casters
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MLBB Broadcast Overlay Suite - Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#F0F9FF',
+                            100: '#E0F2FE',
+                            500: '#0EA5E9',
+                            600: '#0284C7',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #F8FAFC;
+            color: #1E293B;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+
+        .card-modern {
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #E2E8F0;
+            transition: all 0.2s;
+        }
+
+        .card-modern:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: #BAE6FD;
+            transform: translateY(-2px);
+        }
+
+        /* Styling spesifik untuk thumbnail */
+        .card-thumbnail {
+            width: 100%;
+            height: 140px;
+            border-radius: 10px 10px 0 0;
+            background-color: #F1F5F9;
+            background-size: cover;
+            background-position: center;
+            border-bottom: 1px solid #F1F5F9;
+        }
+    </style>
+</head>
+
+<body class="font-sans antialiased h-screen flex overflow-hidden select-none">
+
+    <!-- ================= SIDEBAR (KIRI) ================= -->
+    <aside
+        class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between p-4 flex-shrink-0 z-20 shadow-sm">
+
+        <!-- Top Section -->
+        <div class="space-y-6">
+            <!-- 1. Header / Logo Placeholder -->
+            <div
+                class="w-full aspect-video bg-brand-50 rounded-xl border border-brand-100 flex flex-col items-center justify-center p-3 text-center">
+                <div
+                    class="w-12 h-12 rounded-full bg-white text-brand-600 flex items-center justify-center mb-2 shadow-sm border border-brand-100">
+                    <i class="fa-solid font-bold text-xl fa-gamepad"></i>
+                </div>
+                <span class="font-bold text-xs uppercase tracking-wider text-brand-600">MLBB BROADCAST</span>
+                <span class="text-[10px] text-slate-400 font-mono font-medium mt-0.5">Control Hub v1.0</span>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="space-y-2" id="sidebar-nav">
+                <button onclick="switchTab('display')" id="nav-display"
+                    class="nav-btn w-full text-left px-4 py-3 rounded-lg text-sm font-semibold flex items-center justify-between transition-all duration-150 text-slate-500 hover:bg-slate-50">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-desktop w-4 text-center"></i>
+                        <span>Display</span>
+                    </div>
+                    <span class="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-mono"
+                        id="count-display">8</span>
+                </button>
+
+                <button onclick="switchTab('control')" id="nav-control"
+                    class="nav-btn w-full text-left px-4 py-3 rounded-lg text-sm font-semibold flex items-center justify-between transition-all duration-150 text-slate-500 hover:bg-slate-50">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-sliders w-4 text-center"></i>
+                        <span>Control</span>
+                    </div>
+                    <span class="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-mono"
+                        id="count-control">8</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Bottom Section -->
+        <div class="pt-4 border-t border-slate-100">
+            <button onclick="switchTab('settings')" id="nav-settings"
+                class="nav-btn w-full text-left px-4 py-3 rounded-lg text-sm font-semibold flex items-center justify-between transition-all duration-150 text-slate-500 hover:bg-slate-50">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-gear w-4 text-center"></i>
+                    <span>Settings</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-xs opacity-50"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ================= AREA UTAMA (CONTENT AREA) ================= -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden">
+
+        <!-- Top Title Bar -->
+        <header class="h-16 border-b border-slate-200 px-8 flex items-center justify-between bg-white shadow-sm z-10">
+            <div class="flex items-center space-x-3">
+                <h1 id="section-title" class="text-xl font-bold text-slate-800 tracking-tight">Display</h1>
+                <span class="text-slate-300">/</span>
+                <span id="section-subtitle"
+                    class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Overlay Outputs</span>
+            </div>
+
+            <!-- Quick Utilities -->
+            <div class="flex items-center space-x-3">
+                <div
+                    class="flex items-center space-x-2 text-xs bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="text-slate-600 font-semibold">Server Ready</span>
+                </div>
+                <button onclick="openAllInTabs()"
+                    class="text-xs bg-brand-600 hover:bg-brand-500 text-white px-4 py-2 rounded-lg font-semibold shadow-sm transition-all flex items-center space-x-1.5">
+                    <i class="fa-solid fa-up-right-from-square text-[10px]"></i>
+                    <span>Launch All</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content View (Grid area) -->
+        <div class="flex-1 overflow-y-auto p-8 bg-[#F8FAFC]">
+            <!-- Cards Grid Container -->
+            <div id="cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Content generated via JavaScript dynamically -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- JS Logic -->
+    <script>
+        const modulesData = {
+            display: [
+                {
+                    title: "Countdown Overlay",
+                    desc: "Starting soon screen & break match countdown timer",
+                    icon: "fa-hourglass-start",
+                    path: "display/countdown.html",
+                    badge: "1080p Stream",
+                    thumb: "../assets/mlbb-logo.png"
+                },
+                {
+                    title: "Draft Pick Screen",
+                    desc: "Full screen pick & ban phase overlay with real-time sync",
+                    icon: "fa-users-slash",
+                    path: "display/draft-pick.html",
+                    badge: "Interactive",
+                    thumb: "https://placehold.co/400x200/F0F9FF/0284C7?text=Draft+Pick"
+                },
+                {
+                    title: "In-Game Scoreboard",    
+                    desc: "Top bar HUD: KDA, Gold, Turret, Lord/Turtle timer",
+                    icon: "fa-trophy",
+                    path: "display/ingame-hud.html",
+                    badge: "HUD Overlay",
+                    thumb: "https://placehold.co/400x200/F0F9FF/0284C7?text=In-Game+HUD"
+                },
+                {
+                    title: "Match Result & Stats",
+                    desc: "End game summary, MVP, Gold graph & Damage comparison",
+                    icon: "fa-chart-column",
+                    path: "display/match-result.html",
+                    badge: "Post Game",
+                    thumb: "https://placehold.co/400x200/F0F9FF/0284C7?text=Match+Result"
+                }
+            ],
+            control: [
+                {
+                    title: "Countdown Control",
+                    desc: "Panel pengendali waktu, Caster, dan Ads commercial break",
+                    icon: "fa-stopwatch",
+                    path: "control/countdown.html",
+                    badge: "Time System",
+                    thumb: "https://placehold.co/400x200/f8fafc/1E293B?text=Countdown+Control"
+                },
+                {
+                    title: "Draft Pick Control",
+                    desc: "Panel pengendali sistem Pick, Ban, Hero Selection & Swap",
+                    icon: "fa-gamepad",
+                    path: "control/draft-pick.html",
+                    badge: "Live Control",
+                    thumb: "https://placehold.co/400x200/f8fafc/1E293B?text=Draft+Pick+Control"
+                },
+                {
+                    title: "Match Admin Panel",
+                    desc: "Atur Score, KDA, Gold, Timer, & Nama Tim secara manual",
+                    icon: "fa-sliders",
+                    path: "control/match-admin.html",
+                    badge: "Main Controller",
+                    thumb: "https://placehold.co/400x200/f8fafc/1E293B?text=Match+Admin"
+                },
+                {
+                    title: "Python OCR Reader",
+                    desc: "Monitor & atur otomatisasi OCR screen grabber dari game",
+                    icon: "fa-eye",
+                    path: "control/ocr-config.html",
+                    badge: "Automation",
+                    thumb: "https://placehold.co/400x200/f8fafc/1E293B?text=OCR+Reader"
+                }
+            ],
+            settings: [
+                {
+                    title: "Server & Socket Config",
+                    desc: "Konfigurasi port Server JS (Node.js/Express) & WebSockets",
+                    icon: "fa-network-wired",
+                    path: "settings/server.html",
+                    badge: "Core",
+                    thumb: "https://placehold.co/400x200/F1F5F9/94A3B8?text=Server+Config"
+                },
+                {
+                    title: "Team & Asset Manager",
+                    desc: "Upload logo tim, foto pemain, dan bendera kustom",
+                    icon: "fa-folder-open",
+                    path: "settings/assets.html",
+                    badge: "Database",
+                    thumb: "https://placehold.co/400x200/F1F5F9/94A3B8?text=Assets+Manager"
+                }
+            ]
+        };
+
+        let currentTab = 'display';
+
+        function renderCards(tabKey) {
+            const grid = document.getElementById('cards-grid');
+            const dataList = modulesData[tabKey] || [];
+            grid.innerHTML = '';
+
+            dataList.forEach(item => {
+                const card = document.createElement('a');
+                card.href = item.path;
+                card.target = "_blank";
+                card.className = "card-modern group cursor-pointer block relative";
+
+                card.innerHTML = `
+                    <div class="card-thumbnail relative" style="background-image: url('${item.thumb}');">
+                        <div class="absolute inset-0 bg-brand-600/0 group-hover:bg-brand-600/10 transition-colors rounded-t-xl"></div>
+                        <div class="absolute bottom-2 right-2 bg-white/90 backdrop-blur text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
+                            <i class="fa-solid ${item.icon} mr-1 text-brand-500"></i>${item.badge}
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-slate-800 text-sm mb-1.5 group-hover:text-brand-600 transition-colors flex items-center justify-between">
+                            <span>${item.title}</span>
+                            <i class="fa-solid fa-arrow-right text-[10px] opacity-0 group-hover:opacity-100 transform -translate-x-2 group-hover:translate-x-0 transition-all"></i>
+                        </h3>
+                        <p class="text-[11px] text-slate-500 leading-relaxed line-clamp-2 mb-3">${item.desc}</p>
+                        
+                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400">
+                            <span class="font-mono bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100 truncate">${item.path}</span>
+                            <span class="font-semibold text-brand-500 group-hover:underline">Open Tab</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function switchTab(tabKey) {
+            currentTab = tabKey;
+            const titleElem = document.getElementById('section-title');
+            const subtitleElem = document.getElementById('section-subtitle');
+
+            if (tabKey === 'display') {
+                titleElem.innerText = 'Display'; subtitleElem.innerText = 'Overlay Outputs';
+            } else if (tabKey === 'control') {
+                titleElem.innerText = 'Control'; subtitleElem.innerText = 'Control Panels';
+            } else if (tabKey === 'settings') {
+                titleElem.innerText = 'Settings'; subtitleElem.innerText = 'Configurations';
+            }
+
+            const navButtons = document.querySelectorAll('.nav-btn');
+            navButtons.forEach(btn => {
+                btn.className = "nav-btn w-full text-left px-4 py-3 rounded-lg text-sm font-medium flex items-center justify-between transition-all duration-150 text-slate-500 hover:bg-slate-50";
+                const icon = btn.querySelector('i');
+                if (icon) icon.className = icon.className.replace('text-brand-600', '');
+            });
+
+            const activeBtn = document.getElementById(`nav-${tabKey}`);
+            if (activeBtn) {
+                activeBtn.className = "nav-btn w-full text-left px-4 py-3 rounded-lg text-sm font-semibold flex items-center justify-between transition-all duration-150 bg-brand-50 text-brand-600 border border-brand-100 shadow-sm";
+                const activeIcon = activeBtn.querySelector('i');
+                if (activeIcon) activeIcon.className += ' text-brand-600';
+            }
+
+            renderCards(tabKey);
+        }
+
+        function openAllInTabs() {
+            const dataList = modulesData[currentTab] || [];
+            if (confirm(`Launch ${dataList.length} ${currentTab} modules in new tabs?`)) {
+                dataList.forEach(item => window.open(item.path, '_blank'));
+            }
+        }
+
+        window.onload = () => switchTab('display');
+    </script>
+</body>
+
+</html>
