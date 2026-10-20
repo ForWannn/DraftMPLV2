@@ -13,12 +13,29 @@
     <style>
         * {
             margin: 0;
-            background-color: #fff;
         }
 
         body {
+            background: url('../ASSETS/BG-PREMIUM-NAVY.png');
+            background-size: cover;
+            background-position: top;
+            background-repeat: no-repeat;
             font-family: 'Poppins', sans-serif;
             padding: 50px;
+            max-width: 1920px;
+            max-height: 1080px;
+            overflow: hidden;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: -1;
         }
 
         .upper {
@@ -29,7 +46,7 @@
         }
 
         .icon {
-            width: 165px;
+            width: 200px;
         }
 
         .icon img {
@@ -46,23 +63,190 @@
 
         .line {
             width: 2px;
-            height: 54px;
+            height: 60px;
             background-color: #2b2b2b;
         }
 
         .middle .timer-caster {
             display: grid;
-            grid-template-columns: 590px 1fr;
+            grid-template-columns: 650px 1fr;
             gap: 65px;
-            height: 165px;
+            height: 248px;
             align-items: center;
         }
 
         .middle .timer-caster .timer {
-            font-size: 110px;
+            font-size: 150px;
             text-align: center;
             font-family: 'Anton', sans-serif;
-            color: #0071B3;
+            color: #64CFFD;
+            filter: drop-shadow(0 0 10px rgb(100, 207, 253, 0.3)) drop-shadow(0 0 20px rgb(100, 207, 253, 0.3));
+        }
+
+        .middle .timer-caster .caster {
+            display: flex;
+            gap: 70px;
+        }
+
+        .middle .timer-caster .caster p {
+            color: #64CFFD;
+            letter-spacing: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .middle .timer-caster .caster .frame {
+            height: 215px;
+            width: 170px;
+            border: 1px solid #64CFFD;
+        }
+
+        .middle .timer-caster .caster .frame .card {
+            height: 170px;
+            border-bottom: 1px solid #64CFFD;
+            background-image: url(../ASSETS/CASTERS/BG-CASTER.png);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            overflow: hidden;
+        }
+
+        .middle .timer-caster .caster .frame .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: bottom;
+        }
+
+        .middle .timer-caster .caster .frame .name {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 27px;
+            color: #64CFFD;
+            font-weight: 500;
+            font-family: 'Anton', sans-serif;
+            letter-spacing: 4px;
+        }
+
+        .middle .team-ads {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .middle .team-ads .team-schedule {
+            display: flex;
+            flex-direction: column;
+            height: 570px;
+            width: 650px;
+            gap: 45px;
+            backdrop-filter: blur(10px);
+        }
+
+        .middle .team-ads .team-schedule .match {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 160px;
+            width: 100%;
+            background: url(../ASSETS/COUNTDOWN/INACTIVE-MATCH.png);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .middle .team-ads .team-schedule .match.active {
+            background: url(../ASSETS/COUNTDOWN/ACTIVE-MATCH.png);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .middle .team-ads .team-schedule .match .detail {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            width: 470px;
+            height: 110px;
+            color: #b6b6b6;
+        }
+
+        .middle .team-ads .team-schedule .match .detail.active {
+            color: #64CFFD;
+        }
+
+        .middle .team-ads .team-schedule .match .detail .team {
+            width: 80px;
+            height: 108px;
+        }
+
+        .middle .team-ads .team-schedule .match .detail .team img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        .middle .team-ads .team-schedule .match .detail .team .team-name {
+            letter-spacing: 2px;
+            margin-top: -10px;
+            text-align: center;
+            font-family: 'poppins', sans-serif;
+            font-weight: 500;
+            font-style: italic;
+            font-size: 23px;
+        }
+
+        .middle .team-ads .team-schedule .match .detail .score {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: auto;
+            height: 108px;
+            font-family: 'Anton', sans-serif;
+            font-size: 90px;
+        }
+
+        .middle .team-ads .team-schedule .match .detail .match-info {
+            text-align: center;
+            font-family: 'poppins', sans-serif;
+        }
+
+        .middle .team-ads .team-schedule .match .detail .match-info .bo,
+        .middle .team-ads .team-schedule .match .detail .match-info .clock {
+            font-size: 13px;
+            font-weight: 300;
+        }
+
+        .middle .team-ads .team-schedule .match .detail .match-info .versus {
+            font-size: 40px;
+            font-weight: 700;
+            font-style: italic;
+        }
+
+        .middle .team-ads .arrow-container {
+            height: 570px;
+            width: 158px;
+        }
+
+        .middle .team-ads .arrow-container .arrow {
+            width: 0;
+            height: 0;
+            border-top: 27px solid transparent;
+            border-bottom: 27px solid transparent;
+            border-right: 47px solid #65DDFB;
+            margin-top: 55px;
+            margin-left: 50px;
+        }
+
+        .middle .team-ads .ads-container {
+            height: 570px;
+            width: 1013px;
+            background: url(../ASSETS/ADS-CONTAINER.png);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
     </style>
 </head>
@@ -81,12 +265,73 @@
         <div class="timer-caster">
             <div class="timer">59:59</div>
             <div class="caster">
-                <p>Caster Lineup</p>
+                <p>CASTER LINEUP</p>
                 <div class="frame">
-                    <img src="" alt="">
-                    <h3 class="caster-name"></h3>
+                    <div class="card">
+                        <img src="../ASSETS/CASTERS/ContohCaster.png" alt="">
+                    </div>
+                    <div class="name">DINO</div>
+                </div>
+                <div class="frame">
+                    <div class="card">
+                        <img src="../ASSETS/CASTERS/ContohCaster.png" alt="">
+                    </div>
+                    <div class="name">DINO</div>
+                </div>
+                <div class="frame">
+                    <div class="card">
+                        <img src="../ASSETS/CASTERS/ContohCaster.png" alt="">
+                    </div>
+                    <div class="name">DINO</div>
                 </div>
             </div>
+        </div>
+        <div class="team-ads">
+            <div class="team-schedule">
+                <div class="match">
+                    <div class="detail">
+                        <div class="team left">
+                            <img src="../ASSETS/TEAMS/evos.png" alt="">
+                            <div class="team-name">EVOS</div>
+                        </div>
+                        <div class="score left">0</div>
+                        <div class="match-info">
+                            <p class="bo">Best Of 3</p>
+                            <p class="versus">VS</p>
+                            <p class="clock">13.00 WIB</p>
+                        </div>
+                        <div class="score right">0</div>
+                        <div class="team right">
+                            <img src="../ASSETS/TEAMS/rrq.webp" alt="">
+                            <div class="team-name">RRQ</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="match active">
+                    <div class="detail active">
+                        <div class="team left">
+                            <img src="../ASSETS/TEAMS/evos.png" alt="">
+                            <div class="team-name">EVOS</div>
+                        </div>
+                        <div class="score left">0</div>
+                        <div class="match-info">
+                            <p class="bo">Best Of 3</p>
+                            <p class="versus">VS</p>
+                            <p class="clock">13.00 WIB</p>
+                        </div>
+                        <div class="score right">0</div>
+                        <div class="team right">
+                            <img src="../ASSETS/TEAMS/rrq.webp" alt="">
+                            <div class="team-name">RRQ</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="match"></div>
+            </div>
+            <div class="arrow-container">
+                <div class="arrow"></div>
+            </div>
+            <div class="ads-container"></div>
         </div>
     </div>
 </body>
