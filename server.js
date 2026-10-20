@@ -34,7 +34,7 @@ const broadcast = () => {
     wss.clients.forEach(c => c.readyState === 1 && c.send(m));
     fs.writeFile(SF, JSON.stringify(state), () => { });
 };
-const KEYS = ['mode', 'playing', 'matches', 'casters', 'playlist'];
+const KEYS = ['mode', 'playing', 'matches', 'casters', 'playlist', 'activeMatch', 'ad'];
 
 wss.on('connection', ws => {
     ws.send(pack());
@@ -46,6 +46,7 @@ wss.on('connection', ws => {
             const t = s.timer, now = Date.now();
             if (m.action === 'start') { t.left = +m.ms || 0; t.endsAt = now + t.left; t.running = true; }
             else if (m.action === 'stop') { t.left = Math.max(0, t.endsAt - now); t.running = false; }
+            else if (m.action === 'set') { t.left = +m.ms || 0; t.endsAt = now + t.left; t.running = false; }
         } else return;
         broadcast();
     });

@@ -336,112 +336,28 @@
             line-height: 1.5;
         }
 
-        .preview-screen {
+        .preview-mirror-wrapper {
             position: relative;
-            display: flex;
-            min-height: 240px;
-            flex-direction: column;
-            justify-content: center;
-            overflow: hidden;
-            padding: 24px;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            min-height: 220px;
             border: 1px solid #263b54;
             border-radius: 11px;
-            background: radial-gradient(ellipse at 50% 10%, #173b62 0%, #0b1d32 42%, #07101d 100%);
-            isolation: isolate;
-        }
-
-        .preview-screen::before,
-        .preview-screen::after {
-            position: absolute;
-            z-index: -1;
-            content: "";
-            width: 210px;
-            height: 300px;
-            border: 1px solid #1d5790;
-            transform: rotate(38deg);
-            opacity: .5;
-        }
-
-        .preview-screen::before {
-            left: -130px;
-            bottom: -130px;
-            box-shadow: 18px 0 0 #0d2c4b, 36px 0 0 #0d2c4b, 54px 0 0 #0d2c4b;
-        }
-
-        .preview-screen::after {
-            right: -130px;
-            top: -150px;
-            box-shadow: -18px 0 0 #0d2c4b, -36px 0 0 #0d2c4b, -54px 0 0 #0d2c4b;
-        }
-
-        .preview-topline {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            color: #b9d5ed;
-            font-size: 9px;
-            font-weight: 800;
-            letter-spacing: 2px;
-        }
-
-        .preview-dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: var(--cyan);
-        }
-
-        .preview-time {
-            margin: 12px 0 16px;
-            color: #fff;
-            text-align: center;
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: clamp(54px, 5.8vw, 78px);
-            font-weight: 800;
-            line-height: 1;
-            letter-spacing: 1px;
-            font-variant-numeric: tabular-nums;
-            text-shadow: 0 0 25px #2c9fe744;
-        }
-
-        .preview-versus {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            padding: 10px 12px;
-            border: 1px solid #28517a;
-            border-radius: 7px;
-            background: #071422c9;
-            font-size: clamp(9px, .85vw, 12px);
-            font-weight: 800;
-        }
-
-        .preview-versus span {
+            background: #07101d;
             overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
         }
 
-        .preview-versus b {
-            color: var(--cyan);
-            font-size: 12px;
-        }
-
-        .preview-footer {
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            margin-top: 14px;
-            color: #9fb3c9;
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: .6px;
-        }
-
-        .preview-footer b {
-            color: #fff;
+        .preview-mirror-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1920px;
+            height: 1080px;
+            border: none;
+            transform-origin: top left;
+            pointer-events: none;
+            user-select: none;
         }
 
         .ads-panel {
@@ -588,6 +504,64 @@
 
         .team-field {
             min-width: 0;
+        }
+
+        .team-input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .team-logo-upload {
+            position: relative;
+            width: 36px;
+            height: 36px;
+            flex: 0 0 36px;
+            display: grid;
+            place-items: center;
+            border: 1px solid #3b3b3b;
+            border-radius: 7px;
+            background: #101010;
+            cursor: pointer;
+            overflow: hidden;
+            transition: border-color .18s ease, background .18s ease;
+        }
+
+        .team-logo-upload:hover {
+            border-color: var(--cyan);
+            background: #191919;
+        }
+
+        .team-logo-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 3px;
+            display: none;
+        }
+
+        .team-logo-upload.has-logo .team-logo-preview {
+            display: block;
+        }
+
+        .team-logo-upload.has-logo .team-logo-icon {
+            display: none;
+        }
+
+        .team-logo-upload:hover.has-logo .team-logo-icon {
+            display: grid;
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            color: #fff;
+            place-items: center;
+        }
+
+        .team-logo-icon {
+            color: #8b96a5;
+            font-size: 13px;
+            font-weight: 700;
         }
 
         .team-field label,
@@ -978,16 +952,10 @@
                     <div><span class="panel-index">02</span>
                         <h2>Display Preview</h2>
                     </div>
-                    <span class="subtle-tag">LIVE PREVIEW</span>
+                    <span class="subtle-tag">LIVE MIRROR</span>
                 </div>
-                <div class="preview-screen">
-                    <div class="preview-topline"><span>MATCH STARTS IN</span><span class="preview-dot"></span></div>
-                    <div class="preview-time" id="preview-time">59:59</div>
-                    <div class="preview-versus">
-                        <span id="preview-team-a">TEAM A</span><b>VS</b><span id="preview-team-b">TEAM B</span>
-                    </div>
-                    <div class="preview-footer"><span>BEST OF <b id="preview-bo">3</b></span><span
-                            id="preview-match-time">16:00 WIB</span></div>
+                <div class="preview-mirror-wrapper" id="preview-mirror-wrapper">
+                    <iframe id="preview-iframe" src="../display/countdown.html" title="Display Preview Mirror" scrolling="no"></iframe>
                 </div>
             </section>
 
@@ -1032,11 +1000,27 @@
                                 title="Set active match"><input type="checkbox" class="match-toggle" checked><span
                                     class="switch-track"></span></label></div>
                         <div class="team-editor">
-                            <div class="team-field"><label for="team-a-0">Team A</label><input id="team-a-0"
-                                    class="team-input team-a-input" value="EVOS" maxlength="18"></div>
+                            <div class="team-field"><label for="team-a-0">Team A</label>
+                                <div class="team-input-group">
+                                    <label class="team-logo-upload has-logo" title="Upload Logo Team A">
+                                        <img class="team-logo-preview" src="../ASSETS/TEAMS/evos.png" alt="Logo Team A">
+                                        <span class="team-logo-icon">↑</span>
+                                        <input type="file" class="team-logo-file team-a-logo-file" accept="image/*" hidden>
+                                    </label>
+                                    <input id="team-a-0" class="team-input team-a-input" value="EVOS" maxlength="18">
+                                </div>
+                            </div>
                             <span class="versus-small">VS</span>
-                            <div class="team-field"><label for="team-b-0">Team B</label><input id="team-b-0"
-                                    class="team-input team-b-input" value="RRQ" maxlength="18"></div>
+                            <div class="team-field"><label for="team-b-0">Team B</label>
+                                <div class="team-input-group">
+                                    <label class="team-logo-upload has-logo" title="Upload Logo Team B">
+                                        <img class="team-logo-preview" src="../ASSETS/TEAMS/rrq.webp" alt="Logo Team B">
+                                        <span class="team-logo-icon">↑</span>
+                                        <input type="file" class="team-logo-file team-b-logo-file" accept="image/*" hidden>
+                                    </label>
+                                    <input id="team-b-0" class="team-input team-b-input" value="RRQ" maxlength="18">
+                                </div>
+                            </div>
                         </div>
                         <div class="match-meta">
                             <label class="compact-field"><span>Score A</span><input class="score-input score-a-input"
@@ -1061,11 +1045,27 @@
                                 title="Set active match"><input type="checkbox" class="match-toggle"><span
                                     class="switch-track"></span></label></div>
                         <div class="team-editor">
-                            <div class="team-field"><label for="team-a-1">Team A</label><input id="team-a-1"
-                                    class="team-input team-a-input" value="ONIC" maxlength="18"></div>
+                            <div class="team-field"><label for="team-a-1">Team A</label>
+                                <div class="team-input-group">
+                                    <label class="team-logo-upload" title="Upload Logo Team A">
+                                        <img class="team-logo-preview" alt="Logo Team A">
+                                        <span class="team-logo-icon">↑</span>
+                                        <input type="file" class="team-logo-file team-a-logo-file" accept="image/*" hidden>
+                                    </label>
+                                    <input id="team-a-1" class="team-input team-a-input" value="ONIC" maxlength="18">
+                                </div>
+                            </div>
                             <span class="versus-small">VS</span>
-                            <div class="team-field"><label for="team-b-1">Team B</label><input id="team-b-1"
-                                    class="team-input team-b-input" value="GEEK" maxlength="18"></div>
+                            <div class="team-field"><label for="team-b-1">Team B</label>
+                                <div class="team-input-group">
+                                    <label class="team-logo-upload" title="Upload Logo Team B">
+                                        <img class="team-logo-preview" alt="Logo Team B">
+                                        <span class="team-logo-icon">↑</span>
+                                        <input type="file" class="team-logo-file team-b-logo-file" accept="image/*" hidden>
+                                    </label>
+                                    <input id="team-b-1" class="team-input team-b-input" value="GEEK" maxlength="18">
+                                </div>
+                            </div>
                         </div>
                         <div class="match-meta">
                             <label class="compact-field"><span>Score A</span><input class="score-input score-a-input"
@@ -1090,11 +1090,27 @@
                                 title="Set active match"><input type="checkbox" class="match-toggle"><span
                                     class="switch-track"></span></label></div>
                         <div class="team-editor">
-                            <div class="team-field"><label for="team-a-2">Team A</label><input id="team-a-2"
-                                    class="team-input team-a-input" value="ALTER EGO" maxlength="18"></div>
+                            <div class="team-field"><label for="team-a-2">Team A</label>
+                                <div class="team-input-group">
+                                    <label class="team-logo-upload" title="Upload Logo Team A">
+                                        <img class="team-logo-preview" alt="Logo Team A">
+                                        <span class="team-logo-icon">↑</span>
+                                        <input type="file" class="team-logo-file team-a-logo-file" accept="image/*" hidden>
+                                    </label>
+                                    <input id="team-a-2" class="team-input team-a-input" value="ALTER EGO" maxlength="18">
+                                </div>
+                            </div>
                             <span class="versus-small">VS</span>
-                            <div class="team-field"><label for="team-b-2">Team B</label><input id="team-b-2"
-                                    class="team-input team-b-input" value="BIGETRON" maxlength="18"></div>
+                            <div class="team-field"><label for="team-b-2">Team B</label>
+                                <div class="team-input-group">
+                                    <label class="team-logo-upload" title="Upload Logo Team B">
+                                        <img class="team-logo-preview" alt="Logo Team B">
+                                        <span class="team-logo-icon">↑</span>
+                                        <input type="file" class="team-logo-file team-b-logo-file" accept="image/*" hidden>
+                                    </label>
+                                    <input id="team-b-2" class="team-input team-b-input" value="BIGETRON" maxlength="18">
+                                </div>
+                            </div>
                         </div>
                         <div class="match-meta">
                             <label class="compact-field"><span>Score A</span><input class="score-input score-a-input"
@@ -1114,7 +1130,7 @@
                         </div>
                     </article>
                 </div>
-                <p class="helper-text">Aktifkan satu match untuk mengirim detailnya ke preview.</p>
+                <p class="helper-text">Aktifkan satu match untuk menyorot dan mengarahkan indikator panah pada display.</p>
             </section>
 
             <section class="panel caster-panel">
@@ -1173,192 +1189,580 @@
             const $ = (selector, root = document) => root.querySelector(selector);
             const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
-            // Countdown controls
+            const state = {
+                timer: { running: false, left: 3599000, endsAt: 0 },
+                activeMatch: 0,
+                matches: [
+                    { bo: 3, time: '16:00', a: { name: 'EVOS', logo: '../ASSETS/TEAMS/evos.png' }, b: { name: 'RRQ', logo: '../ASSETS/TEAMS/rrq.webp' }, sa: 0, sb: 0 },
+                    { bo: 3, time: '19:00', a: { name: 'ONIC', logo: '' }, b: { name: 'GEEK', logo: '' }, sa: 0, sb: 0 },
+                    { bo: 3, time: '21:00', a: { name: 'ALTER EGO', logo: '' }, b: { name: 'BIGETRON', logo: '' }, sa: 0, sb: 0 }
+                ],
+                casters: [
+                    { name: 'Caster One', photo: '', visible: true },
+                    { name: 'Caster Two', photo: '', visible: true },
+                    { name: 'Caster Three', photo: '', visible: true }
+                ],
+                ad: { visible: false, url: '', type: 'image' }
+            };
+
+            let serverTimeOffset = 0;
+
+            // --- Mirror preview scaling ---
+            const previewWrapper = $('#preview-mirror-wrapper');
+            const previewIframe = $('#preview-iframe');
+            function fitPreviewMirror() {
+                if (previewWrapper && previewIframe) {
+                    const scale = previewWrapper.clientWidth / 1920;
+                    previewIframe.style.transform = `scale(${scale})`;
+                }
+            }
+            window.addEventListener('resize', fitPreviewMirror);
+            window.addEventListener('DOMContentLoaded', fitPreviewMirror);
+            if (window.ResizeObserver && previewWrapper) {
+                new ResizeObserver(fitPreviewMirror).observe(previewWrapper);
+            }
+
+            // --- Communication & Synchronization ---
+            const channel = new BroadcastChannel('mlbb_countdown_channel');
+            let ws = null;
+
+            function postLocalMirror() {
+                channel.postMessage({
+                    timer: state.timer,
+                    activeMatch: state.activeMatch,
+                    matches: state.matches,
+                    casters: state.casters,
+                    ad: state.ad
+                });
+            }
+
+            function sendPatch(key, value) {
+                if (ws && ws.readyState === 1) {
+                    ws.send(JSON.stringify({
+                        page: 'countdown',
+                        type: 'patch',
+                        key: key,
+                        value: value
+                    }));
+                }
+            }
+
+            function sendTimer(action, ms) {
+                if (ws && ws.readyState === 1) {
+                    ws.send(JSON.stringify({
+                        page: 'countdown',
+                        type: 'timer',
+                        action: action,
+                        ms: ms
+                    }));
+                }
+            }
+
+            // --- Safe Asset Upload Helper ---
+            async function uploadAsset(file) {
+                try {
+                    const res = await fetch(`/upload?name=${encodeURIComponent(file.name)}`, {
+                        method: 'POST',
+                        body: file
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.url) return data.url;
+                    }
+                } catch (e) {}
+
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            function setSafeImgSrc(img, src, fallback = '') {
+                if (!img) return;
+                const target = src || fallback;
+                if (!target) {
+                    img.removeAttribute('src');
+                    img.removeAttribute('data-active-src');
+                    return;
+                }
+                if (img.getAttribute('data-active-src') !== target) {
+                    img.setAttribute('data-active-src', target);
+                    img.src = target;
+                }
+            }
+
+            // --- Countdown Timer Controls ---
             const minutesInput = $('#timer-minutes');
             const secondsInput = $('#timer-seconds');
-            const previewTime = $('#preview-time');
             const timerStatus = $('#timer-status');
-            let remaining = 59 * 60 + 59;
-            let interval = null;
+            const connLabel = $('#connection-label');
 
             const clamp = (value, min, max) => Math.min(max, Math.max(min, Number(value) || 0));
-            const formatTime = (seconds) => {
-                const safe = Math.max(0, Math.floor(seconds));
-                return `${String(Math.floor(safe / 60)).padStart(2, '0')}:${String(safe % 60).padStart(2, '0')}`;
-            };
+
             const readInputs = () => {
                 const mins = clamp(minutesInput.value, 0, 99);
                 const secs = clamp(secondsInput.value, 0, 59);
                 minutesInput.value = String(mins).padStart(2, '0');
                 secondsInput.value = String(secs).padStart(2, '0');
-                return mins * 60 + secs;
+                return (mins * 60 + secs) * 1000;
             };
-            const renderTimer = () => {
-                previewTime.textContent = formatTime(remaining);
-                minutesInput.value = String(Math.floor(remaining / 60)).padStart(2, '0');
-                secondsInput.value = String(remaining % 60).padStart(2, '0');
-            };
-            const stopTimer = () => {
-                if (interval) window.clearInterval(interval);
-                interval = null;
-            };
-            $('#start-timer').addEventListener('click', () => {
-                if (interval) return;
-                if (remaining <= 0) remaining = readInputs();
-                timerStatus.textContent = 'Countdown running';
-                $('#connection-label').textContent = 'Timer running';
-                interval = window.setInterval(() => {
-                    if (remaining > 0) {
-                        remaining -= 1;
-                        renderTimer();
-                    } else {
-                        stopTimer();
-                        timerStatus.textContent = 'Countdown finished';
-                        $('#connection-label').textContent = 'Timer finished';
-                    }
-                }, 1000);
-            });
-            $('#pause-timer').addEventListener('click', () => {
-                stopTimer();
-                timerStatus.textContent = 'Countdown paused';
-                $('#connection-label').textContent = 'Timer paused';
-            });
-            $('#reset-timer').addEventListener('click', () => {
-                stopTimer();
-                remaining = readInputs();
-                renderTimer();
-                timerStatus.textContent = 'Timer reset';
-                $('#connection-label').textContent = 'Control ready';
-            });
-            [minutesInput, secondsInput].forEach(input => input.addEventListener('change', () => {
-                stopTimer();
-                remaining = readInputs();
-                renderTimer();
-                timerStatus.textContent = 'Duration updated';
-            }));
-            renderTimer();
 
-            // One match is active at a time.
+            function updateTimerInputsFromMs(ms) {
+                const safeSecs = Math.max(0, Math.ceil(ms / 1000));
+                const mins = Math.floor(safeSecs / 60);
+                const secs = safeSecs % 60;
+                if (document.activeElement !== minutesInput) {
+                    minutesInput.value = String(mins).padStart(2, '0');
+                }
+                if (document.activeElement !== secondsInput) {
+                    secondsInput.value = String(secs).padStart(2, '0');
+                }
+            }
+
+            function tickTimer() {
+                if (state.timer.running) {
+                    const now = Date.now() - serverTimeOffset;
+                    const remMs = Math.max(0, state.timer.endsAt - now);
+                    updateTimerInputsFromMs(remMs);
+
+                    if (remMs <= 0) {
+                        state.timer.running = false;
+                        timerStatus.textContent = 'Countdown finished';
+                        connLabel.textContent = 'Timer finished';
+                    } else {
+                        timerStatus.textContent = 'Countdown running';
+                        connLabel.textContent = 'Timer running';
+                    }
+                } else {
+                    if (state.timer.left === 0) {
+                        timerStatus.textContent = 'Countdown finished';
+                    } else if (connLabel.textContent !== 'Server connected' && connLabel.textContent !== 'Reconnecting...') {
+                        connLabel.textContent = 'Control ready';
+                    }
+                }
+            }
+            setInterval(tickTimer, 200);
+
+            $('#start-timer').addEventListener('click', () => {
+                const ms = (state.timer.left > 0 && !state.timer.running) ? state.timer.left : readInputs();
+                const now = Date.now() - serverTimeOffset;
+                state.timer.left = ms;
+                state.timer.endsAt = now + ms;
+                state.timer.running = true;
+
+                timerStatus.textContent = 'Countdown running';
+                connLabel.textContent = 'Timer running';
+
+                sendTimer('start', ms);
+                postLocalMirror();
+            });
+
+            $('#pause-timer').addEventListener('click', () => {
+                const now = Date.now() - serverTimeOffset;
+                if (state.timer.running) {
+                    state.timer.left = Math.max(0, state.timer.endsAt - now);
+                    state.timer.running = false;
+                }
+                timerStatus.textContent = 'Countdown paused';
+                connLabel.textContent = 'Timer paused';
+
+                sendTimer('stop');
+                postLocalMirror();
+            });
+
+            $('#reset-timer').addEventListener('click', () => {
+                const ms = readInputs();
+                state.timer.left = ms;
+                state.timer.endsAt = 0;
+                state.timer.running = false;
+
+                updateTimerInputsFromMs(ms);
+                timerStatus.textContent = 'Timer reset';
+                connLabel.textContent = 'Control ready';
+
+                sendTimer('set', ms);
+                postLocalMirror();
+            });
+
+            [minutesInput, secondsInput].forEach(inp => {
+                inp.addEventListener('change', () => {
+                    const ms = readInputs();
+                    state.timer.left = ms;
+                    state.timer.endsAt = 0;
+                    state.timer.running = false;
+                    timerStatus.textContent = 'Duration updated';
+
+                    sendTimer('set', ms);
+                    postLocalMirror();
+                });
+            });
+
+            // --- Match Setup & Team Logo Upload Controls ---
             const matchCards = $$('.match-card');
             const matchToggles = $$('.match-toggle');
-            function setActiveMatch(index) {
+
+            function setActiveMatch(index, sendServer = true) {
+                state.activeMatch = index;
+                state.matches.forEach((m, i) => {
+                    m.active = (i === index);
+                });
                 matchToggles.forEach((toggle, i) => {
-                    toggle.checked = i === index;
+                    toggle.checked = (i === index);
                     matchCards[i].classList.toggle('is-active', i === index);
                 });
-                updateMatchPreview(matchCards[index]);
+
+                if (sendServer) {
+                    sendPatch('activeMatch', state.activeMatch);
+                    sendPatch('matches', state.matches);
+                }
+                postLocalMirror();
             }
-            function updateMatchPreview(card) {
-                if (!card) return;
-                $('#preview-team-a').textContent = $('.team-a-input', card).value || 'TEAM A';
-                $('#preview-team-b').textContent = $('.team-b-input', card).value || 'TEAM B';
-                $('#preview-bo').textContent = $('.best-of-input', card).value;
-                $('#preview-match-time').textContent = `${$('.match-time-input', card).value || '--:--'} WIB`;
-            }
+
             matchToggles.forEach((toggle, index) => {
                 toggle.addEventListener('change', () => {
-                    if (toggle.checked) setActiveMatch(index);
-                    else if (!matchToggles.some(item => item.checked)) setActiveMatch(index);
-                });
-            });
-            matchCards.forEach(card => {
-                ['.team-a-input', '.team-b-input', '.best-of-input', '.match-time-input', '.score-a-input', '.score-b-input'].forEach(selector => {
-                    $(selector, card).addEventListener('input', () => {
-                        if ($('.match-toggle', card).checked) updateMatchPreview(card);
-                    });
+                    setActiveMatch(index);
                 });
             });
 
-            // Advertisement on/off + local preview upload.
+            matchCards.forEach((card, idx) => {
+                const teamAInput = $('.team-a-input', card);
+                const teamBInput = $('.team-b-input', card);
+                const scoreAInput = $('.score-a-input', card);
+                const scoreBInput = $('.score-b-input', card);
+                const boInput = $('.best-of-input', card);
+                const timeInput = $('.match-time-input', card);
+
+                const logoAFile = $('.team-a-logo-file', card);
+                const logoBFile = $('.team-b-logo-file', card);
+                const logoALabel = logoAFile.closest('.team-logo-upload');
+                const logoBLabel = logoBFile.closest('.team-logo-upload');
+                const logoAPreview = $('.team-logo-preview', logoALabel);
+                const logoBPreview = $('.team-logo-preview', logoBLabel);
+
+                teamAInput.addEventListener('input', () => {
+                    state.matches[idx].a.name = teamAInput.value;
+                    sendPatch('matches', state.matches);
+                    postLocalMirror();
+                });
+
+                teamBInput.addEventListener('input', () => {
+                    state.matches[idx].b.name = teamBInput.value;
+                    sendPatch('matches', state.matches);
+                    postLocalMirror();
+                });
+
+                scoreAInput.addEventListener('input', () => {
+                    state.matches[idx].sa = +scoreAInput.value || 0;
+                    sendPatch('matches', state.matches);
+                    postLocalMirror();
+                });
+
+                scoreBInput.addEventListener('input', () => {
+                    state.matches[idx].sb = +scoreBInput.value || 0;
+                    sendPatch('matches', state.matches);
+                    postLocalMirror();
+                });
+
+                boInput.addEventListener('change', () => {
+                    state.matches[idx].bo = +boInput.value || 3;
+                    sendPatch('matches', state.matches);
+                    postLocalMirror();
+                });
+
+                timeInput.addEventListener('change', () => {
+                    state.matches[idx].time = timeInput.value || '16:00';
+                    sendPatch('matches', state.matches);
+                    postLocalMirror();
+                });
+
+                logoAFile.addEventListener('change', async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    const url = await uploadAsset(file);
+                    setSafeImgSrc(logoAPreview, url);
+                    logoALabel.classList.add('has-logo');
+                    state.matches[idx].a.logo = url;
+                    sendPatch('matches', state.matches);
+                    postLocalMirror();
+                });
+
+                logoBFile.addEventListener('change', async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    const url = await uploadAsset(file);
+                    setSafeImgSrc(logoBPreview, url);
+                    logoBLabel.classList.add('has-logo');
+                    state.matches[idx].b.logo = url;
+                    sendPatch('matches', state.matches);
+                    postLocalMirror();
+                });
+            });
+
+            // --- Advertisement Controls ---
             const adsToggle = $('#ads-toggle');
             const adsScreen = $('#ads-screen');
             const adImage = $('#ad-image');
             const adVideo = $('#ad-video');
-            let adObjectUrl = null;
-            function updateAdsState() {
-                adsScreen.classList.toggle('is-visible', adsToggle.checked);
-                $('#ads-state').textContent = adsToggle.checked ? 'ON AIR' : 'HIDDEN';
-                $('#footer-status').textContent = adsToggle.checked ? 'Advertisement enabled in preview' : 'Advertisement hidden in preview';
+            const adUpload = $('#ad-upload');
+            const clearAd = $('#clear-ad');
+
+            function updateAdsUI(sendServer = true) {
+                const on = adsToggle.checked;
+                adsScreen.classList.toggle('is-visible', on);
+                $('#ads-state').textContent = on ? 'ON AIR' : 'HIDDEN';
+                state.ad.visible = on;
+
+                if (on && state.ad.type === 'video' && state.ad.url) {
+                    adVideo.play().catch(() => {});
+                } else {
+                    adVideo.pause();
+                }
+
+                if (sendServer) {
+                    sendPatch('ad', state.ad);
+                    sendPatch('playing', state.ad.visible);
+                }
+                postLocalMirror();
             }
-            adsToggle.addEventListener('change', updateAdsState);
-            $('#ad-upload').addEventListener('change', event => {
+
+            adsToggle.addEventListener('change', () => updateAdsUI(true));
+
+            adUpload.addEventListener('change', async (event) => {
                 const file = event.target.files?.[0];
                 if (!file) return;
-                if (adObjectUrl) URL.revokeObjectURL(adObjectUrl);
-                adObjectUrl = URL.createObjectURL(file);
-                adImage.removeAttribute('src');
-                adVideo.pause();
-                adVideo.removeAttribute('src');
-                adsScreen.classList.remove('has-image', 'has-video', 'has-asset');
-                if (file.type.startsWith('image/')) {
-                    adImage.src = adObjectUrl;
-                    adsScreen.classList.add('has-image', 'has-asset');
-                } else if (file.type.startsWith('video/')) {
-                    adVideo.src = adObjectUrl;
-                    adsScreen.classList.add('has-video', 'has-asset');
-                    if (adsToggle.checked) adVideo.play().catch(() => { });
-                } else {
-                    alert('Format tidak didukung. Pilih gambar atau video.');
-                }
-            });
-            $('#clear-ad').addEventListener('click', () => {
-                if (adObjectUrl) URL.revokeObjectURL(adObjectUrl);
-                adObjectUrl = null;
-                adImage.removeAttribute('src');
-                adVideo.pause();
-                adVideo.removeAttribute('src');
-                $('#ad-upload').value = '';
-                adsScreen.classList.remove('has-image', 'has-video', 'has-asset');
-            });
-            adsToggle.addEventListener('change', () => {
-                if (adsToggle.checked && adsScreen.classList.contains('has-video')) adVideo.play().catch(() => { });
-                else adVideo.pause();
-            });
-            updateAdsState();
+                const isVideo = file.type.startsWith('video/');
+                const url = await uploadAsset(file);
 
-            // Caster visibility switches and local portrait previews.
+                state.ad.url = url;
+                state.ad.type = isVideo ? 'video' : 'image';
+
+                adsScreen.classList.remove('has-image', 'has-video', 'has-asset');
+                if (isVideo) {
+                    adImage.removeAttribute('src');
+                    adVideo.src = url;
+                    adsScreen.classList.add('has-video', 'has-asset');
+                    if (adsToggle.checked) adVideo.play().catch(() => {});
+                } else {
+                    adVideo.pause();
+                    adVideo.removeAttribute('src');
+                    setSafeImgSrc(adImage, url);
+                    adsScreen.classList.add('has-image', 'has-asset');
+                }
+
+                sendPatch('ad', state.ad);
+                sendPatch('playlist', [{ url: url, type: state.ad.type }]);
+                postLocalMirror();
+            });
+
+            clearAd.addEventListener('click', () => {
+                adUpload.value = '';
+                adImage.removeAttribute('src');
+                adVideo.pause();
+                adVideo.removeAttribute('src');
+                adsScreen.classList.remove('has-image', 'has-video', 'has-asset');
+                state.ad.url = '';
+                state.ad.visible = false;
+                adsToggle.checked = false;
+
+                sendPatch('ad', state.ad);
+                sendPatch('playing', false);
+                sendPatch('playlist', []);
+                updateAdsUI(false);
+            });
+
+            // --- Caster Controls ---
             $$('.caster-card').forEach((card, index) => {
                 const toggle = $('.caster-toggle', card);
                 const nameInput = $('.caster-name-input', card);
                 const avatar = $('.caster-avatar', card);
-                const image = $('img', avatar);
+                const img = $('img', avatar);
                 const fileInput = $(`#caster-file-${index}`);
-                function updateCasterVisibility() {
-                    card.classList.toggle('is-hidden', !toggle.checked);
-                    card.setAttribute('aria-label', `${nameInput.value}: ${toggle.checked ? 'visible' : 'hidden'}`);
-                }
-                toggle.addEventListener('change', updateCasterVisibility);
-                nameInput.addEventListener('input', () => {
-                    card.setAttribute('aria-label', `${nameInput.value}: ${toggle.checked ? 'visible' : 'hidden'}`);
+
+                toggle.addEventListener('change', () => {
+                    const visible = toggle.checked;
+                    card.classList.toggle('is-hidden', !visible);
+                    state.casters[index].visible = visible;
+                    sendPatch('casters', state.casters);
+                    postLocalMirror();
                 });
-                fileInput.addEventListener('change', event => {
+
+                nameInput.addEventListener('input', () => {
+                    state.casters[index].name = nameInput.value;
+                    sendPatch('casters', state.casters);
+                    postLocalMirror();
+                });
+
+                fileInput.addEventListener('change', async (event) => {
                     const file = event.target.files?.[0];
                     if (!file) return;
-                    if (image.dataset.objectUrl) URL.revokeObjectURL(image.dataset.objectUrl);
-                    const url = URL.createObjectURL(file);
-                    image.dataset.objectUrl = url;
-                    image.src = url;
+                    const url = await uploadAsset(file);
+                    setSafeImgSrc(img, url);
                     avatar.classList.add('has-image');
+                    state.casters[index].photo = url;
+                    sendPatch('casters', state.casters);
+                    postLocalMirror();
                 });
-                updateCasterVisibility();
             });
 
-            // Reset all controls to the sample state.
+            // --- Apply Server State into Control Panel (One-Way, No Echo) ---
+            function applyStateFromServer(cd, serverNow) {
+                if (!cd) return;
+                if (serverNow) {
+                    serverTimeOffset = Date.now() - serverNow;
+                }
+
+                if (cd.timer) {
+                    state.timer = { ...state.timer, ...cd.timer };
+                    if (state.timer.running) {
+                        const now = Date.now() - serverTimeOffset;
+                        const remMs = Math.max(0, state.timer.endsAt - now);
+                        updateTimerInputsFromMs(remMs);
+                    } else {
+                        updateTimerInputsFromMs(state.timer.left || 3599000);
+                    }
+                }
+
+                if (cd.activeMatch !== undefined) {
+                    setActiveMatch(+cd.activeMatch, false);
+                }
+
+                if (Array.isArray(cd.matches)) {
+                    cd.matches.forEach((m, i) => {
+                        if (!m || i >= matchCards.length) return;
+                        state.matches[i] = { ...state.matches[i], ...m };
+                        const card = matchCards[i];
+                        const teamAInput = $('.team-a-input', card);
+                        const teamBInput = $('.team-b-input', card);
+                        const scoreAInput = $('.score-a-input', card);
+                        const scoreBInput = $('.score-b-input', card);
+                        const boInput = $('.best-of-input', card);
+                        const timeInput = $('.match-time-input', card);
+
+                        if (document.activeElement !== teamAInput && m.a && m.a.name !== undefined) {
+                            teamAInput.value = m.a.name;
+                        }
+                        if (document.activeElement !== teamBInput && m.b && m.b.name !== undefined) {
+                            teamBInput.value = m.b.name;
+                        }
+                        if (document.activeElement !== scoreAInput && m.sa !== undefined) {
+                            scoreAInput.value = m.sa;
+                        }
+                        if (document.activeElement !== scoreBInput && m.sb !== undefined) {
+                            scoreBInput.value = m.sb;
+                        }
+                        if (document.activeElement !== boInput && m.bo !== undefined) {
+                            boInput.value = m.bo;
+                        }
+                        if (document.activeElement !== timeInput && m.time !== undefined) {
+                            timeInput.value = m.time;
+                        }
+
+                        if (m.a && m.a.logo) {
+                            const lblA = $('.team-a-logo-file', card).closest('.team-logo-upload');
+                            const imgA = $('.team-logo-preview', lblA);
+                            setSafeImgSrc(imgA, m.a.logo);
+                            lblA.classList.add('has-logo');
+                        }
+                        if (m.b && m.b.logo) {
+                            const lblB = $('.team-b-logo-file', card).closest('.team-logo-upload');
+                            const imgB = $('.team-logo-preview', lblB);
+                            setSafeImgSrc(imgB, m.b.logo);
+                            lblB.classList.add('has-logo');
+                        }
+                    });
+                }
+
+                if (Array.isArray(cd.casters)) {
+                    cd.casters.forEach((c, i) => {
+                        const cards = $$('.caster-card');
+                        if (!c || i >= cards.length) return;
+                        state.casters[i] = { ...state.casters[i], ...c };
+                        const card = cards[i];
+                        const nameInput = $('.caster-name-input', card);
+                        if (document.activeElement !== nameInput && c.name !== undefined) {
+                            nameInput.value = c.name;
+                        }
+                        if (c.visible !== undefined) {
+                            $('.caster-toggle', card).checked = c.visible;
+                            card.classList.toggle('is-hidden', !c.visible);
+                        }
+                        if (c.photo) {
+                            const av = $('.caster-avatar', card);
+                            const img = $('img', av);
+                            setSafeImgSrc(img, c.photo);
+                            av.classList.add('has-image');
+                        }
+                    });
+                }
+
+                if (cd.ad || (cd.playlist && cd.playlist[0])) {
+                    const adData = cd.ad || { visible: cd.playing, url: cd.playlist[0].url, type: cd.playlist[0].type };
+                    state.ad = { ...state.ad, ...adData };
+                    adsToggle.checked = !!state.ad.visible;
+                    if (state.ad.url) {
+                        if (state.ad.type === 'video') {
+                            if (adVideo.src !== state.ad.url) adVideo.src = state.ad.url;
+                            adsScreen.classList.add('has-video', 'has-asset');
+                        } else {
+                            setSafeImgSrc(adImage, state.ad.url);
+                            adsScreen.classList.add('has-image', 'has-asset');
+                        }
+                    }
+                    updateAdsUI(false);
+                }
+
+                // Forward to local mirror preview iframe without looping to server
+                postLocalMirror();
+            }
+
+            // WebSocket connection
+            function connectWebSocket() {
+                try {
+                    const host = location.host || 'localhost:3000';
+                    const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+                    ws = new WebSocket(`${protocol}//${host}`);
+
+                    ws.onopen = () => {
+                        connLabel.textContent = 'Server connected';
+                        $('.status-dot').style.background = 'var(--green)';
+                    };
+
+                    ws.onmessage = (event) => {
+                        try {
+                            const data = JSON.parse(event.data);
+                            if (data.type === 'state' && data.state && data.state.countdown) {
+                                applyStateFromServer(data.state.countdown, data.now);
+                            }
+                        } catch (e) {}
+                    };
+
+                    ws.onclose = () => {
+                        connLabel.textContent = 'Reconnecting...';
+                        $('.status-dot').style.background = '#e6a23c';
+                        setTimeout(connectWebSocket, 2000);
+                    };
+
+                    ws.onerror = () => {
+                        if (ws) ws.close();
+                    };
+                } catch (e) {
+                    setTimeout(connectWebSocket, 3000);
+                }
+            }
+            connectWebSocket();
+
+            // Reset all controls
             $('#reset-all').addEventListener('click', () => {
-                stopTimer();
-                minutesInput.value = '59';
-                secondsInput.value = '59';
-                remaining = 59 * 60 + 59;
-                renderTimer();
-                timerStatus.textContent = 'Timer ready · set the duration above';
-                adsToggle.checked = false;
-                $('#clear-ad').click();
-                updateAdsState();
+                $('#reset-timer').click();
+                clearAd.click();
+
                 const defaults = [
-                    { a: 'EVOS', b: 'RRQ', time: '16:00' },
-                    { a: 'ONIC', b: 'GEEK', time: '19:00' },
-                    { a: 'ALTER EGO', b: 'BIGETRON', time: '21:00' }
+                    { a: 'EVOS', b: 'RRQ', logoA: '../ASSETS/TEAMS/evos.png', logoB: '../ASSETS/TEAMS/rrq.webp', time: '16:00' },
+                    { a: 'ONIC', b: 'GEEK', logoA: '', logoB: '', time: '19:00' },
+                    { a: 'ALTER EGO', b: 'BIGETRON', logoA: '', logoB: '', time: '21:00' }
                 ];
+
                 matchCards.forEach((card, i) => {
                     $('.team-a-input', card).value = defaults[i].a;
                     $('.team-b-input', card).value = defaults[i].b;
@@ -1366,22 +1770,62 @@
                     $('.score-b-input', card).value = 0;
                     $('.best-of-input', card).value = '3';
                     $('.match-time-input', card).value = defaults[i].time;
+
+                    const lblA = $('.team-a-logo-file', card).closest('.team-logo-upload');
+                    const lblB = $('.team-b-logo-file', card).closest('.team-logo-upload');
+                    const imgA = $('.team-logo-preview', lblA);
+                    const imgB = $('.team-logo-preview', lblB);
+
+                    if (defaults[i].logoA) {
+                        setSafeImgSrc(imgA, defaults[i].logoA);
+                        lblA.classList.add('has-logo');
+                    } else {
+                        imgA.removeAttribute('src');
+                        lblA.classList.remove('has-logo');
+                    }
+
+                    if (defaults[i].logoB) {
+                        setSafeImgSrc(imgB, defaults[i].logoB);
+                        lblB.classList.add('has-logo');
+                    } else {
+                        imgB.removeAttribute('src');
+                        lblB.classList.remove('has-logo');
+                    }
+
+                    state.matches[i] = {
+                        bo: 3,
+                        time: defaults[i].time,
+                        active: (i === 0),
+                        a: { name: defaults[i].a, logo: defaults[i].logoA },
+                        b: { name: defaults[i].b, logo: defaults[i].logoB },
+                        sa: 0,
+                        sb: 0
+                    };
                 });
                 setActiveMatch(0);
+
                 $$('.caster-card').forEach((card, i) => {
-                    $('.caster-name-input', card).value = ['Caster One', 'Caster Two', 'Caster Three'][i];
+                    const defaultName = ['Caster One', 'Caster Two', 'Caster Three'][i];
+                    $('.caster-name-input', card).value = defaultName;
                     $('.caster-toggle', card).checked = true;
                     card.classList.remove('is-hidden');
-                    const image = $('img', card);
-                    if (image.dataset.objectUrl) URL.revokeObjectURL(image.dataset.objectUrl);
-                    image.removeAttribute('src');
-                    delete image.dataset.objectUrl;
-                    $('.caster-avatar', card).classList.remove('has-image');
+                    const av = $('.caster-avatar', card);
+                    const img = $('img', av);
+                    img.removeAttribute('src');
+                    img.removeAttribute('data-active-src');
+                    av.classList.remove('has-image');
                     $(`#caster-file-${i}`).value = '';
+                    state.casters[i] = { name: defaultName, photo: '', visible: true };
                 });
-                $('#connection-label').textContent = 'Control ready';
+
+                sendPatch('matches', state.matches);
+                sendPatch('activeMatch', 0);
+                sendPatch('casters', state.casters);
+                postLocalMirror();
                 $('#footer-status').textContent = 'All controls reset to defaults';
             });
+
+            fitPreviewMirror();
         })();
     </script>
 </body>

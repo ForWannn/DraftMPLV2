@@ -73,6 +73,7 @@
             gap: 65px;
             height: 248px;
             align-items: center;
+            margin-bottom: 50px;
         }
 
         .middle .timer-caster .timer {
@@ -226,27 +227,46 @@
         }
 
         .middle .team-ads .arrow-container {
+            position: relative;
             height: 570px;
             width: 158px;
         }
 
         .middle .team-ads .arrow-container .arrow {
+            position: absolute;
             width: 0;
             height: 0;
             border-top: 27px solid transparent;
             border-bottom: 27px solid transparent;
             border-right: 47px solid #65DDFB;
-            margin-top: 55px;
-            margin-left: 50px;
+            top: 0;
+            left: 50px;
+            margin: 0;
+            transform: translateY(53px);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            filter: drop-shadow(0 0 10px rgba(100, 207, 253, 0.5));
         }
 
         .middle .team-ads .ads-container {
+            position: relative;
             height: 570px;
             width: 1013px;
             background: url(../ASSETS/ADS-CONTAINER.png);
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .middle .team-ads .ads-container img,
+        .middle .team-ads .ads-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: none;
         }
     </style>
 </head>
@@ -254,86 +274,387 @@
 <body>
     <div class="upper">
         <div class="icon">
-            <img src="../ASSETS/mlbb-logo.png" alt="">
+            <img src="../ASSETS/mlbb-logo.png" alt="MLBB Logo">
         </div>
         <div class="line"></div>
         <div class="text">
-            <p>PROFESSIONAL ESPORT</br>TOURNAMENT</p>
+            <p>PROFESSIONAL ESPORT<br>TOURNAMENT</p>
         </div>
     </div>
     <div class="middle">
         <div class="timer-caster">
-            <div class="timer">59:59</div>
-            <div class="caster">
+            <div class="timer" id="timer-display">59:59</div>
+            <div class="caster" id="casters-wrap">
                 <p>CASTER LINEUP</p>
-                <div class="frame">
+                <div class="frame" id="caster-frame-0">
                     <div class="card">
-                        <img src="../ASSETS/CASTERS/ContohCaster.png" alt="">
+                        <img id="caster-img-0" src="../ASSETS/CASTERS/ContohCaster.png" alt="Caster 1">
                     </div>
-                    <div class="name">DINO</div>
+                    <div class="name" id="caster-name-0">DINO</div>
                 </div>
-                <div class="frame">
+                <div class="frame" id="caster-frame-1">
                     <div class="card">
-                        <img src="../ASSETS/CASTERS/ContohCaster.png" alt="">
+                        <img id="caster-img-1" src="../ASSETS/CASTERS/ContohCaster.png" alt="Caster 2">
                     </div>
-                    <div class="name">DINO</div>
+                    <div class="name" id="caster-name-1">DINO</div>
                 </div>
-                <div class="frame">
+                <div class="frame" id="caster-frame-2">
                     <div class="card">
-                        <img src="../ASSETS/CASTERS/ContohCaster.png" alt="">
+                        <img id="caster-img-2" src="../ASSETS/CASTERS/ContohCaster.png" alt="Caster 3">
                     </div>
-                    <div class="name">DINO</div>
+                    <div class="name" id="caster-name-2">DINO</div>
                 </div>
             </div>
         </div>
         <div class="team-ads">
-            <div class="team-schedule">
-                <div class="match">
-                    <div class="detail">
-                        <div class="team left">
-                            <img src="../ASSETS/TEAMS/evos.png" alt="">
-                            <div class="team-name">EVOS</div>
-                        </div>
-                        <div class="score left">0</div>
-                        <div class="match-info">
-                            <p class="bo">Best Of 3</p>
-                            <p class="versus">VS</p>
-                            <p class="clock">13.00 WIB</p>
-                        </div>
-                        <div class="score right">0</div>
-                        <div class="team right">
-                            <img src="../ASSETS/TEAMS/rrq.webp" alt="">
-                            <div class="team-name">RRQ</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="match active">
+            <div class="team-schedule" id="team-schedule">
+                <div class="match active" id="match-card-0" data-match="0">
                     <div class="detail active">
                         <div class="team left">
-                            <img src="../ASSETS/TEAMS/evos.png" alt="">
-                            <div class="team-name">EVOS</div>
+                            <img class="team-logo-a" src="../ASSETS/TEAMS/evos.png" alt="Team A">
+                            <div class="team-name team-name-a">EVOS</div>
                         </div>
-                        <div class="score left">0</div>
+                        <div class="score left score-a">0</div>
                         <div class="match-info">
-                            <p class="bo">Best Of 3</p>
+                            <p class="bo bo-text">Best Of 3</p>
                             <p class="versus">VS</p>
-                            <p class="clock">13.00 WIB</p>
+                            <p class="clock clock-text">16.00 WIB</p>
                         </div>
-                        <div class="score right">0</div>
+                        <div class="score right score-b">0</div>
                         <div class="team right">
-                            <img src="../ASSETS/TEAMS/rrq.webp" alt="">
-                            <div class="team-name">RRQ</div>
+                            <img class="team-logo-b" src="../ASSETS/TEAMS/rrq.webp" alt="Team B">
+                            <div class="team-name team-name-b">RRQ</div>
                         </div>
                     </div>
                 </div>
-                <div class="match"></div>
+                <div class="match" id="match-card-1" data-match="1">
+                    <div class="detail">
+                        <div class="team left">
+                            <img class="team-logo-a" src="../ASSETS/TEAMS/evos.png" alt="Team A">
+                            <div class="team-name team-name-a">ONIC</div>
+                        </div>
+                        <div class="score left score-a">0</div>
+                        <div class="match-info">
+                            <p class="bo bo-text">Best Of 3</p>
+                            <p class="versus">VS</p>
+                            <p class="clock clock-text">19.00 WIB</p>
+                        </div>
+                        <div class="score right score-b">0</div>
+                        <div class="team right">
+                            <img class="team-logo-b" src="../ASSETS/TEAMS/rrq.webp" alt="Team B">
+                            <div class="team-name team-name-b">GEEK</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="match" id="match-card-2" data-match="2">
+                    <div class="detail">
+                        <div class="team left">
+                            <img class="team-logo-a" src="../ASSETS/TEAMS/evos.png" alt="Team A">
+                            <div class="team-name team-name-a">ALTER EGO</div>
+                        </div>
+                        <div class="score left score-a">0</div>
+                        <div class="match-info">
+                            <p class="bo bo-text">Best Of 3</p>
+                            <p class="versus">VS</p>
+                            <p class="clock clock-text">21.00 WIB</p>
+                        </div>
+                        <div class="score right score-b">0</div>
+                        <div class="team right">
+                            <img class="team-logo-b" src="../ASSETS/TEAMS/rrq.webp" alt="Team B">
+                            <div class="team-name team-name-b">BIGETRON</div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="arrow-container">
-                <div class="arrow"></div>
+                <div class="arrow" id="active-arrow"></div>
             </div>
-            <div class="ads-container"></div>
+            <div class="ads-container" id="ads-container">
+                <img id="ad-img" alt="Advertisement">
+                <video id="ad-video" muted loop playsinline></video>
+            </div>
         </div>
     </div>
+
+    <script>
+        (() => {
+            const state = {
+                timer: { running: false, left: 3599000, endsAt: 0 },
+                activeMatch: 0,
+                matches: [
+                    { bo: 3, time: '16:00', a: { name: 'EVOS', logo: '../ASSETS/TEAMS/evos.png' }, b: { name: 'RRQ', logo: '../ASSETS/TEAMS/rrq.webp' }, sa: 0, sb: 0 },
+                    { bo: 3, time: '19:00', a: { name: 'ONIC', logo: '' }, b: { name: 'GEEK', logo: '' }, sa: 0, sb: 0 },
+                    { bo: 3, time: '21:00', a: { name: 'ALTER EGO', logo: '' }, b: { name: 'BIGETRON', logo: '' }, sa: 0, sb: 0 }
+                ],
+                casters: [
+                    { name: 'Caster One', photo: '', visible: true },
+                    { name: 'Caster Two', photo: '', visible: true },
+                    { name: 'Caster Three', photo: '', visible: true }
+                ],
+                ad: { visible: false, url: '', type: 'image' }
+            };
+
+            let serverTimeOffset = 0;
+
+            const timerEl = document.getElementById('timer-display');
+            const arrowEl = document.getElementById('active-arrow');
+            const adImgEl = document.getElementById('ad-img');
+            const adVideoEl = document.getElementById('ad-video');
+            const scheduleEl = document.getElementById('team-schedule');
+
+            // --- Safe DOM update utilities (prevent flicker/re-rendering) ---
+            function updateText(el, text) {
+                if (!el) return;
+                const str = String(text ?? '');
+                if (el.textContent !== str) {
+                    el.textContent = str;
+                }
+            }
+
+            function updateImageSrc(img, src, fallback = '') {
+                if (!img) return;
+                const target = src || fallback;
+                if (!target) {
+                    if (img.style.display !== 'none') img.style.display = 'none';
+                    return;
+                }
+                if (img.getAttribute('data-active-src') !== target) {
+                    img.setAttribute('data-active-src', target);
+                    img.src = target;
+                }
+                if (img.style.display === 'none') {
+                    img.style.display = 'block';
+                }
+            }
+
+            // --- Timer calculation & formatting ---
+            function formatClock(seconds) {
+                const safe = Math.max(0, Math.floor(seconds));
+                const mins = String(Math.floor(safe / 60)).padStart(2, '0');
+                const secs = String(safe % 60).padStart(2, '0');
+                return `${mins}:${secs}`;
+            }
+
+            function getRemainingSeconds() {
+                if (state.timer.running) {
+                    const now = Date.now() - serverTimeOffset;
+                    const diff = Math.max(0, state.timer.endsAt - now);
+                    return Math.ceil(diff / 1000);
+                }
+                return Math.max(0, Math.ceil((state.timer.left || 0) / 1000));
+            }
+
+            function tickTimer() {
+                if (timerEl) {
+                    updateText(timerEl, formatClock(getRemainingSeconds()));
+                }
+            }
+            setInterval(tickTimer, 100);
+
+            // --- Dynamic Arrow Positioning ---
+            function updateArrowPosition(activeIndex) {
+                if (!arrowEl) return;
+                const matchCards = document.querySelectorAll('.team-schedule .match');
+                const clampedIndex = Math.max(0, Math.min(matchCards.length - 1, activeIndex || 0));
+
+                matchCards.forEach((card, idx) => {
+                    const isActive = idx === clampedIndex;
+                    if (card.classList.contains('active') !== isActive) {
+                        card.classList.toggle('active', isActive);
+                    }
+                    const detail = card.querySelector('.detail');
+                    if (detail && detail.classList.contains('active') !== isActive) {
+                        detail.classList.toggle('active', isActive);
+                    }
+                });
+
+                const targetCard = matchCards[clampedIndex];
+                let targetY = clampedIndex * 205 + 53;
+                if (targetCard) {
+                    const cardTop = targetCard.offsetTop;
+                    const cardHeight = targetCard.offsetHeight || 160;
+                    targetY = cardTop + (cardHeight / 2) - 27;
+                }
+                const newTransform = `translateY(${targetY}px)`;
+                if (arrowEl.style.transform !== newTransform) {
+                    arrowEl.style.transform = newTransform;
+                }
+            }
+
+            // --- Match Setup Render ---
+            function renderMatches() {
+                const matchCards = document.querySelectorAll('.team-schedule .match');
+                state.matches.forEach((m, idx) => {
+                    const card = matchCards[idx];
+                    if (!card || !m) return;
+
+                    const nameA = card.querySelector('.team-name-a');
+                    const nameB = card.querySelector('.team-name-b');
+                    const logoA = card.querySelector('.team-logo-a');
+                    const logoB = card.querySelector('.team-logo-b');
+                    const scoreA = card.querySelector('.score-a');
+                    const scoreB = card.querySelector('.score-b');
+                    const boText = card.querySelector('.bo-text');
+                    const clockText = card.querySelector('.clock-text');
+
+                    updateText(nameA, (m.a && m.a.name) ? m.a.name : 'TEAM A');
+                    updateText(nameB, (m.b && m.b.name) ? m.b.name : 'TEAM B');
+                    updateImageSrc(logoA, (m.a && m.a.logo) ? m.a.logo : '', '../ASSETS/TEAMS/evos.png');
+                    updateImageSrc(logoB, (m.b && m.b.logo) ? m.b.logo : '', '../ASSETS/TEAMS/rrq.webp');
+                    updateText(scoreA, (m.sa !== undefined ? m.sa : (m.a ? m.a.score : 0)) || 0);
+                    updateText(scoreB, (m.sb !== undefined ? m.sb : (m.b ? m.b.score : 0)) || 0);
+                    updateText(boText, `Best Of ${m.bo || 3}`);
+                    updateText(clockText, `${m.time || '16.00'} WIB`);
+                });
+
+                updateArrowPosition(state.activeMatch);
+            }
+
+            // --- Caster Lineup Render ---
+            function renderCasters() {
+                state.casters.forEach((c, idx) => {
+                    const frame = document.getElementById(`caster-frame-${idx}`);
+                    const img = document.getElementById(`caster-img-${idx}`);
+                    const name = document.getElementById(`caster-name-${idx}`);
+                    if (!frame) return;
+
+                    const isVisible = (c && c.visible !== false);
+                    const targetDisplay = isVisible ? '' : 'none';
+                    if (frame.style.display !== targetDisplay) {
+                        frame.style.display = targetDisplay;
+                    }
+
+                    if (isVisible) {
+                        updateText(name, (c && c.name) ? c.name : 'CASTER');
+                        updateImageSrc(img, (c && c.photo) ? c.photo : '', '../ASSETS/CASTERS/ContohCaster.png');
+                    }
+                });
+            }
+
+            // --- Advertisement Render ---
+            function renderAds() {
+                if (!adImgEl || !adVideoEl) return;
+                const ad = state.ad;
+                if (ad && ad.visible && ad.url) {
+                    if (ad.type === 'video') {
+                        adImgEl.style.display = 'none';
+                        adVideoEl.style.display = 'block';
+                        if (adVideoEl.getAttribute('data-active-src') !== ad.url) {
+                            adVideoEl.setAttribute('data-active-src', ad.url);
+                            adVideoEl.src = ad.url;
+                            adVideoEl.play().catch(() => { });
+                        }
+                    } else {
+                        adVideoEl.pause();
+                        adVideoEl.style.display = 'none';
+                        updateImageSrc(adImgEl, ad.url);
+                    }
+                } else {
+                    adVideoEl.pause();
+                    adVideoEl.style.display = 'none';
+                    adImgEl.style.display = 'none';
+                }
+            }
+
+            // --- Selective State Update (prevents full re-render on timer ticks) ---
+            function applyFullState(newState, serverNow) {
+                if (!newState) return;
+                if (serverNow) {
+                    serverTimeOffset = Date.now() - serverNow;
+                }
+
+                let matchesDirty = false;
+                let castersDirty = false;
+                let adsDirty = false;
+
+                if (newState.timer) {
+                    state.timer = { ...state.timer, ...newState.timer };
+                    tickTimer();
+                }
+
+                if (newState.activeMatch !== undefined && state.activeMatch !== +newState.activeMatch) {
+                    state.activeMatch = +newState.activeMatch;
+                    matchesDirty = true;
+                }
+
+                if (Array.isArray(newState.matches)) {
+                    state.matches = newState.matches.map((m, i) => ({
+                        ...state.matches[i],
+                        ...m
+                    }));
+                    matchesDirty = true;
+                }
+
+                if (Array.isArray(newState.casters)) {
+                    state.casters = newState.casters.map((c, i) => ({
+                        ...state.casters[i],
+                        ...c
+                    }));
+                    castersDirty = true;
+                }
+
+                if (newState.ad) {
+                    state.ad = { ...state.ad, ...newState.ad };
+                    adsDirty = true;
+                }
+
+                if (matchesDirty) renderMatches();
+                if (castersDirty) renderCasters();
+                if (adsDirty) renderAds();
+            }
+
+            // Sync channel between tabs & preview iframe
+            const channel = new BroadcastChannel('mlbb_countdown_channel');
+            channel.onmessage = (event) => {
+                if (event.data && event.data.type !== 'REQUEST_STATE') {
+                    applyFullState(event.data);
+                }
+            };
+
+            // WebSocket sync for persistence / remote / OBS
+            function connectWebSocket() {
+                try {
+                    const host = location.host || 'localhost:3000';
+                    const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+                    const ws = new WebSocket(`${protocol}//${host}`);
+
+                    ws.onmessage = (event) => {
+                        try {
+                            const data = JSON.parse(event.data);
+                            if (data.type === 'state' && data.state && data.state.countdown) {
+                                const cd = data.state.countdown;
+                                applyFullState({
+                                    timer: cd.timer,
+                                    activeMatch: cd.activeMatch !== undefined ? cd.activeMatch : (cd.matches ? cd.matches.findIndex(m => m.active) : 0),
+                                    matches: cd.matches,
+                                    casters: cd.casters,
+                                    ad: cd.ad || (cd.playlist && cd.playlist[0] ? { visible: cd.playing, url: cd.playlist[0].url, type: cd.playlist[0].type } : null)
+                                }, data.now);
+                            }
+                        } catch (err) { }
+                    };
+
+                    ws.onclose = () => {
+                        setTimeout(connectWebSocket, 2000);
+                    };
+                } catch (e) {
+                    setTimeout(connectWebSocket, 3000);
+                }
+            }
+            connectWebSocket();
+
+            // Initial render
+            window.addEventListener('DOMContentLoaded', () => {
+                renderMatches();
+                renderCasters();
+                renderAds();
+                updateArrowPosition(state.activeMatch);
+            });
+            window.addEventListener('resize', () => {
+                updateArrowPosition(state.activeMatch);
+            });
+        })();
+    </script>
 </body>
 
 </html>
