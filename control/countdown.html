@@ -700,7 +700,7 @@
             padding: 13px;
             border: 1px solid #393939;
             border-radius: 11px;
-            background: #d8d8d8;
+            background: #171717;
             color: #111;
             transition: opacity .2s ease, filter .2s ease;
         }
@@ -756,9 +756,9 @@
 
         .caster-name-input {
             height: 31px;
-            border-color: #c5c5c5;
-            background: #f7f7f7;
-            color: #111;
+            border-color: #474747;
+            background: #101010;
+            color: #fff;
             font-size: 12px;
             font-weight: 750;
         }
@@ -773,6 +773,10 @@
             font-weight: 750;
         }
 
+        .caster-bottom span {
+            color: #f7f7f7;
+        }
+
         .caster-bottom .switch {
             transform: scale(.9);
             transform-origin: right center;
@@ -785,7 +789,7 @@
             height: 29px;
             border: 1px solid #b7b7b7;
             border-radius: 8px;
-            color: #202020;
+            color: #fff;
             cursor: pointer;
             font-size: 18px;
             font-weight: 700;
@@ -793,6 +797,7 @@
 
         .avatar-upload:hover {
             background: #fff;
+            color: #202020;
         }
 
         .footer-actions {
@@ -908,9 +913,8 @@
     <main class="dashboard">
         <header class="topbar">
             <div class="brand">
-                <div class="brand-mark">M</div>
+
                 <div>
-                    <p class="eyebrow">MLBB BROADCAST TOOLS</p>
                     <h1>Countdown Control Panel</h1>
                 </div>
             </div>
@@ -955,7 +959,8 @@
                     <span class="subtle-tag">LIVE MIRROR</span>
                 </div>
                 <div class="preview-mirror-wrapper" id="preview-mirror-wrapper">
-                    <iframe id="preview-iframe" src="../display/countdown.html" title="Display Preview Mirror" scrolling="no"></iframe>
+                    <iframe id="preview-iframe" src="../display/countdown.html" title="Display Preview Mirror"
+                        scrolling="no"></iframe>
                 </div>
             </section>
 
@@ -1005,7 +1010,8 @@
                                     <label class="team-logo-upload has-logo" title="Upload Logo Team A">
                                         <img class="team-logo-preview" src="../ASSETS/TEAMS/evos.png" alt="Logo Team A">
                                         <span class="team-logo-icon">↑</span>
-                                        <input type="file" class="team-logo-file team-a-logo-file" accept="image/*" hidden>
+                                        <input type="file" class="team-logo-file team-a-logo-file" accept="image/*"
+                                            hidden>
                                     </label>
                                     <input id="team-a-0" class="team-input team-a-input" value="EVOS" maxlength="18">
                                 </div>
@@ -1016,7 +1022,8 @@
                                     <label class="team-logo-upload has-logo" title="Upload Logo Team B">
                                         <img class="team-logo-preview" src="../ASSETS/TEAMS/rrq.webp" alt="Logo Team B">
                                         <span class="team-logo-icon">↑</span>
-                                        <input type="file" class="team-logo-file team-b-logo-file" accept="image/*" hidden>
+                                        <input type="file" class="team-logo-file team-b-logo-file" accept="image/*"
+                                            hidden>
                                     </label>
                                     <input id="team-b-0" class="team-input team-b-input" value="RRQ" maxlength="18">
                                 </div>
@@ -1050,7 +1057,8 @@
                                     <label class="team-logo-upload" title="Upload Logo Team A">
                                         <img class="team-logo-preview" alt="Logo Team A">
                                         <span class="team-logo-icon">↑</span>
-                                        <input type="file" class="team-logo-file team-a-logo-file" accept="image/*" hidden>
+                                        <input type="file" class="team-logo-file team-a-logo-file" accept="image/*"
+                                            hidden>
                                     </label>
                                     <input id="team-a-1" class="team-input team-a-input" value="ONIC" maxlength="18">
                                 </div>
@@ -1061,7 +1069,8 @@
                                     <label class="team-logo-upload" title="Upload Logo Team B">
                                         <img class="team-logo-preview" alt="Logo Team B">
                                         <span class="team-logo-icon">↑</span>
-                                        <input type="file" class="team-logo-file team-b-logo-file" accept="image/*" hidden>
+                                        <input type="file" class="team-logo-file team-b-logo-file" accept="image/*"
+                                            hidden>
                                     </label>
                                     <input id="team-b-1" class="team-input team-b-input" value="GEEK" maxlength="18">
                                 </div>
@@ -1095,9 +1104,11 @@
                                     <label class="team-logo-upload" title="Upload Logo Team A">
                                         <img class="team-logo-preview" alt="Logo Team A">
                                         <span class="team-logo-icon">↑</span>
-                                        <input type="file" class="team-logo-file team-a-logo-file" accept="image/*" hidden>
+                                        <input type="file" class="team-logo-file team-a-logo-file" accept="image/*"
+                                            hidden>
                                     </label>
-                                    <input id="team-a-2" class="team-input team-a-input" value="ALTER EGO" maxlength="18">
+                                    <input id="team-a-2" class="team-input team-a-input" value="ALTER EGO"
+                                        maxlength="18">
                                 </div>
                             </div>
                             <span class="versus-small">VS</span>
@@ -1106,9 +1117,11 @@
                                     <label class="team-logo-upload" title="Upload Logo Team B">
                                         <img class="team-logo-preview" alt="Logo Team B">
                                         <span class="team-logo-icon">↑</span>
-                                        <input type="file" class="team-logo-file team-b-logo-file" accept="image/*" hidden>
+                                        <input type="file" class="team-logo-file team-b-logo-file" accept="image/*"
+                                            hidden>
                                     </label>
-                                    <input id="team-b-2" class="team-input team-b-input" value="BIGETRON" maxlength="18">
+                                    <input id="team-b-2" class="team-input team-b-input" value="BIGETRON"
+                                        maxlength="18">
                                 </div>
                             </div>
                         </div>
@@ -1130,7 +1143,8 @@
                         </div>
                     </article>
                 </div>
-                <p class="helper-text">Aktifkan satu match untuk menyorot dan mengarahkan indikator panah pada display.</p>
+                <p class="helper-text">Aktifkan satu match untuk menyorot dan mengarahkan indikator panah pada display.
+                </p>
             </section>
 
             <section class="panel caster-panel">
@@ -1269,7 +1283,7 @@
                         const data = await res.json();
                         if (data.url) return data.url;
                     }
-                } catch (e) {}
+                } catch (e) { }
 
                 return new Promise((resolve) => {
                     const reader = new FileReader();
@@ -1514,7 +1528,7 @@
                 state.ad.visible = on;
 
                 if (on && state.ad.type === 'video' && state.ad.url) {
-                    adVideo.play().catch(() => {});
+                    adVideo.play().catch(() => { });
                 } else {
                     adVideo.pause();
                 }
@@ -1542,7 +1556,7 @@
                     adImage.removeAttribute('src');
                     adVideo.src = url;
                     adsScreen.classList.add('has-video', 'has-asset');
-                    if (adsToggle.checked) adVideo.play().catch(() => {});
+                    if (adsToggle.checked) adVideo.play().catch(() => { });
                 } else {
                     adVideo.pause();
                     adVideo.removeAttribute('src');
@@ -1734,7 +1748,7 @@
                             if (data.type === 'state' && data.state && data.state.countdown) {
                                 applyStateFromServer(data.state.countdown, data.now);
                             }
-                        } catch (e) {}
+                        } catch (e) { }
                     };
 
                     ws.onclose = () => {

@@ -234,17 +234,25 @@
 
         .middle .team-ads .arrow-container .arrow {
             position: absolute;
-            width: 0;
-            height: 0;
-            border-top: 27px solid transparent;
-            border-bottom: 27px solid transparent;
-            border-right: 47px solid #65DDFB;
             top: 0;
-            left: 50px;
+            left: 0;
+            width: 130px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             margin: 0;
-            transform: translateY(53px);
+            transform: translateY(80px) translateY(-50%);
             transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             filter: drop-shadow(0 0 10px rgba(100, 207, 253, 0.5));
+            pointer-events: none;
+        }
+
+        .middle .team-ads .arrow-container .arrow video {
+            width: 70%;
+            height: auto;
+            max-width: 130px;
+            display: block;
+            object-fit: contain;
         }
 
         .middle .team-ads .ads-container {
@@ -367,7 +375,9 @@
                 </div>
             </div>
             <div class="arrow-container">
-                <div class="arrow" id="active-arrow"></div>
+                <div class="arrow" id="active-arrow">
+                    <video autoplay loop muted playsinline src="../ASSETS/animations/ArrowAnim.webm"></video>
+                </div>
             </div>
             <div class="ads-container" id="ads-container">
                 <img id="ad-img" alt="Advertisement">
@@ -469,15 +479,20 @@
                 });
 
                 const targetCard = matchCards[clampedIndex];
-                let targetY = clampedIndex * 205 + 53;
+                let targetCenterY = clampedIndex * 205 + 80;
                 if (targetCard) {
                     const cardTop = targetCard.offsetTop;
                     const cardHeight = targetCard.offsetHeight || 160;
-                    targetY = cardTop + (cardHeight / 2) - 27;
+                    targetCenterY = cardTop + (cardHeight / 2);
                 }
-                const newTransform = `translateY(${targetY}px)`;
+                const newTransform = `translateY(${targetCenterY}px) translateY(-50%)`;
                 if (arrowEl.style.transform !== newTransform) {
                     arrowEl.style.transform = newTransform;
+                }
+
+                const arrowVideo = arrowEl.querySelector('video');
+                if (arrowVideo && arrowVideo.paused) {
+                    arrowVideo.play().catch(() => { });
                 }
             }
 

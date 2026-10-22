@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draft Control</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            box-sizing: border-box
+        }
+
+        :root {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #f4f4f4;
+            background: #191919
+        }
+
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
+            background: #191919
+        }
+
+        body {
+            padding: 2.25vw 1.3vw 1.8vw
+        }
+
+        .dashboard {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.05vw
+        }
+
+        .panel {
+            background: #222;
+            border-radius: 14px;
+
+        }
+
+        h2 {
+            font-size: 20px;
+            line-height: 1;
+            margin: 0 0 .75vw;
+            font-weight: 700
+        }
+
+        .top-row {
+            display: grid;
+            grid-template-columns: 1.55fr .95fr 1.55fr;
+            gap: 1.05vw;
+            height: 32.5vh;
+            min-height: 255px
+        }
+
+        .team-panel {
+            padding: 1vw;
+            display: flex;
+            flex-direction: column;
+            width: 700px;
+            height: 350px;
+        }
+
+        .team-form {
+            background: #101010;
+            border-radius: 18px;
+            flex: 1;
+            min-height: 0;
+            padding: 1.1vw;
+            display: grid;
+            grid-template-columns: 1.45fr .7fr 1fr;
+            grid-template-rows: auto auto 1fr;
+            gap: .55vw 1.2vw
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            gap: 5px
+        }
+
+        .field label {
+            font-size: 10px;
+            font-weight: bold
+        }
+
+        input,
+        .logo-box,
+        .best-of span,
+        .phase-inputs span,
+        .timer-display {
+            background: #222;
+            border: 1px solid #343434;
+            border-radius: 7px;
+            min-width: 0
+        }
+
+        .field input {
+            height: 38px;
+            min-height: 27px;
+            width: 305px;
+            padding: 4px 8px;
+            color: #eee;
+            outline: none
+        }
+
+        .coach.field.custom {
+            width: 190px;
+
+        }
+
+        .team-name {
+            grid-column: 1;
+            grid-row: 1
+        }
+
+        .team-logo {
+            grid-column: 2/4;
+            grid-row: 1/3
+        }
+
+        .coach {
+            grid-column: 1;
+            grid-row: 2
+        }
+
+        .score {
+            grid-column: 2;
+            grid-row: 2
+        }
+
+        .logo-row {
+            display: flex;
+            gap: .7vw;
+            height: 100%;
+            min-height: 70px
+        }
+
+        .logo-box {
+            width: 42%;
+            max-width: 95px;
+            height: 100%;
+            min-height: 70px
+        }
+
+        .logo-row button {
+            height: 28px;
+            flex: 1
+        }
+
+        .players {
+            grid-column: 1/4;
+            grid-row: 3;
+            gap: 12px;
+            padding-top: .1vw
+        }
+
+        .player-inputs {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: .9vw
+        }
+
+        .player-inputs input {
+            height: 2vw;
+            min-height: 27px
+        }
+
+        .players small {
+            font-size: clamp(6px, .43vw, 8px);
+            font-weight: bold
+        }
+
+        button,
+        select {
+            background: #171717;
+            color: #f5f5f5;
+            border: 1px solid #303030;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: clamp(6px, .48vw, 9px)
+        }
+
+        button {
+            cursor: pointer
+        }
+
+        .match-panel {
+            display: flex;
+            flex-direction: column
+        }
+
+        .match-form {
+            background: #101010;
+            border-radius: 18px;
+            flex: 1;
+            padding: .9vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: .55vw
+        }
+
+        .match-line {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            align-items: center;
+            gap: .8vw
+        }
+
+        .match-line strong {
+            font-size: clamp(12px, .95vw, 17px);
+            white-space: nowrap
+        }
+
+        .best-of {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3px
+        }
+
+        .best-of span {
+            height: 2vw;
+            min-height: 25px
+        }
+
+        .phase-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px
+        }
+
+        .phase-inputs span {
+            height: 1.8vw;
+            min-height: 24px
+        }
+
+        .timer-label {
+            text-align: center;
+            font-size: clamp(12px, .95vw, 17px)
+        }
+
+        .timer-display {
+            height: 4vw;
+            min-height: 46px
+        }
+
+        .timer-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px
+        }
+
+        .timer-buttons button {
+            height: 22px
+        }
+
+        .timer-buttons .start,
+        .action-grid .active {
+            background: #1877f2;
+            border-color: #1877f2
+        }
+
+        .draft-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1vw 2.05vw
+        }
+
+        .draft-panel {
+            height: 19.7vh;
+            min-height: 160px;
+            padding: .8vw;
+            display: flex;
+            flex-direction: column
+        }
+
+        .draft-panel h2 {
+            margin-left: .25vw;
+            margin-bottom: .6vw
+        }
+
+        .right-draft h2 {
+            text-align: right;
+            margin-right: .25vw
+        }
+
+        .hero-slots {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 1vw;
+            flex: 1;
+            min-height: 0
+        }
+
+        .hero-slot {
+            background: #0e0e0e;
+            border-radius: 9px;
+            position: relative;
+            overflow: hidden;
+            min-width: 0
+        }
+
+        .hero-slot b {
+            position: absolute;
+            left: 7px;
+            top: 7px;
+            font-size: clamp(14px, 1.1vw, 20px);
+            z-index: 2
+        }
+
+        .hero-slot i {
+            position: absolute;
+            right: 8px;
+            top: 6px;
+            font-size: clamp(17px, 1.25vw, 23px);
+            font-style: normal;
+            font-weight: bold;
+            z-index: 2
+        }
+
+        .hero-slot button,
+        .hero-select {
+            position: absolute;
+            bottom: 6px;
+            left: 5px;
+            right: 5px;
+            width: calc(100% - 10px);
+            height: 20px;
+            z-index: 3
+        }
+
+        .hero-slot button span,
+        .hero-select span {
+            float: right;
+            margin-right: 3px
+        }
+
+        .hero-slot.selected {
+            background: #111
+        }
+
+        .hero-image {
+            position: absolute;
+            inset: 0 0 0;
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, .6), rgba(0, 0, 0, .15)), url("ling-portrait.jpg");
+            background-size: cover;
+            background-position: center
+        }
+
+        .hero-select {
+            background: #222;
+            border: 1px solid #343434;
+            border-radius: 4px;
+            text-align: center;
+            font-size: clamp(7px, .55vw, 10px);
+            font-weight: bold;
+            line-height: 18px
+        }
+
+        .bottom-row {
+            display: grid;
+            grid-template-columns: 1fr 1.65fr .82fr;
+            gap: 1vw;
+            min-height: 16vh
+        }
+
+        .swap-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: .35vw
+        }
+
+        .swap-panel h2 {
+            margin: 0
+        }
+
+        .swap-line {
+            display: grid;
+            grid-template-columns: 1.3fr 1.3fr .52fr;
+            gap: .5vw;
+            margin-bottom: .3vw
+        }
+
+        .swap-line select,
+        .swap-line button {
+            height: 20px;
+            min-width: 0;
+            text-align: center
+        }
+
+        .live-preview {
+            background: #fff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #050505;
+            font-size: clamp(22px, 2.2vw, 36px);
+            font-weight: 700
+        }
+
+        .actions-panel {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 1vw
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .8vw;
+            width: 100%
+        }
+
+        .action-grid button {
+            height: 22px;
+            font-size: clamp(6px, .43vw, 8px)
+        }
+
+        @media(max-width:900px) {
+            body {
+                padding: 14px
+            }
+
+            .top-row {
+                height: auto;
+                grid-template-columns: 1fr;
+                min-height: 0
+            }
+
+            .team-panel {
+                min-height: 270px
+            }
+
+            .match-panel {
+                min-height: 250px
+            }
+
+            .draft-row {
+                grid-template-columns: 1fr;
+                gap: 12px
+            }
+
+            .draft-panel {
+                height: 190px
+            }
+
+            .bottom-row {
+                grid-template-columns: 1fr;
+                min-height: 0
+            }
+
+            .live-preview {
+                min-height: 180px
+            }
+
+            .actions-panel {
+                min-height: 110px
+            }
+
+            .team-form {
+                padding: 15px;
+                gap: 9px
+            }
+
+            .field input,
+            .player-inputs input {
+                height: 38px
+            }
+
+            .match-form {
+                padding: 14px
+            }
+
+            .best-of span {
+                height: 30px
+            }
+
+            .phase-inputs span {
+                height: 28px
+            }
+
+            .timer-display {
+                height: 55px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="dashboard">
+        <section class="top-row">
+            <article class="panel team-panel">
+                <h2>Left Team</h2>
+                <div class="team-form">
+                    <div class="team-name field"><label>Team Name</label><input></div>
+                    <div class="team-logo field"><label>Team Logo</label>
+                        <div class="logo-row">
+                            <div class="logo-box"></div><button>Upload Logo</button>
+                        </div>
+                    </div>
+                    <div class="coach field custom"><label>Coach</label><input></div>
+                    <div class="score field"><label>Score</label><input></div>
+                    <div class="players field"><label>Players Name</label>
+                        <div class="player-inputs"><input><input><input><input><input></div><small>Left to Right
+                            (1-5)</small>
+                    </div>
+                </div>
+            </article>
+            <article class="panel match-panel">
+                <h2>Match Detail</h2>
+                <div class="match-form">
+                    <div class="match-line"><strong>Best Of</strong>
+                        <div class="best-of"><span></span><span></span><span></span><span></span></div>
+                    </div>
+                    <div class="match-line phase"><strong>Phase</strong>
+                        <div class="phase-inputs"><span></span><span></span></div>
+                    </div>
+                    <strong class="timer-label">Timer</strong>
+                    <div class="timer-display"></div>
+                    <div class="timer-buttons"><button
+                            class="start">Start</button><button>Pause</button><button>Reset</button></div>
+                </div>
+            </article>
+            <article class="panel team-panel">
+                <h2>Left Team</h2>
+                <div class="team-form">
+                    <div class="team-name field"><label>Team Name</label><input></div>
+                    <div class="team-logo field"><label>Team Logo</label>
+                        <div class="logo-row">
+                            <div class="logo-box"></div><button>Upload Logo</button>
+                        </div>
+                    </div>
+                    <div class="coach field"><label>Coach</label><input></div>
+                    <div class="score field"><label>Score</label><input></div>
+                    <div class="players field"><label>Players Name</label>
+                        <div class="player-inputs"><input><input><input><input><input></div><small>Left to Right
+                            (1-5)</small>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <section class="draft-row">
+            <article class="panel draft-panel">
+                <h2>Hero Ban</h2>
+                <div class="hero-slots left-slots">
+                    <div class="hero-slot selected"><b>1</b><i>×</i>
+                        <div class="hero-image"></div>
+                        <div class="hero-select">Ling <span>⌄</span></div>
+                    </div>
+                    <div class="hero-slot"><b>2</b><i>×</i><button>Select <span>⌄</span></button></div>
+                    <div class="hero-slot"><b>3</b><i>×</i><button>Select <span>⌄</span></button></div>
+                    <div class="hero-slot"><b>4</b><i>×</i><button>Select <span>⌄</span></button></div>
+                    <div class="hero-slot"><b>5</b><i>×</i><button>Select <span>⌄</span></button></div>
+                </div>
+            </article>
+            <article class="panel draft-panel right-draft">
+                <h2>Hero Ban</h2>
+                <div class="hero-slots right-slots">
+                    <div class="hero-slot"><b>5</b><i>×</i><button>Select <span>⌄</span></button></div>
+                    <div class="hero-slot"><b>4</b><i>×</i><button>Select <span>⌄</span></button></div>
+                    <div class="hero-slot"><b>3</b><i>×</i><button>Select <span>⌄</span></button></div>
+                    <div class="hero-slot"><b>2</b><i>×</i><button>Select <span>⌄</span></button></div>
+                    <div class="hero-slot selected"><b>1</b><i>×</i>
+                        <div class="hero-image"></div>
+                        <div class="hero-select">Ling <span>⌄</span></div>
+                    </div>
+                </div>
+            </article>
+            <article class="panel draft-panel">
+                <h2>Hero Pick</h2>
+                <div class="hero-slots left-slots">
+                    <div class="hero-slot selected"><b>1</b><i>×</i>
+                        <div class="hero-image"></div>
+                        <div class="hero-select">Ling <span>⌄</span></div>
+                    </div>
+                    <div class="hero-slot"><b>2</b><i>×</i><button>Select <span>⌄</span></button></div>
+                    <div class="hero-slot"><b>3</b><i>×</i><button>Select <span>⌄</span></button></div>
+                    <div class="hero-slot"><b>4</b><i>×</i><button>Select <span>⌄</span></button></div>
+                    <div class="hero-slot"><b>5</b><i>×</i><button>Select <span>⌄</span></button></div>
+                </div>
+            </article>
+            <article class="panel draft-panel right-draft">
+                <h2>Hero Pick</h2>
+                <div class="hero-slots right-slots">
+                    <div class="hero-slot"><b>5</b><i>×</i><button>Select <span>⌄</span></button></div>
+                    <div class="hero-slot"><b>4</b><i>×</i><button>Select <span>⌄</span></button></div>
+                    <div class="hero-slot"><b>3</b><i>×</i><button>Select <span>⌄</span></button></div>
+                    <div class="hero-slot"><b>2</b><i>×</i><button>Select <span>⌄</span></button></div>
+                    <div class="hero-slot selected"><b>1</b><i>×</i>
+                        <div class="hero-image"></div>
+                        <div class="hero-select">Ling <span>⌄</span></div>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <section class="bottom-row">
+            <article class="panel swap-panel">
+                <h2>Swap Hero</h2>
+                <div class="swap-line"><select>
+                        <option>Ling</option>
+                    </select><select>
+                        <option>Ling</option>
+                    </select><button>Submit</button></div>
+                <h2>Swap Player</h2>
+                <div class="swap-line"><select>
+                        <option>Arman</option>
+                    </select><select>
+                        <option>Kairi</option>
+                    </select><button>Submit</button></div>
+            </article>
+            <div class="live-preview">LIVE PREVIEW</div>
+            <article class="panel actions-panel">
+                <div class="action-grid">
+                    <button class="active">Animation In</button><button>Animation Out</button>
+                    <button>Show History Pick</button><button>Hide History Pick</button>
+                    <button>Swap Team</button><button>Reset All</button>
+                </div>
+            </article>
+        </section>
+    </main>
+</body>
+
+</html>
