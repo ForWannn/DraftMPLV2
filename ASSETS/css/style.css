@@ -1,0 +1,42 @@
+/* style.css */
+@font-face {
+    font-family: 'Eixample Light';
+    src: url('../fonts/eixample-villa/fonnts.com-Eixample_Villa_Light.otf') format('opentype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Eixample Regular';
+    src: url('../fonts/eixample-villa/fonnts.com-Eixample_Villa_Regular.otf') format('opentype');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Eixample Thin';
+    src: url('../fonts/eixample-villa/fonnts.com-Eixample_Villa_Thin.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Eixample Heavy';
+    src: url('../fonts/eixample-villa/fonnts.com-Eixample_Villa_Heavy.otf') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Eixample Bold';
+    src: url('../fonts/eixample-villa/fonnts.com-Eixample_Villa_Bold.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Eixample ExtraBold';
+    src: url('../fonts/eixample-villa/fonnts.com-Eixample_Villa_ExtraBold.otf') format('opentype');
+    font-weight: 800;
+    font-style: normal;
+}
