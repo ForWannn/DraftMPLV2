@@ -416,7 +416,7 @@
         .logo-preview-box img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             display: none;
         }
 
@@ -1173,33 +1173,32 @@
             // Each entry is one operator turn. For double-pick turns, each hero slot
             // gets its own timer step. Reorder these entries to match your event rules.
             const DRAFT_SEQUENCE = [
-                { side: 'left', phase: 'ban', slot: 'left-ban-slot-1', turn: 1 },
-                { side: 'right', phase: 'ban', slot: 'right-ban-slot-1', turn: 1 },
-                { side: 'left', phase: 'ban', slot: 'left-ban-slot-2', turn: 2 },
-                { side: 'right', phase: 'ban', slot: 'right-ban-slot-2', turn: 2 },
-                { side: 'left', phase: 'ban', slot: 'left-ban-slot-3', turn: 3 },
-                { side: 'right', phase: 'ban', slot: 'right-ban-slot-3', turn: 3 },
-                { side: 'left', phase: 'pick', slot: 'left-pick-slot-1', turn: 1 },
-                { side: 'right', phase: 'pick', slot: 'right-pick-slot-1', turn: 1 },
-                { side: 'right', phase: 'pick', slot: 'right-pick-slot-2', turn: 2 },
-                { side: 'left', phase: 'pick', slot: 'left-pick-slot-2', turn: 2 },
-                { side: 'left', phase: 'pick', slot: 'left-pick-slot-3', turn: 3 },
-                { side: 'right', phase: 'pick', slot: 'right-pick-slot-3', turn: 3 },
-                { side: 'left', phase: 'ban', slot: 'left-ban-slot-4', turn: 4 },
-                { side: 'right', phase: 'ban', slot: 'right-ban-slot-4', turn: 4 },
-                { side: 'left', phase: 'ban', slot: 'left-ban-slot-5', turn: 5 },
-                { side: 'right', phase: 'ban', slot: 'right-ban-slot-5', turn: 5 },
+                // BAN PHASE 1 — first three bans per team, alternating.
+                { side: 'left', phase: 'ban', turn: 1, label: 'BLUE TEAM · BAN 1', slots: ['left-ban-slot-1'] },
+                { side: 'right', phase: 'ban', turn: 1, label: 'RED TEAM · BAN 1', slots: ['right-ban-slot-1'] },
+                { side: 'left', phase: 'ban', turn: 2, label: 'BLUE TEAM · BAN 2', slots: ['left-ban-slot-2'] },
+                { side: 'right', phase: 'ban', turn: 2, label: 'RED TEAM · BAN 2', slots: ['right-ban-slot-2'] },
+                { side: 'left', phase: 'ban', turn: 3, label: 'BLUE TEAM · BAN 3', slots: ['left-ban-slot-3'] },
+                { side: 'right', phase: 'ban', turn: 3, label: 'RED TEAM · BAN 3', slots: ['right-ban-slot-3'] },
 
-                // Pick order: Blue 1, Red 1-2, Blue 2-3, Red 3, Blue 4,
-                // Red 4-5, Blue 5. Slots are sequenced one at a time.
+                // PICK PHASE 1 — Blue 1, Red 2, Blue 2, Red 1.
+                { side: 'left', phase: 'pick', turn: 1, label: 'BLUE TEAM · PICK 1', slots: ['left-pick-slot-1'] },
+                { side: 'right', phase: 'pick', turn: '1 + 2', label: 'RED TEAM · PICK 1 + 2', slots: ['right-pick-slot-1', 'right-pick-slot-2'] },
+                { side: 'left', phase: 'pick', turn: '2 + 3', label: 'BLUE TEAM · PICK 2 + 3', slots: ['left-pick-slot-2', 'left-pick-slot-3'] },
+                { side: 'right', phase: 'pick', turn: 3, label: 'RED TEAM · PICK 3', slots: ['right-pick-slot-3'] },
 
-                { side: 'left', phase: 'pick', slot: 'left-pick-slot-4', turn: 4 },
-                { side: 'right', phase: 'pick', slot: 'right-pick-slot-4', turn: 4 },
-                { side: 'right', phase: 'pick', slot: 'right-pick-slot-5', turn: 5 },
-                { side: 'left', phase: 'pick', slot: 'left-pick-slot-5', turn: 5 },
+                // BAN PHASE 2 — fourth and fifth bans per team, alternating.
+                { side: 'left', phase: 'ban', turn: 4, label: 'BLUE TEAM · BAN 4', slots: ['left-ban-slot-4'] },
+                { side: 'right', phase: 'ban', turn: 4, label: 'RED TEAM · BAN 4', slots: ['right-ban-slot-4'] },
+                { side: 'left', phase: 'ban', turn: 5, label: 'BLUE TEAM · BAN 5', slots: ['left-ban-slot-5'] },
+                { side: 'right', phase: 'ban', turn: 5, label: 'RED TEAM · BAN 5', slots: ['right-ban-slot-5'] },
 
-                // Last Change is a final 30-second step after all picks.
-                { side: 'both', phase: 'last-change', slot: null, turn: null }
+                // PICK PHASE 2 — Blue 1, Red 2, Blue 1.
+                { side: 'left', phase: 'pick', turn: 4, label: 'BLUE TEAM · PICK 4', slots: ['left-pick-slot-4'] },
+                { side: 'right', phase: 'pick', turn: '4 + 5', label: 'RED TEAM · PICK 4 + 5', slots: ['right-pick-slot-4', 'right-pick-slot-5'] },
+                { side: 'left', phase: 'pick', turn: 5, label: 'BLUE TEAM · PICK 5', slots: ['left-pick-slot-5'] },
+
+                { side: 'both', phase: 'last-change', turn: null, label: 'LAST CHANGE', slots: [] }
             ];
 
             let timerSeconds = PHASE_DURATIONS.pick;
@@ -1251,15 +1250,12 @@
                     return;
                 }
 
-                if (step.phase === 'last-change') {
-                    turnLabel.textContent = `LAST CHANGE · ${currentStepIndex + 1}/${DRAFT_SEQUENCE.length}`;
-                    return;
-                }
-
-                const sideLabel = TEAM_LABELS[step.side] || String(step.side).toUpperCase();
-                const phaseLabel = step.phase === 'ban' ? 'BAN' : 'PICK';
-                turnLabel.textContent =
-                    `${sideLabel} · ${phaseLabel} ${step.turn} · ${currentStepIndex + 1}/${DRAFT_SEQUENCE.length}`;
+                const label = step.label || (
+                    step.phase === 'last-change'
+                        ? 'LAST CHANGE'
+                        : `${TEAM_LABELS[step.side] || String(step.side).toUpperCase()} · ${step.phase.toUpperCase()} ${step.turn}`
+                );
+                turnLabel.textContent = `${label} · ${currentStepIndex + 1}/${DRAFT_SEQUENCE.length}`;
             }
 
             function applyTimerMode(mode, options = {}) {
