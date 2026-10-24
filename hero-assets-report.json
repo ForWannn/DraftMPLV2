@@ -1,0 +1,689 @@
+{
+  "generatedAt": "2026-10-24T13:14:51.432Z",
+  "source": "Moonton GMS API endpoint (undocumented; may change)",
+  "masterHeroCount": 134,
+  "apiHeroCount": 133,
+  "downloaded": [],
+  "alreadyPresent": [
+    {
+      "id": "aamon",
+      "name": "Aamon",
+      "file": "assets/HEROES/aamon.png"
+    },
+    {
+      "id": "akai",
+      "name": "Akai",
+      "file": "assets/HEROES/akai.png"
+    },
+    {
+      "id": "aldous",
+      "name": "Aldous",
+      "file": "assets/HEROES/aldous.png"
+    },
+    {
+      "id": "alice",
+      "name": "Alice",
+      "file": "assets/HEROES/alice.png"
+    },
+    {
+      "id": "alpha",
+      "name": "Alpha",
+      "file": "assets/HEROES/alpha.png"
+    },
+    {
+      "id": "alucard",
+      "name": "Alucard",
+      "file": "assets/HEROES/alucard.png"
+    },
+    {
+      "id": "angela",
+      "name": "Angela",
+      "file": "assets/HEROES/angela.png"
+    },
+    {
+      "id": "argus",
+      "name": "Argus",
+      "file": "assets/HEROES/argus.png"
+    },
+    {
+      "id": "arlott",
+      "name": "Arlott",
+      "file": "assets/HEROES/arlott.png"
+    },
+    {
+      "id": "atlas",
+      "name": "Atlas",
+      "file": "assets/HEROES/atlas.png"
+    },
+    {
+      "id": "aulus",
+      "name": "Aulus",
+      "file": "assets/HEROES/aulus.png"
+    },
+    {
+      "id": "aurora",
+      "name": "Aurora",
+      "file": "assets/HEROES/aurora.png"
+    },
+    {
+      "id": "badang",
+      "name": "Badang",
+      "file": "assets/HEROES/badang.png"
+    },
+    {
+      "id": "balmond",
+      "name": "Balmond",
+      "file": "assets/HEROES/balmond.png"
+    },
+    {
+      "id": "bane",
+      "name": "Bane",
+      "file": "assets/HEROES/bane.png"
+    },
+    {
+      "id": "barats",
+      "name": "Barats",
+      "file": "assets/HEROES/barats.png"
+    },
+    {
+      "id": "baxia",
+      "name": "Baxia",
+      "file": "assets/HEROES/baxia.png"
+    },
+    {
+      "id": "beatrix",
+      "name": "Beatrix",
+      "file": "assets/HEROES/beatrix.png"
+    },
+    {
+      "id": "belerick",
+      "name": "Belerick",
+      "file": "assets/HEROES/belerick.png"
+    },
+    {
+      "id": "benedetta",
+      "name": "Benedetta",
+      "file": "assets/HEROES/benedetta.png"
+    },
+    {
+      "id": "brody",
+      "name": "Brody",
+      "file": "assets/HEROES/brody.png"
+    },
+    {
+      "id": "bruno",
+      "name": "Bruno",
+      "file": "assets/HEROES/bruno.png"
+    },
+    {
+      "id": "carmilla",
+      "name": "Carmilla",
+      "file": "assets/HEROES/carmilla.png"
+    },
+    {
+      "id": "cecilion",
+      "name": "Cecilion",
+      "file": "assets/HEROES/cecilion.png"
+    },
+    {
+      "id": "change",
+      "name": "Chang'e",
+      "file": "assets/HEROES/change.png"
+    },
+    {
+      "id": "chip",
+      "name": "Chip",
+      "file": "assets/HEROES/chip.png"
+    },
+    {
+      "id": "chou",
+      "name": "Chou",
+      "file": "assets/HEROES/chou.png"
+    },
+    {
+      "id": "cici",
+      "name": "Cici",
+      "file": "assets/HEROES/cici.png"
+    },
+    {
+      "id": "claude",
+      "name": "Claude",
+      "file": "assets/HEROES/claude.png"
+    },
+    {
+      "id": "clint",
+      "name": "Clint",
+      "file": "assets/HEROES/clint.png"
+    },
+    {
+      "id": "cyclops",
+      "name": "Cyclops",
+      "file": "assets/HEROES/cyclops.png"
+    },
+    {
+      "id": "diggie",
+      "name": "Diggie",
+      "file": "assets/HEROES/diggie.png"
+    },
+    {
+      "id": "dyrroth",
+      "name": "Dyrroth",
+      "file": "assets/HEROES/dyrroth.png"
+    },
+    {
+      "id": "edith",
+      "name": "Edith",
+      "file": "assets/HEROES/edith.png"
+    },
+    {
+      "id": "esmeralda",
+      "name": "Esmeralda",
+      "file": "assets/HEROES/esmeralda.png"
+    },
+    {
+      "id": "estes",
+      "name": "Estes",
+      "file": "assets/HEROES/estes.png"
+    },
+    {
+      "id": "eudora",
+      "name": "Eudora",
+      "file": "assets/HEROES/eudora.png"
+    },
+    {
+      "id": "fanny",
+      "name": "Fanny",
+      "file": "assets/HEROES/fanny.png"
+    },
+    {
+      "id": "faramis",
+      "name": "Faramis",
+      "file": "assets/HEROES/faramis.png"
+    },
+    {
+      "id": "floryn",
+      "name": "Floryn",
+      "file": "assets/HEROES/floryn.png"
+    },
+    {
+      "id": "franco",
+      "name": "Franco",
+      "file": "assets/HEROES/franco.png"
+    },
+    {
+      "id": "fredrinn",
+      "name": "Fredrinn",
+      "file": "assets/HEROES/fredrinn.png"
+    },
+    {
+      "id": "freya",
+      "name": "Freya",
+      "file": "assets/HEROES/freya.png"
+    },
+    {
+      "id": "gatotkaca",
+      "name": "Gatotkaca",
+      "file": "assets/HEROES/gatotkaca.png"
+    },
+    {
+      "id": "gloo",
+      "name": "Gloo",
+      "file": "assets/HEROES/gloo.png"
+    },
+    {
+      "id": "gord",
+      "name": "Gord",
+      "file": "assets/HEROES/gord.png"
+    },
+    {
+      "id": "granger",
+      "name": "Granger",
+      "file": "assets/HEROES/granger.png"
+    },
+    {
+      "id": "grock",
+      "name": "Grock",
+      "file": "assets/HEROES/grock.png"
+    },
+    {
+      "id": "guinevere",
+      "name": "Guinevere",
+      "file": "assets/HEROES/guinevere.png"
+    },
+    {
+      "id": "gusion",
+      "name": "Gusion",
+      "file": "assets/HEROES/gusion.png"
+    },
+    {
+      "id": "hanabi",
+      "name": "Hanabi",
+      "file": "assets/HEROES/hanabi.png"
+    },
+    {
+      "id": "hanzo",
+      "name": "Hanzo",
+      "file": "assets/HEROES/hanzo.png"
+    },
+    {
+      "id": "harith",
+      "name": "Harith",
+      "file": "assets/HEROES/harith.png"
+    },
+    {
+      "id": "harley",
+      "name": "Harley",
+      "file": "assets/HEROES/harley.png"
+    },
+    {
+      "id": "hayabusa",
+      "name": "Hayabusa",
+      "file": "assets/HEROES/hayabusa.png"
+    },
+    {
+      "id": "helcurt",
+      "name": "Helcurt",
+      "file": "assets/HEROES/helcurt.png"
+    },
+    {
+      "id": "hilda",
+      "name": "Hilda",
+      "file": "assets/HEROES/hilda.png"
+    },
+    {
+      "id": "hirara",
+      "name": "Hirara",
+      "file": "assets/HEROES/hirara.png"
+    },
+    {
+      "id": "hylos",
+      "name": "Hylos",
+      "file": "assets/HEROES/hylos.png"
+    },
+    {
+      "id": "irithel",
+      "name": "Irithel",
+      "file": "assets/HEROES/irithel.png"
+    },
+    {
+      "id": "ixia",
+      "name": "Ixia",
+      "file": "assets/HEROES/ixia.png"
+    },
+    {
+      "id": "jawhead",
+      "name": "Jawhead",
+      "file": "assets/HEROES/jawhead.png"
+    },
+    {
+      "id": "johnson",
+      "name": "Johnson",
+      "file": "assets/HEROES/johnson.png"
+    },
+    {
+      "id": "joy",
+      "name": "Joy",
+      "file": "assets/HEROES/joy.png"
+    },
+    {
+      "id": "julian",
+      "name": "Julian",
+      "file": "assets/HEROES/julian.png"
+    },
+    {
+      "id": "kadita",
+      "name": "Kadita",
+      "file": "assets/HEROES/kadita.png"
+    },
+    {
+      "id": "kagura",
+      "name": "Kagura",
+      "file": "assets/HEROES/kagura.png"
+    },
+    {
+      "id": "kaja",
+      "name": "Kaja",
+      "file": "assets/HEROES/kaja.png"
+    },
+    {
+      "id": "kalea",
+      "name": "Kalea",
+      "file": "assets/HEROES/kalea.png"
+    },
+    {
+      "id": "karina",
+      "name": "Karina",
+      "file": "assets/HEROES/karina.png"
+    },
+    {
+      "id": "karrie",
+      "name": "Karrie",
+      "file": "assets/HEROES/karrie.png"
+    },
+    {
+      "id": "khaleed",
+      "name": "Khaleed",
+      "file": "assets/HEROES/khaleed.png"
+    },
+    {
+      "id": "khufra",
+      "name": "Khufra",
+      "file": "assets/HEROES/khufra.png"
+    },
+    {
+      "id": "kimmy",
+      "name": "Kimmy",
+      "file": "assets/HEROES/kimmy.png"
+    },
+    {
+      "id": "lancelot",
+      "name": "Lancelot",
+      "file": "assets/HEROES/lancelot.png"
+    },
+    {
+      "id": "lapu-lapu",
+      "name": "Lapu-Lapu",
+      "file": "assets/HEROES/lapu-lapu.png"
+    },
+    {
+      "id": "layla",
+      "name": "Layla",
+      "file": "assets/HEROES/layla.png"
+    },
+    {
+      "id": "leomord",
+      "name": "Leomord",
+      "file": "assets/HEROES/leomord.png"
+    },
+    {
+      "id": "lesley",
+      "name": "Lesley",
+      "file": "assets/HEROES/lesley.png"
+    },
+    {
+      "id": "ling",
+      "name": "Ling",
+      "file": "assets/HEROES/ling.png"
+    },
+    {
+      "id": "lolita",
+      "name": "Lolita",
+      "file": "assets/HEROES/lolita.png"
+    },
+    {
+      "id": "lukas",
+      "name": "Lukas",
+      "file": "assets/HEROES/lukas.png"
+    },
+    {
+      "id": "lunox",
+      "name": "Lunox",
+      "file": "assets/HEROES/lunox.png"
+    },
+    {
+      "id": "luo-yi",
+      "name": "Luo Yi",
+      "file": "assets/HEROES/luo-yi.png"
+    },
+    {
+      "id": "lylia",
+      "name": "Lylia",
+      "file": "assets/HEROES/lylia.png"
+    },
+    {
+      "id": "marcel",
+      "name": "Marcel",
+      "file": "assets/HEROES/marcel.png"
+    },
+    {
+      "id": "martis",
+      "name": "Martis",
+      "file": "assets/HEROES/martis.png"
+    },
+    {
+      "id": "masha",
+      "name": "Masha",
+      "file": "assets/HEROES/masha.png"
+    },
+    {
+      "id": "mathilda",
+      "name": "Mathilda",
+      "file": "assets/HEROES/mathilda.png"
+    },
+    {
+      "id": "melissa",
+      "name": "Melissa",
+      "file": "assets/HEROES/melissa.png"
+    },
+    {
+      "id": "minotaur",
+      "name": "Minotaur",
+      "file": "assets/HEROES/minotaur.png"
+    },
+    {
+      "id": "minsitthar",
+      "name": "Minsitthar",
+      "file": "assets/HEROES/minsitthar.png"
+    },
+    {
+      "id": "miya",
+      "name": "Miya",
+      "file": "assets/HEROES/miya.png"
+    },
+    {
+      "id": "moskov",
+      "name": "Moskov",
+      "file": "assets/HEROES/moskov.png"
+    },
+    {
+      "id": "nana",
+      "name": "Nana",
+      "file": "assets/HEROES/nana.png"
+    },
+    {
+      "id": "natalia",
+      "name": "Natalia",
+      "file": "assets/HEROES/natalia.png"
+    },
+    {
+      "id": "natan",
+      "name": "Natan",
+      "file": "assets/HEROES/natan.png"
+    },
+    {
+      "id": "nolan",
+      "name": "Nolan",
+      "file": "assets/HEROES/nolan.png"
+    },
+    {
+      "id": "novaria",
+      "name": "Novaria",
+      "file": "assets/HEROES/novaria.png"
+    },
+    {
+      "id": "obsidia",
+      "name": "Obsidia",
+      "file": "assets/HEROES/obsidia.png"
+    },
+    {
+      "id": "odette",
+      "name": "Odette",
+      "file": "assets/HEROES/odette.png"
+    },
+    {
+      "id": "paquito",
+      "name": "Paquito",
+      "file": "assets/HEROES/paquito.png"
+    },
+    {
+      "id": "pharsa",
+      "name": "Pharsa",
+      "file": "assets/HEROES/pharsa.png"
+    },
+    {
+      "id": "phoveus",
+      "name": "Phoveus",
+      "file": "assets/HEROES/phoveus.png"
+    },
+    {
+      "id": "popol-and-kupa",
+      "name": "Popol and Kupa",
+      "file": "assets/HEROES/popol-and-kupa.png"
+    },
+    {
+      "id": "rafaela",
+      "name": "Rafaela",
+      "file": "assets/HEROES/rafaela.png"
+    },
+    {
+      "id": "roger",
+      "name": "Roger",
+      "file": "assets/HEROES/roger.png"
+    },
+    {
+      "id": "ruby",
+      "name": "Ruby",
+      "file": "assets/HEROES/ruby.png"
+    },
+    {
+      "id": "saber",
+      "name": "Saber",
+      "file": "assets/HEROES/saber.png"
+    },
+    {
+      "id": "selena",
+      "name": "Selena",
+      "file": "assets/HEROES/selena.png"
+    },
+    {
+      "id": "silvanna",
+      "name": "Silvanna",
+      "file": "assets/HEROES/silvanna.png"
+    },
+    {
+      "id": "sora",
+      "name": "Sora",
+      "file": "assets/HEROES/sora.png"
+    },
+    {
+      "id": "sun",
+      "name": "Sun",
+      "file": "assets/HEROES/sun.png"
+    },
+    {
+      "id": "suyou",
+      "name": "Suyou",
+      "file": "assets/HEROES/suyou.png"
+    },
+    {
+      "id": "terizla",
+      "name": "Terizla",
+      "file": "assets/HEROES/terizla.png"
+    },
+    {
+      "id": "thamuz",
+      "name": "Thamuz",
+      "file": "assets/HEROES/thamuz.png"
+    },
+    {
+      "id": "tigreal",
+      "name": "Tigreal",
+      "file": "assets/HEROES/tigreal.png"
+    },
+    {
+      "id": "uranus",
+      "name": "Uranus",
+      "file": "assets/HEROES/uranus.png"
+    },
+    {
+      "id": "vale",
+      "name": "Vale",
+      "file": "assets/HEROES/vale.png"
+    },
+    {
+      "id": "valentina",
+      "name": "Valentina",
+      "file": "assets/HEROES/valentina.png"
+    },
+    {
+      "id": "valir",
+      "name": "Valir",
+      "file": "assets/HEROES/valir.png"
+    },
+    {
+      "id": "vexana",
+      "name": "Vexana",
+      "file": "assets/HEROES/vexana.png"
+    },
+    {
+      "id": "wanwan",
+      "name": "Wanwan",
+      "file": "assets/HEROES/wanwan.png"
+    },
+    {
+      "id": "xborg",
+      "name": "X.Borg",
+      "file": "assets/HEROES/xborg.png"
+    },
+    {
+      "id": "xavier",
+      "name": "Xavier",
+      "file": "assets/HEROES/xavier.png"
+    },
+    {
+      "id": "yi-sun-shin",
+      "name": "Yi Sun-shin",
+      "file": "assets/HEROES/yi-sun-shin.png"
+    },
+    {
+      "id": "yin",
+      "name": "Yin",
+      "file": "assets/HEROES/yin.png"
+    },
+    {
+      "id": "yu-zhong",
+      "name": "Yu Zhong",
+      "file": "assets/HEROES/yu-zhong.png"
+    },
+    {
+      "id": "yve",
+      "name": "Yve",
+      "file": "assets/HEROES/yve.png"
+    },
+    {
+      "id": "zetian",
+      "name": "Zetian",
+      "file": "assets/HEROES/zetian.png"
+    },
+    {
+      "id": "zhask",
+      "name": "Zhask",
+      "file": "assets/HEROES/zhask.png"
+    },
+    {
+      "id": "zhuxin",
+      "name": "Zhuxin",
+      "file": "assets/HEROES/zhuxin.png"
+    },
+    {
+      "id": "zilong",
+      "name": "Zilong",
+      "file": "assets/HEROES/zilong.png"
+    }
+  ],
+  "failed": [],
+  "unmatchedHeroes": [
+    {
+      "id": "dori",
+      "name": "Dori"
+    }
+  ],
+  "missingAfterRun": [
+    {
+      "id": "dori",
+      "name": "Dori",
+      "file": "assets/HEROES/dori.png",
+      "status": "unmatched"
+    }
+  ]
+}

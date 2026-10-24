@@ -1073,7 +1073,6 @@
             bindLogoUpload('upload-logo-left', 'logo-img-left');
             bindLogoUpload('upload-logo-right', 'logo-img-right');
 
-            // Match Detail - Best Of selection
             document.querySelectorAll('.bo-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.bo-btn').forEach(b => b.classList.remove('active'));
@@ -1081,7 +1080,6 @@
                 });
             });
 
-            // Match Detail - Phase selection
             document.querySelectorAll('.phase-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('active'));
@@ -1089,7 +1087,6 @@
                 });
             });
 
-            // Match Detail - Timer Controls
             let timerSeconds = 45;
             let timerInterval = null;
             const timerDisplay = document.getElementById('draft-timer-display');

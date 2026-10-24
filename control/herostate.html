@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hero Statistics · MLBB Broadcast Tools</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #151719;
+            --panel: #1e2124;
+            --panel2: #111315;
+            --line: #353a3f;
+            --text: #f3f5f7;
+            --muted: #98a2ab;
+            --cyan: #50d3f3;
+            --green: #54d6a0;
+            --red: #ff727b
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font: 14px/1.45 Inter, "Segoe UI", Arial, sans-serif
+        }
+
+        button,
+        input,
+        select {
+            font: inherit
+        }
+
+        button {
+            cursor: pointer
+        }
+
+        .app {
+            width: min(1500px, 100%);
+            margin: auto;
+            padding: 28px clamp(14px, 2.5vw, 36px) 34px
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding-bottom: 22px;
+            border-bottom: 1px solid var(--line)
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px
+        }
+
+        .brand-icon {
+            display: grid;
+            place-items: center;
+            width: 46px;
+            height: 46px;
+            border: 1px solid #3c7b8a;
+            border-radius: 12px;
+            background: #50d3f31c;
+            color: var(--cyan);
+            font-size: 23px;
+            font-weight: 900
+        }
+
+        .eyebrow {
+            margin: 0 0 3px;
+            color: var(--cyan);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.8px;
+            text-transform: uppercase
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(22px, 2.5vw, 32px);
+            font-weight: 850;
+            letter-spacing: -.8px;
+            text-transform: uppercase
+        }
+
+        .db-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 11px
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            flex: none;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 0 4px #54d6a018
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 22px 0 20px
+        }
+
+        .search-wrap {
+            position: relative;
+            flex: 1 1 230px;
+            max-width: 420px
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #89939c;
+            font-size: 18px
+        }
+
+        .search,
+        .select {
+            width: 100%;
+            height: 42px;
+            border: 1px solid var(--line);
+            border-radius: 9px;
+            background: var(--panel2);
+            color: var(--text);
+            outline: none
+        }
+
+        .search {
+            padding: 0 12px 0 38px
+        }
+
+        .select {
+            min-width: 135px;
+            padding: 0 12px;
+            background: var(--panel)
+        }
+
+        .search:focus,
+        .select:focus,
+        .field:focus {
+            border-color: var(--cyan);
+            box-shadow: 0 0 0 3px #50d3f31b
+        }
+
+        .summary {
+            display: flex;
+            gap: 8px;
+            margin-left: auto
+        }
+
+        .chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 11px;
+            border: 1px solid var(--line);
+            border-radius: 9px;
+            background: var(--panel);
+            color: var(--muted);
+            font-size: 11px;
+            white-space: nowrap
+        }
+
+        .chip strong {
+            color: var(--text);
+            font-size: 13px
+        }
+
+        .section-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 20px 0 13px
+        }
+
+        .section-row h2 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 800
+        }
+
+        .section-row p {
+            margin: 3px 0 0;
+            color: var(--muted);
+            font-size: 11px
+        }
+
+        .section-label {
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.2px
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 15px
+        }
+
+        .hero-card {
+            min-width: 0;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 13px;
+            background: linear-gradient(150deg, #24282b, #1b1e21);
+            transition: border-color .18s, transform .18s
+        }
+
+        .hero-card:hover {
+            border-color: #4a7884;
+            transform: translateY(-2px)
+        }
+
+        .hero-art {
+            position: relative;
+            aspect-ratio: 1.08/1;
+            overflow: hidden;
+            background: linear-gradient(145deg, #28333d, #11161b)
+        }
+
+        .hero-art img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            object-position: center 20%;
+            transition: transform .25s
+        }
+
+        .hero-card:hover .hero-art img {
+            transform: scale(1.025)
+        }
+
+        .hero-art:after {
+            position: absolute;
+            inset: 45% 0 0;
+            content: "";
+            background: linear-gradient(transparent, #0a0c0edb);
+            pointer-events: none
+        }
+
+        .initials {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            color: #66727c;
+            font-size: 42px;
+            font-weight: 900;
+            opacity: 0;
+        }
+
+        .hero-nameplate {
+            position: absolute;
+            z-index: 1;
+            right: 10px;
+            bottom: 9px;
+            left: 10px;
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 6px
+        }
+
+        .hero-name {
+            overflow: hidden;
+            font-size: 15px;
+            font-weight: 850;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+            white-space: nowrap;
+            text-shadow: 0 2px 8px #000
+        }
+
+        .role {
+            flex: none;
+            padding: 4px 6px;
+            border: 1px solid #ffffff2c;
+            border-radius: 5px;
+            background: #111a;
+            color: #e1e7ec;
+            font-size: 8px;
+            font-weight: 800;
+            letter-spacing: .5px;
+            text-transform: uppercase
+        }
+
+        .card-body {
+            padding: 12px
+        }
+
+        .inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 9px
+        }
+
+        .field-group {
+            min-width: 0
+        }
+
+        .field-label {
+            display: block;
+            margin-bottom: 6px;
+            color: #aeb6be;
+            font-size: 9px;
+            font-weight: 850;
+            letter-spacing: 1.1px;
+            text-transform: uppercase
+        }
+
+        .field {
+            width: 100%;
+            height: 39px;
+            padding: 0 10px;
+            border: 1px solid #3b4146;
+            border-radius: 8px;
+            background: #111315;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 750;
+            font-variant-numeric: tabular-nums;
+            outline: none
+        }
+
+        .winrate {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #343b40;
+            border-radius: 9px;
+            background: #141719
+        }
+
+        .wr-label {
+            color: #9aa5ae;
+            font-size: 9px;
+            font-weight: 850;
+            letter-spacing: .8px;
+            text-transform: uppercase
+        }
+
+        .wr-value {
+            margin-top: 2px;
+            color: var(--cyan);
+            font-size: 24px;
+            font-weight: 850;
+            line-height: 1.1;
+            font-variant-numeric: tabular-nums
+        }
+
+        .wr-detail {
+            color: #9aa5ae;
+            font-size: 10px;
+            text-align: right
+        }
+
+        .track {
+            height: 3px;
+            margin-top: 9px;
+            overflow: hidden;
+            border-radius: 99px;
+            background: #30373c
+        }
+
+        .fill {
+            height: 100%;
+            width: 0;
+            border-radius: 99px;
+            background: var(--cyan);
+            transition: width .2s
+        }
+
+        .error {
+            display: none;
+            margin-top: 8px;
+            color: var(--red);
+            font-size: 10px
+        }
+
+        .hero-card.invalid {
+            border-color: #a8444d
+        }
+
+        .hero-card.invalid .error {
+            display: block
+        }
+
+        .empty {
+            grid-column: 1/-1;
+            padding: 45px 20px;
+            border: 1px dashed #42484d;
+            border-radius: 13px;
+            color: var(--muted);
+            text-align: center
+        }
+
+        .footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-top: 22px;
+            padding-top: 16px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-size: 11px
+        }
+
+        .save-status {
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            min-height: 38px;
+            padding: 8px 12px;
+            border: 1px solid var(--line);
+            border-radius: 9px;
+            background: #25292d;
+            color: var(--text);
+            font-size: 11px;
+            font-weight: 750
+        }
+
+        .btn:hover {
+            border-color: #59636b;
+            background: #2b3034
+        }
+
+        .hidden {
+            display: none !important
+        }
+
+        .toast {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 4;
+            padding: 12px 15px;
+            border: 1px solid #3e6973;
+            border-radius: 10px;
+            background: #17272c;
+            color: #dffaff;
+            box-shadow: 0 10px 35px #0006;
+            font-size: 12px;
+            opacity: 0;
+            transform: translateY(8px);
+            pointer-events: none;
+            transition: .2s
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0)
+        }
+
+        @media(max-width:1250px) {
+            .hero-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr))
+            }
+        }
+
+        @media(max-width:950px) {
+            .hero-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr))
+            }
+
+            .summary {
+                margin-left: 0
+            }
+        }
+
+        @media(max-width:650px) {
+            .app {
+                padding: 18px 12px 25px
+            }
+
+            .header {
+                align-items: flex-start
+            }
+
+            .db-status {
+                font-size: 0
+            }
+
+            .db-status .dot {
+                font-size: initial
+            }
+
+            .search-wrap {
+                flex-basis: 100%;
+                max-width: none
+            }
+
+            .summary {
+                width: 100%
+            }
+
+            .chip {
+                flex: 1
+            }
+
+            .hero-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px
+            }
+
+            .card-body {
+                padding: 9px
+            }
+
+            .hero-name {
+                font-size: 13px
+            }
+
+            .field {
+                height: 36px;
+                padding: 0 7px
+            }
+
+            .wr-value {
+                font-size: 21px
+            }
+
+            .footer {
+                align-items: flex-start;
+                flex-direction: column
+            }
+        }
+
+        @media(max-width:380px) {
+            .hero-grid {
+                grid-template-columns: 1fr
+            }
+
+            .hero-art {
+                aspect-ratio: 1.6/1
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="app">
+        <header class="header">
+            <div class="brand">
+                <div class="brand-icon">↗</div>
+                <div>
+                    <p class="eyebrow">MLBB Broadcast Tools</p>
+                    <h1>Hero Statistics</h1>
+                </div>
+            </div>
+            <div class="db-status"><span class="dot"></span><span id="db-status">Loading hero database…</span></div>
+        </header>
+        <section class="toolbar">
+            <div class="search-wrap"><span class="search-icon">⌕</span><input id="search" class="search" type="search"
+                    placeholder="Search hero name…" autocomplete="off"></div><select id="role-filter" class="select"
+                aria-label="Filter by role">
+                <option value="all">All roles</option>
+            </select><select id="sort-filter" class="select" aria-label="Sort heroes">
+                <option value="name">Sort: Name</option>
+                <option value="pick">Sort: Most picked</option>
+                <option value="winrate">Sort: Highest win rate</option>
+            </select>
+            <div class="summary">
+                <div class="chip"><span>Heroes</span><strong id="total-heroes">0</strong></div>
+                <div class="chip"><span>Total picks</span><strong id="total-picks">0</strong></div>
+                <div class="chip"><span>Total wins</span><strong id="total-wins">0</strong></div>
+            </div>
+        </section>
+        <div class="section-row">
+            <div>
+                <h2>Hero database</h2>
+                <p>Enter Pick and Win counts. Win Rate is calculated automatically.</p>
+            </div><span class="section-label" id="shown-count">0 HEROES</span>
+        </div>
+        <section id="hero-grid" class="hero-grid" aria-live="polite"></section>
+        <footer class="footer">
+            <div class="save-status"><span class="dot"></span><span id="save-status">Changes save automatically in this
+                    browser.</span></div>
+            <div class="actions"><button class="btn" id="export-btn" type="button">↓ Export stats JSON</button><button
+                    class="btn" id="import-btn" type="button">↑ Import stats JSON</button><input id="import-file"
+                    type="file" accept="application/json,.json" class="hidden"><button class="btn" id="reset-btn"
+                    type="button">Reset statistics</button></div>
+        </footer>
+    </main>
+    <div class="toast" id="toast" role="status"></div>
+    <script src="/assets/heroes.js"></script>
+    <script>
+        (() => {
+            'use strict';
+            const STORAGE_KEY = 'mlbb-hero-statistics-v1', grid = document.getElementById('hero-grid'), search = document.getElementById('search'), roleFilter = document.getElementById('role-filter'), sortFilter = document.getElementById('sort-filter'), toast = document.getElementById('toast'); let toastTimer;
+            const fallback = [{ id: 'aamon', name: 'Aamon', imageFile: 'aamon.png', role: 'Assassin', heroState: { picks: 0, wins: 0 } }, { id: 'akai', name: 'Akai', imageFile: 'akai.png', role: 'Tank', heroState: { picks: 0, wins: 0 } }, { id: 'fanny', name: 'Fanny', imageFile: 'fanny.png', role: 'Assassin', heroState: { picks: 0, wins: 0 } }, { id: 'ling', name: 'Ling', imageFile: 'ling.png', role: 'Assassin', heroState: { picks: 0, wins: 0 } }];
+            function masterData() { try { if (Array.isArray(window.heroList)) return window.heroList; if (typeof heroList !== 'undefined' && Array.isArray(heroList)) return heroList } catch (e) { } return fallback }
+            function count(v) { if (typeof v === 'number' && Number.isFinite(v)) return Math.max(0, Math.floor(v)); const n = parseInt(String(v ?? '').replace(/[^\d-]/g, ''), 10); return Number.isFinite(n) ? Math.max(0, n) : 0 }
+            function idFor(h, i) { return String(h.id || h.name || `hero-${i + 1}`).trim().toLowerCase().replace(/[^a-z0-9]+/g, '-') }
+            function initial(h) { const s = h.heroState || {}, t = h.stats || {}; return { picks: count(s.picks ?? t.picks ?? 0), wins: count(s.wins ?? t.wins ?? 0) } }
+            function load() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') } catch (e) { return {} } }
+            const heroes = masterData().map((h, i) => ({ ...h, id: idFor(h, i), role: h.role || h.lane || (Array.isArray(h.roles) ? h.roles[0] : 'Hero') })), saved = load(), stats = {};
+            heroes.forEach(h => { const d = initial(h), s = saved[h.id] || {}; stats[h.id] = { picks: count(s.picks ?? d.picks), wins: count(s.wins ?? d.wins) } });
+            function rate(id) { const s = stats[id]; return !s || s.picks <= 0 || s.wins > s.picks ? null : s.wins / s.picks * 100 } function fmt(r) { return r === null ? '—' : r.toFixed(1).replace(/\.0$/, '') + '%' }
+            function asset(file) { if (!file) return ''; file = String(file); if (/^(https?:|data:|blob:|\/)/i.test(file)) return file; return '/assets/HEROES/' + file.split('/').map(encodeURIComponent).join('/') }
+            function esc(v) { return String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])) }
+            function card(h) { const s = stats[h.id], r = rate(h.id), img = asset(h.imageFile || h.image || ''), initials = String(h.name || '?').trim().slice(0, 2).toUpperCase(); return `<article class="hero-card" data-id="${esc(h.id)}"><div class="hero-art"><div class="initials">${esc(initials)}</div>${img ? `<img src="${esc(img)}" alt="${esc(h.name)}" loading="lazy">` : ''}<div class="hero-nameplate"><span class="hero-name" title="${esc(h.name)}">${esc(h.name)}</span><span class="role">${esc(h.role || 'Hero')}</span></div></div><div class="card-body"><div class="inputs"><label class="field-group"><span class="field-label">Pick</span><input class="field" type="number" min="0" step="1" inputmode="numeric" value="${s.picks}" data-field="picks" aria-label="${esc(h.name)} pick count"></label><label class="field-group"><span class="field-label">Win</span><input class="field" type="number" min="0" step="1" inputmode="numeric" value="${s.wins}" data-field="wins" aria-label="${esc(h.name)} win count"></label></div><div class="winrate"><div><div class="wr-label">Win Rate</div><div class="wr-value" data-rate>${fmt(r)}</div></div><div class="wr-detail" data-detail>${s.wins} wins<br>${s.picks} picks</div></div><div class="track"><div class="fill" data-fill style="width:${r === null ? 0 : r}%"></div></div><div class="error" data-error>Win count cannot exceed Pick count.</div></div></article>` }
+            function filtered() { const q = search.value.trim().toLowerCase(), role = roleFilter.value, sort = sortFilter.value; const arr = heroes.filter(h => h.name.toLowerCase().includes(q) && (role === 'all' || String(h.role).toLowerCase() === role.toLowerCase())); arr.sort((a, b) => sort === 'pick' ? (stats[b.id].picks - stats[a.id].picks || a.name.localeCompare(b.name)) : sort === 'winrate' ? ((rate(b.id) ?? -1) - (rate(a.id) ?? -1) || a.name.localeCompare(b.name)) : a.name.localeCompare(b.name)); return arr }
+            function summary() { const total = Object.values(stats).reduce((a, s) => (a.picks += s.picks, a.wins += s.wins, a), { picks: 0, wins: 0 }); document.getElementById('total-heroes').textContent = heroes.length.toLocaleString(); document.getElementById('total-picks').textContent = total.picks.toLocaleString(); document.getElementById('total-wins').textContent = total.wins.toLocaleString() }
+            function render() { const arr = filtered(); grid.innerHTML = arr.length ? arr.map(card).join('') : '<div class="empty">No heroes match your search.</div>'; document.getElementById('shown-count').textContent = `${arr.length} HERO${arr.length === 1 ? '' : 'ES'}`; grid.querySelectorAll('.hero-art img').forEach(img => img.addEventListener('error', () => img.remove(), { once: true })); summary() }
+            function save() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(stats)); document.getElementById('save-status').textContent = 'All changes saved in this browser.' } catch (e) { document.getElementById('save-status').textContent = 'Could not save locally. Check browser storage settings.' } }
+            function update(cardEl, field, value) { const id = cardEl.dataset.id; stats[id][field] = value === '' ? 0 : count(value); const s = stats[id], bad = s.wins > s.picks, r = rate(id); cardEl.classList.toggle('invalid', bad); cardEl.querySelector('[data-rate]').textContent = bad ? 'Check values' : fmt(r); cardEl.querySelector('[data-detail]').innerHTML = `${s.wins} wins<br>${s.picks} picks`; cardEl.querySelector('[data-fill]').style.width = bad || r === null ? '0%' : r + '%'; save(); summary() }
+            function toastMsg(msg) { toast.textContent = msg; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 2400) }
+            grid.addEventListener('input', e => { const input = e.target.closest('[data-field]'); if (input) update(input.closest('.hero-card'), input.dataset.field, input.value) });
+            [search, roleFilter, sortFilter].forEach(el => { el.addEventListener('input', render); el.addEventListener('change', render) });
+            [...new Set(heroes.map(h => String(h.role || 'Hero')).filter(Boolean))].sort().forEach(r => { const o = document.createElement('option'); o.value = r; o.textContent = r; roleFilter.appendChild(o) });
+            document.getElementById('export-btn').addEventListener('click', () => { const blob = new Blob([JSON.stringify({ schemaVersion: 1, exportedAt: new Date().toISOString(), stats }, null, 2)], { type: 'application/json' }), url = URL.createObjectURL(blob), a = document.createElement('a'); a.href = url; a.download = 'hero-stats.json'; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); toastMsg('Hero statistics exported.') });
+            document.getElementById('import-btn').addEventListener('click', () => document.getElementById('import-file').click()); document.getElementById('import-file').addEventListener('change', async e => { const file = e.target.files?.[0]; if (!file) return; try { const data = JSON.parse(await file.text()), incoming = data.stats || data; let n = 0; heroes.forEach(h => { if (incoming[h.id]) { stats[h.id] = { picks: count(incoming[h.id].picks), wins: count(incoming[h.id].wins) }; n++ } }); save(); render(); toastMsg(`Imported statistics for ${n} heroes.`) } catch (err) { toastMsg('Invalid JSON. Nothing imported.') } finally { e.target.value = '' } });
+            document.getElementById('reset-btn').addEventListener('click', () => { if (!confirm('Reset Pick and Win counts for all heroes in this browser?')) return; heroes.forEach(h => stats[h.id] = { picks: 0, wins: 0 }); save(); render(); toastMsg('All hero statistics reset.') });
+            render(); const demo = heroes.length === fallback.length && heroes.every((h, i) => h.id === fallback[i].id); document.getElementById('db-status').textContent = demo ? 'Demo data · heroes.js not detected' : `Connected · ${heroes.length} heroes loaded`;
+        })();
+    </script>
+</body>
+
+</html>
