@@ -171,6 +171,74 @@
             width: 100%;
         }
 
+        .timer-turn-label {
+            width: 100%;
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 10px;
+            border: 1px solid #2e3037;
+            border-radius: 9px;
+            background: #17181c;
+            color: #50d3f3;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .6px;
+            text-align: center;
+        }
+
+        .timer-custom-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .timer-custom-row label {
+            flex: 1;
+            color: #aeb2bd;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .timer-custom-row input {
+            width: 92px;
+            height: 38px;
+            padding: 0 10px;
+            border: 1px solid #2e3037;
+            border-radius: 9px;
+            outline: none;
+            background: #202125;
+            color: #fff;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .timer-custom-row input:focus {
+            border-color: #50d3f3;
+        }
+
+        .timer-custom-row input::-webkit-outer-spin-button,
+        .timer-custom-row input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .timer-custom-row input {
+            -moz-appearance: textfield;
+        }
+
+        .phase-group .phase-btn {
+            min-width: 0;
+            padding: 0 6px;
+            font-size: 13px;
+        }
+
         .timer-display {
             width: 100%;
             height: 90px;
@@ -668,14 +736,22 @@
                         <div class="phase-group">
                             <button type="button" class="phase-btn" data-phase="ban">Ban</button>
                             <button type="button" class="phase-btn active" data-phase="pick">Pick</button>
+                            <button type="button" class="phase-btn" data-phase="last-change">Last Change</button>
                         </div>
                     </div>
                     <div class="timer-section">
-                        <span class="timer-label">Timer</span>
+                        <span class="timer-label">Draft Timer</span>
+                        <div class="timer-turn-label" id="draft-turn-label">BLUE TEAM · BAN 1</div>
                         <div class="timer-display" id="draft-timer-display">00:45</div>
+                        <div class="timer-custom-row">
+                            <label for="timer-custom-seconds">Custom (sec)</label>
+                            <input type="number" id="timer-custom-seconds" min="1" max="599" value="45"
+                                inputmode="numeric">
+                            <button type="button" class="timer-btn" id="btn-timer-apply">Set</button>
+                        </div>
                         <div class="timer-controls">
                             <button type="button" class="timer-btn active" id="btn-timer-start">Start</button>
-                            <button type="button" class="timer-btn" id="btn-timer-pause">Pause</button>
+                            <button type="button" class="timer-btn" id="btn-timer-next">Next</button>
                             <button type="button" class="timer-btn" id="btn-timer-reset">Reset</button>
                         </div>
                     </div>
@@ -1080,133 +1156,417 @@
                 });
             });
 
-            document.querySelectorAll('.phase-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                });
-            });
+            // Match timer + configurable turn-by-turn draft sequence.
+            // Left panel is treated as Blue Team and right panel as Red Team.
+            // Change TEAM_LABELS or DRAFT_SEQUENCE if your tournament order differs.
+            const TEAM_LABELS = {
+                left: 'BLUE TEAM',
+                right: 'RED TEAM'
+            };
 
-            let timerSeconds = 45;
-            let timerInterval = null;
-            const timerDisplay = document.getElementById('draft-timer-display');
-            const btnStart = document.getElementById('btn-timer-start');
-            const btnPause = document.getElementById('btn-timer-pause');
-            const btnReset = document.getElementById('btn-timer-reset');
+            const PHASE_DURATIONS = {
+                ban: 45,
+                pick: 45,
+                'last-change': 30
+            };
 
-            function updateTimerDisplay() {
-                const m = Math.floor(timerSeconds / 60);
-                const s = timerSeconds % 60;
-                timerDisplay.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-            }
+            // Each entry is one operator turn. For double-pick turns, each hero slot
+            // gets its own timer step. Reorder these entries to match your event rules.
+            const DRAFT_SEQUENCE = [
+                { side: 'left', phase: 'ban', slot: 'left-ban-slot-1', turn: 1 },
+                { side: 'right', phase: 'ban', slot: 'right-ban-slot-1', turn: 1 },
+                { side: 'left', phase: 'ban', slot: 'left-ban-slot-2', turn: 2 },
+                { side: 'right', phase: 'ban', slot: 'right-ban-slot-2', turn: 2 },
+                { side: 'left', phase: 'ban', slot: 'left-ban-slot-3', turn: 3 },
+                { side: 'right', phase: 'ban', slot: 'right-ban-slot-3', turn: 3 },
+                { side: 'left', phase: 'pick', slot: 'left-pick-slot-1', turn: 1 },
+                { side: 'right', phase: 'pick', slot: 'right-pick-slot-1', turn: 1 },
+                { side: 'right', phase: 'pick', slot: 'right-pick-slot-2', turn: 2 },
+                { side: 'left', phase: 'pick', slot: 'left-pick-slot-2', turn: 2 },
+                { side: 'left', phase: 'pick', slot: 'left-pick-slot-3', turn: 3 },
+                { side: 'right', phase: 'pick', slot: 'right-pick-slot-3', turn: 3 },
+                { side: 'left', phase: 'ban', slot: 'left-ban-slot-4', turn: 4 },
+                { side: 'right', phase: 'ban', slot: 'right-ban-slot-4', turn: 4 },
+                { side: 'left', phase: 'ban', slot: 'left-ban-slot-5', turn: 5 },
+                { side: 'right', phase: 'ban', slot: 'right-ban-slot-5', turn: 5 },
 
-            btnStart.addEventListener('click', () => {
-                if (timerInterval) return;
-                btnStart.classList.add('active');
-                btnPause.classList.remove('active');
-                timerInterval = setInterval(() => {
-                    if (timerSeconds > 0) {
-                        timerSeconds--;
-                        updateTimerDisplay();
-                    } else {
-                        clearInterval(timerInterval);
-                        timerInterval = null;
-                        btnStart.classList.remove('active');
-                    }
-                }, 1000);
-            });
+                // Pick order: Blue 1, Red 1-2, Blue 2-3, Red 3, Blue 4,
+                // Red 4-5, Blue 5. Slots are sequenced one at a time.
 
-            btnPause.addEventListener('click', () => {
-                clearInterval(timerInterval);
-                timerInterval = null;
-                btnStart.classList.remove('active');
-                btnPause.classList.add('active');
-            });
+                { side: 'left', phase: 'pick', slot: 'left-pick-slot-4', turn: 4 },
+                { side: 'right', phase: 'pick', slot: 'right-pick-slot-4', turn: 4 },
+                { side: 'right', phase: 'pick', slot: 'right-pick-slot-5', turn: 5 },
+                { side: 'left', phase: 'pick', slot: 'left-pick-slot-5', turn: 5 },
 
-            btnReset.addEventListener('click', () => {
-                clearInterval(timerInterval);
-                timerInterval = null;
-                timerSeconds = 45;
-                updateTimerDisplay();
-                btnStart.classList.add('active');
-                btnPause.classList.remove('active');
-            });
-
-            // Hero List & Slot Initialization
-            const HERO_LIST = [
-                'Ling', 'Akai', 'Alice', 'Alpha', 'Alucard', 'Angela', 'Argus', 'Arlott', 'Atlas',
-                'Aulus', 'Badang', 'Balmond', 'Bane', 'Barats', 'Baxia', 'Beatrix', 'Belerick',
-                'Benedetta', 'Brody', 'Bruno', 'Carmilla', 'Cecilion', 'Change', 'Chou', 'Cici',
-                'Claude', 'Clint', 'Cyclops', 'Diggie', 'Dyrroth', 'Edith', 'Esmeralda', 'Estes',
-                'Eudora', 'Fanny', 'Faramis', 'Floryn', 'Franco', 'Fredrinn', 'Freya', 'Gatotkaca',
-                'Gloo', 'Gord', 'Granger', 'Grock', 'Guinevere', 'Gusion', 'Hanabi', 'Hanzo',
-                'Harith', 'Harley', 'Hayabusa', 'Helcurt', 'Hilda', 'Hylos', 'Irithel', 'Ixia',
-                'Jawhead', 'Johnson', 'Joy', 'Julian', 'Kadita', 'Kagura', 'Kaja', 'Karina',
-                'Karrie', 'Khaleed', 'Khufra', 'Kimmy', 'Lancelot', 'Lapu-Lapu', 'Layla', 'Leomord',
-                'Lesley', 'Lolita', 'Lunox', 'Luo Yi', 'Lylia', 'Martis', 'Masha', 'Mathilda',
-                'Melissa', 'Minotaur', 'Minsitthar', 'Miya', 'Moskov', 'Nana', 'Natalia', 'Nathan',
-                'Nolan', 'Novaria', 'Odette', 'Paquito', 'Phoveus', 'Pharsa', 'Popol and Kupa',
-                'Rafaela', 'Roger', 'Ruby', 'Saber', 'Selena', 'Silvanna', 'Sun', 'Terizla',
-                'Thamuz', 'Tigreal', 'Uranus', 'Vale', 'Valentina', 'Valir', 'Vexana', 'Wanwan',
-                'Xavier', 'Yin', 'Yu Zhong', 'Yve', 'Zhask', 'Zhuxin'
+                // Last Change is a final 30-second step after all picks.
+                { side: 'both', phase: 'last-change', slot: null, turn: null }
             ];
 
-            document.querySelectorAll('.hero-slot').forEach(slot => {
-                const select = slot.querySelector('.hero-slot-select');
-                const nameLabel = slot.querySelector('.hero-selected-name');
-                const img = slot.querySelector('.hero-slot-img');
-                const clearBtn = slot.querySelector('.hero-slot-clear');
-                const defaultHero = select ? select.getAttribute('data-default') : null;
+            let timerSeconds = PHASE_DURATIONS.pick;
+            let timerInterval = null;
+            let currentStepIndex = 0;
+            let currentTimerMode = 'pick';
+            let currentDurationSeconds = PHASE_DURATIONS.pick;
+            let customDurationForCurrentStep = null;
 
-                if (!select) return;
+            const timerDisplay = document.getElementById('draft-timer-display');
+            const turnLabel = document.getElementById('draft-turn-label');
+            const customSecondsInput = document.getElementById('timer-custom-seconds');
+            const btnStart = document.getElementById('btn-timer-start');
+            const btnNext = document.getElementById('btn-timer-next');
+            const btnReset = document.getElementById('btn-timer-reset');
+            const btnApplyCustom = document.getElementById('btn-timer-apply');
+            const phaseButtons = Array.from(document.querySelectorAll('.phase-btn'));
 
-                // Populate options
-                let optionsHTML = '<option value="">Select</option>';
-                HERO_LIST.forEach(hero => {
-                    const isSelected = (defaultHero && defaultHero.toLowerCase() === hero.toLowerCase()) ? ' selected' : '';
-                    optionsHTML += `<option value="${hero}"${isSelected}>${hero}</option>`;
+            function isTimerRunning() {
+                return timerInterval !== null;
+            }
+
+            function stopTimer() {
+                if (timerInterval !== null) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                }
+                btnStart.classList.remove('active');
+            }
+
+            function updateTimerDisplay() {
+                const safeSeconds = Math.max(0, Math.floor(timerSeconds));
+                const minutes = Math.floor(safeSeconds / 60);
+                const seconds = safeSeconds % 60;
+                timerDisplay.textContent =
+                    `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }
+
+            function updatePhaseButtons(phase) {
+                phaseButtons.forEach(button => {
+                    button.classList.toggle('active', button.dataset.phase === phase);
                 });
-                select.innerHTML = optionsHTML;
+            }
 
-                if (defaultHero) {
-                    nameLabel.textContent = defaultHero;
-                    slot.classList.add('has-hero');
-                    if (img && defaultHero.toLowerCase() === 'ling') {
-                        img.src = '../ASSETS/HEROES/Ling.png';
-                        img.style.display = 'block';
-                    }
+            function updateTurnLabel() {
+                const step = DRAFT_SEQUENCE[currentStepIndex];
+                if (!step) {
+                    turnLabel.textContent = 'DRAFT COMPLETE';
+                    return;
                 }
 
-                select.addEventListener('change', () => {
-                    const val = select.value;
-                    if (val) {
-                        nameLabel.textContent = val;
-                        slot.classList.add('has-hero');
-                        if (img) {
-                            if (val.toLowerCase() === 'ling') {
-                                img.src = '../ASSETS/HEROES/Ling.png';
-                                img.style.display = 'block';
-                            } else {
-                                img.style.display = 'none';
-                            }
-                        }
-                    } else {
-                        nameLabel.textContent = 'Select';
-                        slot.classList.remove('has-hero');
-                        if (img) img.style.display = 'none';
-                    }
-                });
-
-                if (clearBtn) {
-                    clearBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        select.value = '';
-                        nameLabel.textContent = 'Select';
-                        slot.classList.remove('has-hero');
-                        if (img) img.style.display = 'none';
-                    });
+                if (step.phase === 'last-change') {
+                    turnLabel.textContent = `LAST CHANGE · ${currentStepIndex + 1}/${DRAFT_SEQUENCE.length}`;
+                    return;
                 }
+
+                const sideLabel = TEAM_LABELS[step.side] || String(step.side).toUpperCase();
+                const phaseLabel = step.phase === 'ban' ? 'BAN' : 'PICK';
+                turnLabel.textContent =
+                    `${sideLabel} · ${phaseLabel} ${step.turn} · ${currentStepIndex + 1}/${DRAFT_SEQUENCE.length}`;
+            }
+
+            function applyTimerMode(mode, options = {}) {
+                const autoStart = Boolean(options.autoStart);
+                const resetCustomOverride = options.resetCustomOverride !== false;
+
+                if (!Object.prototype.hasOwnProperty.call(PHASE_DURATIONS, mode)) return;
+
+                stopTimer();
+                currentTimerMode = mode;
+                if (resetCustomOverride) customDurationForCurrentStep = null;
+                currentDurationSeconds = customDurationForCurrentStep ?? PHASE_DURATIONS[mode];
+                timerSeconds = currentDurationSeconds;
+
+                updatePhaseButtons(mode);
+                btnReset.classList.remove('active');
+                btnNext.classList.remove('active');
+                customSecondsInput.value = String(currentDurationSeconds);
+                updateTimerDisplay();
+
+                if (autoStart) startTimer();
+            }
+
+            function applyCurrentSequenceStep(options = {}) {
+                const step = DRAFT_SEQUENCE[currentStepIndex];
+                if (!step) return;
+
+                const autoStart = options.autoStart !== false;
+                customDurationForCurrentStep = null;
+                currentTimerMode = step.phase;
+                currentDurationSeconds = PHASE_DURATIONS[step.phase] || PHASE_DURATIONS.pick;
+                timerSeconds = currentDurationSeconds;
+
+                updatePhaseButtons(step.phase);
+                btnReset.classList.remove('active');
+                btnNext.classList.remove('active');
+                customSecondsInput.value = String(currentDurationSeconds);
+                updateTurnLabel();
+                updateTimerDisplay();
+
+                if (autoStart) startTimer();
+            }
+
+            function startTimer() {
+                if (timerInterval !== null || timerSeconds <= 0) return;
+
+                btnReset.classList.remove('active');
+                btnNext.classList.remove('active');
+                btnStart.classList.add('active');
+                timerInterval = setInterval(() => {
+                    if (timerSeconds > 0) {
+                        timerSeconds -= 1;
+                        updateTimerDisplay();
+                    }
+
+                    if (timerSeconds <= 0) {
+                        timerSeconds = 0;
+                        updateTimerDisplay();
+                        stopTimer();
+                    }
+                }, 1000);
+            }
+
+            function nextDraftStep() {
+                stopTimer();
+
+                if (currentStepIndex >= DRAFT_SEQUENCE.length - 1) {
+                    // After Last Change, Next starts a fresh draft sequence at Blue Ban 1.
+                    currentStepIndex = 0;
+                } else {
+                    currentStepIndex += 1;
+                }
+
+                applyCurrentSequenceStep({ autoStart: true });
+            }
+
+            btnStart.addEventListener('click', startTimer);
+            btnNext.addEventListener('click', nextDraftStep);
+
+            btnReset.addEventListener('click', () => {
+                stopTimer();
+                timerSeconds = currentDurationSeconds;
+                updateTimerDisplay();
+                btnReset.classList.remove('active');
+                btnNext.classList.remove('active');
             });
+
+            btnApplyCustom.addEventListener('click', () => {
+                const seconds = Number.parseInt(customSecondsInput.value, 10);
+                if (!Number.isFinite(seconds) || seconds < 1 || seconds > 599) {
+                    customSecondsInput.setCustomValidity('Enter a number from 1 to 599 seconds.');
+                    customSecondsInput.reportValidity();
+                    return;
+                }
+
+                customSecondsInput.setCustomValidity('');
+                stopTimer();
+                customDurationForCurrentStep = seconds;
+                currentDurationSeconds = seconds;
+                timerSeconds = seconds;
+                customSecondsInput.value = String(seconds);
+                updateTimerDisplay();
+                btnReset.classList.remove('active');
+                btnNext.classList.remove('active');
+            });
+
+            customSecondsInput.addEventListener('input', () => {
+                customSecondsInput.setCustomValidity('');
+            });
+
+            phaseButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const mode = button.dataset.phase;
+                    // Phase buttons are manual timer presets. Next returns to the configured sequence.
+                    applyTimerMode(mode, { autoStart: false });
+                });
+            });
+
+            // Keep the current turn and timer aligned when the page first opens.
+            applyCurrentSequenceStep({ autoStart: false });
+
+            // Hero List & Slot Initialization — use hero-manifest-assets.json as the source of truth.
+            const HERO_MANIFEST_URLS = [
+                '../ASSETS/hero-manifest-assets.json',
+                '../ASSETS/HEROES/hero-manifest-assets.json',
+                '../hero-assets-manifest.json',
+                '../ASSETS/hero-assets-manifest.json',
+                '../ASSETS/HEROES/hero-assets-manifest.json'
+            ];
+
+            function normalizeHeroKey(value) {
+                return String(value || '').normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .toLowerCase().replace(/[^a-z0-9]/g, '');
+            }
+
+            function getManifestEntries(payload) {
+                if (Array.isArray(payload)) return payload;
+                if (!payload || typeof payload !== 'object') {
+                    throw new Error('Manifest JSON must contain a hero list.');
+                }
+
+                for (const key of ['heroes', 'heroList', 'assets', 'manifest', 'data']) {
+                    const value = payload[key];
+                    if (Array.isArray(value)) return value;
+                    if (value && typeof value === 'object') {
+                        const entries = Object.values(value);
+                        if (entries.length && entries.every(item => item && typeof item === 'object')) {
+                            return entries;
+                        }
+                    }
+                }
+
+                const entries = Object.values(payload).filter(item => item && typeof item === 'object');
+                if (entries.length) return entries;
+                throw new Error('No hero entries found in the manifest.');
+            }
+
+            function getHeroName(hero) {
+                return String(hero.name || hero.heroName || hero.title || hero.id || hero.heroId || '').trim();
+            }
+
+            function getHeroImageSrc(hero) {
+                const localValue = hero.imageFile || hero.imagePath || hero.localImage ||
+                    hero.localPath || hero.fileName || hero.filename || hero.file || hero.path || '';
+
+                if (typeof localValue === 'string' && localValue.trim()) {
+                    const value = localValue.trim().replace(/\\/g, '/');
+                    if (/^(https?:\/\/|data:|blob:)/i.test(value)) return value;
+
+                    if (/^(\/|\.\.?\/)/.test(value) &&
+                        !/\/?assets\/HEROES\//i.test(value) &&
+                        !/\/?ASSETS\/HEROES\//i.test(value)) {
+                        return value;
+                    }
+
+                    const filename = value.split('/').pop();
+                    return '../ASSETS/HEROES/' + encodeURIComponent(filename);
+                }
+
+                if (typeof hero.imageUrl === 'string' && hero.imageUrl.trim()) {
+                    return hero.imageUrl.trim();
+                }
+                return '';
+            }
+
+            async function loadHeroManifest() {
+                let lastError;
+                for (const url of HERO_MANIFEST_URLS) {
+                    try {
+                        const response = await fetch(url, { cache: 'no-store' });
+                        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+                        const payload = await response.json();
+                        const heroes = getManifestEntries(payload)
+                            .map(item => ({ ...item, name: getHeroName(item) }))
+                            .filter(item => item.name);
+
+                        if (!heroes.length) throw new Error('Manifest contains no valid hero entries.');
+                        console.info(`[Draft] Loaded ${heroes.length} heroes from ${url}`);
+                        return heroes;
+                    } catch (error) {
+                        lastError = error;
+                    }
+                }
+                throw new Error(
+                    'Cannot load hero-manifest-assets.json. Check its path and serve this page through Node.js. ' +
+                    (lastError ? `Last error: ${lastError.message}` : '')
+                );
+            }
+
+            function resetHeroSlot(slot, select, nameLabel, img) {
+                select.value = '';
+                nameLabel.textContent = 'Select';
+                slot.classList.remove('has-hero');
+                if (img) {
+                    img.removeAttribute('src');
+                    img.alt = '';
+                    img.style.display = 'none';
+                }
+            }
+
+            function setHeroSlot(slot, select, nameLabel, img, hero) {
+                if (!hero) {
+                    resetHeroSlot(slot, select, nameLabel, img);
+                    return;
+                }
+
+                nameLabel.textContent = hero.name;
+                slot.classList.add('has-hero');
+
+                if (img) {
+                    const imageSrc = getHeroImageSrc(hero);
+                    if (!imageSrc) {
+                        img.removeAttribute('src');
+                        img.alt = '';
+                        img.style.display = 'none';
+                        return;
+                    }
+                    img.onerror = () => {
+                        img.style.display = 'none';
+                        console.warn(`[Draft] Missing image for ${hero.name}: ${imageSrc}`);
+                    };
+                    img.onload = () => { img.style.display = 'block'; };
+                    img.src = imageSrc;
+                    img.alt = hero.name;
+                    img.style.display = 'block';
+                }
+            }
+
+            async function initializeHeroSlots() {
+                const slots = Array.from(document.querySelectorAll('.hero-slot')).map(slot => ({
+                    slot,
+                    select: slot.querySelector('.hero-slot-select'),
+                    nameLabel: slot.querySelector('.hero-selected-name'),
+                    img: slot.querySelector('.hero-slot-img'),
+                    clearBtn: slot.querySelector('.hero-slot-clear'),
+                    defaultHero: slot.querySelector('.hero-slot-select')?.getAttribute('data-default') || ''
+                })).filter(item => item.select && item.nameLabel);
+
+                let heroList;
+                try {
+                    heroList = await loadHeroManifest();
+                } catch (error) {
+                    console.error('[Draft] Hero manifest load failed:', error);
+                    slots.forEach(({ slot, select, nameLabel, img }) => {
+                        select.replaceChildren(new Option('Manifest unavailable', ''));
+                        select.disabled = true;
+                        resetHeroSlot(slot, select, nameLabel, img);
+                        nameLabel.textContent = 'Manifest unavailable';
+                    });
+                    return;
+                }
+
+                heroList.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
+
+                slots.forEach(({ slot, select, nameLabel, img, clearBtn, defaultHero }) => {
+                    select.replaceChildren(new Option('Select', ''));
+                    heroList.forEach(hero => select.add(new Option(hero.name, hero.name)));
+                    select.disabled = false;
+
+                    const selectedHero = defaultHero
+                        ? heroList.find(hero => normalizeHeroKey(hero.name) === normalizeHeroKey(defaultHero))
+                        : null;
+
+                    if (selectedHero) {
+                        select.value = selectedHero.name;
+                        setHeroSlot(slot, select, nameLabel, img, selectedHero);
+                    } else {
+                        resetHeroSlot(slot, select, nameLabel, img);
+                    }
+
+                    select.addEventListener('change', () => {
+                        const selected = heroList.find(hero => hero.name === select.value);
+                        setHeroSlot(slot, select, nameLabel, img, selected || null);
+                    });
+
+                    if (clearBtn) {
+                        clearBtn.addEventListener('click', event => {
+                            event.stopPropagation();
+                            resetHeroSlot(slot, select, nameLabel, img);
+                        });
+                    }
+                });
+            }
+
+            initializeHeroSlots();
+
         </script>
 </body>
 
