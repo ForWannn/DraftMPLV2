@@ -13,15 +13,35 @@
             font-family: 'Eixample Regular';
         }
 
+        body {
+            display: flex;
+            justify-content: center;
+            background: #00ac28;
+            align-items: end;
+            height: 100vh;
+            overflow: hidden;
+            padding-bottom: 25px;
+        }
+
         .draft-container {
-            width: 398px;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+            width: 1900px;
             height: 330px;
+            gap: 2px
         }
 
         .draft-container .top {
             height: 80px;
             width: 1900px;
             display: flex;
+            justify-content: space-between;
+        }
+
+        .draft-container .top .left,
+        .draft-container .top .right {
+            gap: 2px;
         }
 
         .draft-container .bottom {
@@ -41,6 +61,7 @@
         .draft-container .top .right,
         .draft-container .top .mid {
             height: 80px;
+            display: flex;
         }
 
         .draft-container .bottom .left,
@@ -49,12 +70,48 @@
         }
 
         .draft-container .top .coach-container {
+            padding: 10px;
+            width: 330px;
+            background: #EAFAFF;
             display: flex;
+            gap: 20px;
+        }
+
+        .draft-container .top .right {
+            flex-direction: row-reverse;
+        }
+
+        .draft-container .top .right .coach-container {
+            flex-direction: row-reverse;
         }
 
         .draft-container .top .coach-container img {
             height: 25px;
             width: 25px;
+        }
+
+        .draft-container .top .coach-container .coach-name {
+            font-size: 50px;
+            font-family: 'Eixample Extrabold';
+        }
+
+        .draft-container .top .ban-container {
+            width: 408px;
+            height: 80px;
+            gap: 2px;
+            display: flex;
+        }
+
+        .draft-container .top .ban-container .ban-hero {
+            width: 80px;
+            height: 80px;
+            background-color: aqua;
+        }
+
+        .draft-container .top .mid {
+            width: 398px;
+            height: 80px;
+            background-color: #EAFAFF;
         }
     </style>
 </head>
@@ -65,7 +122,7 @@
             <div class="left">
                 <div class="coach-container">
                     <img src="../assets/DRAFTPICK/coach-icon.webp" alt="">
-                    <div class="coach-name">coach name here</div>
+                    <div class="coach-name">EPRAN</div>
                 </div>
                 <div class="ban-container">
                     <div class="ban-hero" id="ban1"></div>
@@ -78,8 +135,15 @@
             <div class="mid"></div>
             <div class="right">
                 <div class="coach-container">
-                    <div class="coach-name">coach name here</div>
                     <img src="../assets/DRAFTPICK/coach-icon.webp" alt="">
+                    <div class="coach-name">YUDI</div>
+                </div>
+                <div class="ban-container">
+                    <div class="ban-hero" id="ban1"></div>
+                    <div class="ban-hero" id="ban2"></div>
+                    <div class="ban-hero" id="ban3"></div>
+                    <div class="ban-hero" id="ban4"></div>
+                    <div class="ban-hero" id="ban5"></div>
                 </div>
             </div>
         </div>
