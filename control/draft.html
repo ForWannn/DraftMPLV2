@@ -810,7 +810,7 @@
                     <h2>Hero Ban</h2>
                     <div class="inside-container-hero">
                         <div class="hero-slot has-hero" id="left-ban-slot-1">
-                            <img src="../ASSETS/HEROES/Ling.png" class="hero-slot-img" alt="Ling">
+                            <img src="" class="hero-slot-img" alt="">
                             <div class="hero-slot-overlay"></div>
                             <div class="hero-slot-top">
                                 <span class="hero-slot-num">1</span>
@@ -818,10 +818,10 @@
                             </div>
                             <div class="hero-slot-bottom">
                                 <div class="hero-selector-btn">
-                                    <span class="hero-selected-name">Ling</span>
+                                    <span class="hero-selected-name"></span>
                                     <span class="hero-select-arrow">v</span>
                                 </div>
-                                <select class="hero-slot-select" data-default="Ling"></select>
+                                <select class="hero-slot-select" data-default=""></select>
                             </div>
                         </div>
                         <div class="hero-slot" id="left-ban-slot-2">
@@ -950,7 +950,7 @@
                             </div>
                         </div>
                         <div class="hero-slot has-hero" id="right-ban-slot-1">
-                            <img src="../ASSETS/HEROES/Ling.png" class="hero-slot-img" alt="Ling">
+                            <img src="" class="hero-slot-img" alt="">
                             <div class="hero-slot-overlay"></div>
                             <div class="hero-slot-top">
                                 <span class="hero-slot-num">1</span>
@@ -958,10 +958,10 @@
                             </div>
                             <div class="hero-slot-bottom">
                                 <div class="hero-selector-btn">
-                                    <span class="hero-selected-name">Ling</span>
+                                    <span class="hero-selected-name"></span>
                                     <span class="hero-select-arrow">v</span>
                                 </div>
-                                <select class="hero-slot-select" data-default="Ling"></select>
+                                <select class="hero-slot-select" data-default=""></select>
                             </div>
                         </div>
                     </div>
@@ -974,7 +974,7 @@
                     <h2>Hero Pick</h2>
                     <div class="inside-container-hero">
                         <div class="hero-slot has-hero" id="left-pick-slot-1">
-                            <img src="../ASSETS/HEROES/Ling.png" class="hero-slot-img" alt="Ling">
+                            <img src="" class="hero-slot-img" alt="">
                             <div class="hero-slot-overlay"></div>
                             <div class="hero-slot-top">
                                 <span class="hero-slot-num">1</span>
@@ -982,10 +982,10 @@
                             </div>
                             <div class="hero-slot-bottom">
                                 <div class="hero-selector-btn">
-                                    <span class="hero-selected-name">Ling</span>
+                                    <span class="hero-selected-name"></span>
                                     <span class="hero-select-arrow">v</span>
                                 </div>
-                                <select class="hero-slot-select" data-default="Ling"></select>
+                                <select class="hero-slot-select" data-default=""></select>
                             </div>
                         </div>
                         <div class="hero-slot" id="left-pick-slot-2">
@@ -1114,7 +1114,7 @@
                             </div>
                         </div>
                         <div class="hero-slot has-hero" id="right-pick-slot-1">
-                            <img src="../ASSETS/HEROES/Ling.png" class="hero-slot-img" alt="Ling">
+                            <img src="" class="hero-slot-img" alt="">
                             <div class="hero-slot-overlay"></div>
                             <div class="hero-slot-top">
                                 <span class="hero-slot-num">1</span>
@@ -1122,10 +1122,10 @@
                             </div>
                             <div class="hero-slot-bottom">
                                 <div class="hero-selector-btn">
-                                    <span class="hero-selected-name">Ling</span>
+                                    <span class="hero-selected-name"></span>
                                     <span class="hero-select-arrow">v</span>
                                 </div>
-                                <select class="hero-slot-select" data-default="Ling"></select>
+                                <select class="hero-slot-select" data-default=""></select>
                             </div>
                         </div>
                     </div>
@@ -1140,10 +1140,15 @@
                 if (!input || !img) return;
                 input.addEventListener('change', function (e) {
                     const file = e.target.files && e.target.files[0];
-                    if (file) {
-                        img.src = URL.createObjectURL(file);
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        img.src = String(reader.result || '');
+                        img.dataset.syncData = String(reader.result || '');
                         img.style.display = 'block';
-                    }
+                        if (typeof publishDraftState === 'function') publishDraftState();
+                    };
+                    reader.readAsDataURL(file);
                 });
             }
             bindLogoUpload('upload-logo-left', 'logo-img-left');
@@ -1153,6 +1158,7 @@
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.bo-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
+                    if (typeof publishDraftState === 'function') publishDraftState();
                 });
             });
 
@@ -1277,6 +1283,7 @@
                 updateTimerDisplay();
 
                 if (autoStart) startTimer();
+                else publishDraftState();
             }
 
             function applyCurrentSequenceStep(options = {}) {
@@ -1305,6 +1312,7 @@
                 btnReset.classList.remove('active');
                 btnNext.classList.remove('active');
                 btnStart.classList.add('active');
+                publishDraftState();
                 timerInterval = setInterval(() => {
                     if (timerSeconds > 0) {
                         timerSeconds -= 1;
@@ -1316,20 +1324,30 @@
                         updateTimerDisplay();
                         stopTimer();
                     }
+                    publishDraftState();
                 }, 1000);
             }
 
             function nextDraftStep() {
                 stopTimer();
 
+                // Last Change appears only once. After that, keep the draft complete
+                // instead of cyc back and triggering another Last Change sequence.
+                if (draftComplete) return;
                 if (currentStepIndex >= DRAFT_SEQUENCE.length - 1) {
-                    // After Last Change, Next starts a fresh draft sequence at Blue Ban 1.
-                    currentStepIndex = 0;
-                } else {
-                    currentStepIndex += 1;
+                    draftComplete = true;
+                    timerSeconds = 0;
+                    updateTimerDisplay();
+                    turnLabel.textContent = 'DRAFT COMPLETE';
+                    btnStart.classList.remove('active');
+                    btnNext.classList.remove('active');
+                    publishDraftState();
+                    return;
                 }
 
+                currentStepIndex += 1;
                 applyCurrentSequenceStep({ autoStart: true });
+                publishDraftState();
             }
 
             btnStart.addEventListener('click', startTimer);
@@ -1341,6 +1359,8 @@
                 updateTimerDisplay();
                 btnReset.classList.remove('active');
                 btnNext.classList.remove('active');
+                draftComplete = false;
+                publishDraftState();
             });
 
             btnApplyCustom.addEventListener('click', () => {
@@ -1360,6 +1380,7 @@
                 updateTimerDisplay();
                 btnReset.classList.remove('active');
                 btnNext.classList.remove('active');
+                publishDraftState();
             });
 
             customSecondsInput.addEventListener('input', () => {
@@ -1369,7 +1390,8 @@
             phaseButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const mode = button.dataset.phase;
-                    // Phase buttons are manual timer presets. Next returns to the configured sequence.
+                    // Phase buttons are manual timer presets. Last Change is a single neutral phase.
+                    draftComplete = false;
                     applyTimerMode(mode, { autoStart: false });
                 });
             });
@@ -1550,16 +1572,145 @@
                     select.addEventListener('change', () => {
                         const selected = heroList.find(hero => hero.name === select.value);
                         setHeroSlot(slot, select, nameLabel, img, selected || null);
+                        if (typeof publishDraftState === 'function') publishDraftState();
                     });
 
                     if (clearBtn) {
                         clearBtn.addEventListener('click', event => {
                             event.stopPropagation();
                             resetHeroSlot(slot, select, nameLabel, img);
+                            if (typeof publishDraftState === 'function') publishDraftState();
                         });
                     }
                 });
+                if (typeof publishDraftState === 'function') publishDraftState();
             }
+
+
+            // Live link to the display page. Open both pages from the same Node.js origin.
+            const DRAFT_SYNC_CHANNEL_NAME = 'mlbb-draft-sync-v1';
+            const DRAFT_SYNC_STORAGE_KEY = 'mlbb-draft-sync-state-v1';
+            const draftSyncChannel = ('BroadcastChannel' in window)
+                ? new BroadcastChannel(DRAFT_SYNC_CHANNEL_NAME)
+                : null;
+            let draftComplete = false;
+
+            function readTeamState(side) {
+                const name = document.getElementById(`team-name-${side}`);
+                const coach = document.getElementById(`coach-${side}`);
+                const score = document.getElementById(`score-${side}`);
+                const logo = document.getElementById(`logo-img-${side}`);
+                const logoValue = logo && logo.dataset.syncData
+                    ? logo.dataset.syncData
+                    : (logo && logo.src && logo.style.display !== 'none' ? logo.src : '');
+                return {
+                    name: name ? name.value.trim() : '',
+                    coach: coach ? coach.value.trim() : '',
+                    score: score ? Math.max(0, Number(score.value) || 0) : 0,
+                    logo: logoValue
+                };
+            }
+
+            function readHeroesState(side, phase) {
+                return Array.from({ length: 5 }, (_, index) => {
+                    const slotNumber = index + 1;
+                    const slot = document.getElementById(`${side}-${phase}-slot-${slotNumber}`);
+                    if (!slot || !slot.classList.contains('has-hero')) return null;
+                    const nameNode = slot.querySelector('.hero-selected-name');
+                    const imageNode = slot.querySelector('.hero-slot-img');
+                    const name = nameNode ? nameNode.textContent.trim() : '';
+                    const image = imageNode && imageNode.getAttribute('src')
+                        ? imageNode.src
+                        : '';
+                    return name ? { name, image } : null;
+                });
+            }
+
+            function getSelectedBestOf() {
+                const active = document.querySelector('.bo-btn.active');
+                return active ? Number(active.dataset.bo) || 3 : 3;
+            }
+
+            function getSyncSideAndLabel() {
+                const step = DRAFT_SEQUENCE[currentStepIndex] || {};
+                let side = currentTimerMode === 'last-change' ? 'both' : (step.side || 'left');
+                let label;
+                if (draftComplete) {
+                    label = 'DRAFT COMPLETE';
+                    side = 'both';
+                } else if (currentTimerMode === 'last-change') {
+                    label = 'LAST CHANGE';
+                } else if (step.phase === currentTimerMode && step.label) {
+                    label = step.label;
+                } else {
+                    const team = side === 'right' ? TEAM_LABELS.right : TEAM_LABELS.left;
+                    label = `${team} · ${String(currentTimerMode).toUpperCase()}`;
+                }
+                return { side, label };
+            }
+
+            function publishDraftState() {
+                // Function may be called by inputs after this script section initializes.
+                if (typeof timerSeconds === 'undefined' || typeof currentStepIndex === 'undefined') return;
+                const stepInfo = getSyncSideAndLabel();
+                const activeBO = getSelectedBestOf();
+                const players = { left: [], right: [] };
+                for (const side of ['left', 'right']) {
+                    players[side] = Array.from({ length: 5 }, (_, index) => {
+                        const input = document.getElementById(`player-${side}-${index + 1}`);
+                        return input ? input.value.trim() : '';
+                    });
+                }
+
+                const state = {
+                    type: 'mlbb-draft-state',
+                    timestamp: Date.now(),
+                    teams: {
+                        left: readTeamState('left'),
+                        right: readTeamState('right')
+                    },
+                    players,
+                    heroes: {
+                        left: {
+                            ban: readHeroesState('left', 'ban'),
+                            pick: readHeroesState('left', 'pick')
+                        },
+                        right: {
+                            ban: readHeroesState('right', 'ban'),
+                            pick: readHeroesState('right', 'pick')
+                        }
+                    },
+                    bestOf: activeBO,
+                    phase: currentTimerMode,
+                    side: stepInfo.side,
+                    label: stepInfo.label,
+                    duration: Math.max(1, Number(currentDurationSeconds) || 45),
+                    remaining: Math.max(0, Number(timerSeconds) || 0),
+                    running: isTimerRunning(),
+                    complete: draftComplete
+                };
+
+                if (draftSyncChannel) draftSyncChannel.postMessage(state);
+                try { localStorage.setItem(DRAFT_SYNC_STORAGE_KEY, JSON.stringify(state)); }
+                catch (error) { console.warn('[Draft Control] State saved to BroadcastChannel only', error); }
+            }
+
+            // Changes to team, coach, score, player names, BO, and hero selectors sync immediately.
+            document.addEventListener('input', event => {
+                if (event.target.matches(
+                    '#team-name-left, #team-name-right, #coach-left, #coach-right, ' +
+                    '#score-left, #score-right, .player-input'
+                )) publishDraftState();
+            });
+            document.addEventListener('change', event => {
+                if (event.target.matches(
+                    '#team-name-left, #team-name-right, #coach-left, #coach-right, ' +
+                    '#score-left, #score-right, .player-input, .hero-slot-select, .bo-btn'
+                )) publishDraftState();
+            });
+
+            // Publish initial values, then hero initialization publishes again when manifest is ready.
+            publishDraftState();
 
             initializeHeroSlots();
 
