@@ -565,7 +565,50 @@
             font-family: 'Eixample Extrabold';
             text-transform: none;
         }
-    </style>
+    
+        /* PICK-CARD ACTIVE TURN ANIMATION */
+        .draft-container .bottom .pick-container {
+            width: 740px;
+            max-width: 740px;
+            min-width: 0;
+            box-sizing: border-box;
+            display: flex;
+            gap: 2px;
+            overflow: hidden;
+        }
+
+        .draft-container .bottom .pick-container .pick-hero {
+            width: 148px;
+            min-width: 0;
+            flex: 1 1 148px;
+            box-sizing: border-box;
+            overflow: hidden;
+            transition: flex-basis 280ms cubic-bezier(.22, .75, .25, 1),
+                        width 280ms cubic-bezier(.22, .75, .25, 1);
+            will-change: flex-basis;
+        }
+
+        .draft-container .bottom .pick-container .pick-hero.is-active-pick {
+            width: 170px;
+            flex: 0 0 170px;
+        }
+
+        .draft-container .bottom .pick-container .pick-hero .pick-image {
+            width: 100%;
+            min-width: 0;
+        }
+
+        .draft-container .bottom .pick-container .pick-hero .players-name {
+            min-width: 0;
+            box-sizing: border-box;
+            padding: 0 4px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        /* END PICK-CARD ACTIVE TURN ANIMATION */
+
+</style>
     <script src="../shared/sync-client.js"></script>
 </head>
 
@@ -860,7 +903,50 @@
             });
         }
 
-        function applyDraftState(state) {
+        
+        function updateActivePickCards(state) {
+            const allCards = document.querySelectorAll(
+                '.draft-container .bottom .pick-container .pick-hero'
+            );
+
+            // Always clear the previous turn first. Ban and Last Change stay at normal width.
+            allCards.forEach(card => card.classList.remove('is-active-pick'));
+
+            if (!state || state.phase !== 'pick' || state.complete) return;
+
+            const side = state.side === 'right' ? 'right'
+                : state.side === 'left' ? 'left'
+                : null;
+            if (!side) return;
+
+            // Labels are supplied by the existing DRAFT_SEQUENCE, e.g.
+            // "BLUE TEAM · PICK 1" or "RED TEAM · PICK 1 + 2".
+            const match = String(state.label || '').match(/\bPICK\s+(\d+)(?:\s*\+\s*(\d+))?/i);
+            if (!match) return;
+
+            const activeSlots = new Set(
+                [Number(match[1]), match[2] ? Number(match[2]) : null]
+                    .filter(number => Number.isInteger(number) && number >= 1 && number <= 5)
+            );
+
+            const sideCards = Array.from(document.querySelectorAll(
+                '.draft-container .bottom .' + side + ' .pick-container .pick-hero'
+            ));
+
+            sideCards.forEach((card, visualIndex) => {
+                // Blue/left is rendered in logical order 1→5.
+                // Red/right is rendered in reverse visual order 5→1.
+                const logicalSlot = side === 'right'
+                    ? sideCards.length - visualIndex
+                    : visualIndex + 1;
+
+                if (activeSlots.has(logicalSlot)) {
+                    card.classList.add('is-active-pick');
+                }
+            });
+        }
+
+function applyDraftState(state) {
             if (!state || state.type !== 'mlbb-draft-state') return;
             lastReceivedState = state;
 
@@ -896,6 +982,7 @@
             timerValue.textContent = String(Math.max(0, Math.floor(Number(state.remaining) || 0))).padStart(2, '0');
             phaseLabel.textContent = state.label || (state.phase || 'DRAFT').replace('-', ' ').toUpperCase();
             renderArrowSide(state.side || 'left');
+            updateActivePickCards(state);
 
             const duration = Math.max(1, Number(state.duration) || 45);
             const remaining = Math.max(0, Math.min(duration, Number(state.remaining) || 0));

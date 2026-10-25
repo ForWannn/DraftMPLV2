@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DRAFT PICK</title>
+    <link rel="stylesheet" href="../ASSETS/css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: 'Eixample Regular';
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            background: rgb(0, 91, 26);
+            align-items: end;
+            height: 100vh;
+            overflow: hidden;
+            padding-bottom: 25px;
+        }
+
+        .draft-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+            width: 1900px;
+            height: 570px;
+            gap: 2px
+        }
+
+        .draft-container .recap-container {
+            display: flex;
+            justify-content: space-between;
+            width: 1900px;
+            height: 195px;
+            margin-bottom: 45px;
+        }
+
+        .draft-container .recap-container .draft-pick-recap {
+            width: 445px;
+            height: 100%;
+            /* background-color: red; */
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .draft-container .recap-container .draft-pick-recap .top {
+            width: 100%;
+            height: 40px;
+            background: URL('../assets/DRAFTPICK/RECAPDRAFT/BG.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            font-family: 'Eixample Extrabold';
+        }
+
+        .draft-container .recap-container .draft-pick-recap .mid {
+            width: 100%;
+            height: 110px;
+            display: flex;
+            gap: 2px;
+        }
+
+        .draft-container .recap-container .draft-pick-recap .bottom {
+            width: 100%;
+            height: 40px !important;
+            display: flex;
+            gap: 2px;
+        }
+
+        .draft-container .recap-container .draft-pick-recap .ban-recap {
+            width: 88px;
+            height: 40px;
+            background-color: black;
+        }
+
+        .draft-container .recap-container .draft-pick-recap .pick-recap {
+            width: 88px;
+            height: 110px;
+            background-color: red;
+        }
+
+        .draft-container .top {
+            height: 80px;
+            width: 1900px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .draft-container .top .left,
+        .draft-container .top .right {
+            gap: 2px;
+        }
+
+        .draft-container .bottom {
+            display: flex;
+            justify-content: space-between;
+            height: 249px;
+            width: 1900px;
+        }
+
+        .draft-container .bottom .pick-container {
+            display: flex;
+            gap: 2px;
+        }
+
+        .draft-container .bottom .pick-container .pick-hero {
+            width: 149px;
+            height: 245px;
+            background-color: #EAFAFF;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .draft-container .bottom .pick-container .pick-hero .pick-image {
+            width: 100%;
+            height: 215px;
+            background: url('../assets/HEROES/aamon.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .draft-container .bottom .pick-container .pick-hero .players-name {
+            width: 100%;
+            height: calc(245px - 215px);
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Eixample Extrabold';
+            text-transform: uppercase;
+            border-top: 1px solid #00ac28;
+        }
+
+        .draft-container .top .left,
+        .draft-container .top .right,
+        .draft-container .bottom .left,
+        .draft-container .bottom .right {
+            width: 740px;
+        }
+
+        .draft-container .top .left,
+        .draft-container .top .right,
+        .draft-container .top .mid {
+            height: 80px;
+            display: flex;
+        }
+
+        .draft-container .bottom .left,
+        .draft-container .bottom .right {
+            height: 249px;
+        }
+
+        .draft-container .top .coach-container {
+            padding: 10px;
+            width: 330px;
+            background: #EAFAFF;
+            display: flex;
+            gap: 20px;
+        }
+
+        .draft-container .top .right {
+            flex-direction: row-reverse;
+        }
+
+        .draft-container .top .right .coach-container {
+            flex-direction: row-reverse;
+        }
+
+        .draft-container .top .coach-container img {
+            height: 25px;
+            width: 25px;
+        }
+
+        .draft-container .top .coach-container .coach-name {
+            font-size: 50px;
+            font-family: 'Eixample Extrabold';
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .draft-container .top .ban-container {
+            width: 408px;
+            height: 80px;
+            gap: 2px;
+            display: flex;
+        }
+
+        .draft-container .top .ban-container .ban-hero {
+            width: 80px;
+            height: 80px;
+            background: url('../assets/HEROES/aamon-splash.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .draft-container .top .ban-container .ban-hero::after {
+            content: '';
+            width: 80px;
+            height: 80px;
+            display: block;
+            background-image: url('../assets/x.svg');
+            background-size: 60%;
+            background-repeat: no-repeat;
+            background-position: center;
+            color: red;
+        }
+
+        /* Selected-map banner: image fills the entire top-mid panel, with title overlaid on the right. */
+        .draft-container .top .mid {
+            width: 398px;
+            height: 80px;
+            position: relative;
+            display: block;
+            overflow: hidden;
+            padding: 0;
+            box-sizing: border-box;
+            background: #111820;
+        }
+
+        .draft-container .top .mid .selected-map-thumb {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            border-radius: 0;
+            overflow: hidden;
+            background: #17222a;
+            box-shadow: none;
+        }
+
+        .draft-container .top .mid .selected-map-thumb::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg,
+                    rgba(0, 0, 0, 0) 0%,
+                    rgba(0, 0, 0, 0.04) 43%,
+                    rgba(0, 0, 0, 0.42) 67%,
+                    rgba(0, 0, 0, 0.88) 100%);
+            pointer-events: none;
+        }
+
+        .draft-container .top .mid .selected-map-thumb img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .draft-container .top .mid .selected-map-info {
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            right: 10px;
+            bottom: 0;
+            width: 43%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 2px;
+            min-width: 0;
+            text-align: right;
+            pointer-events: none;
+        }
+
+        .draft-container .top .mid .map-label {
+            max-width: 100%;
+            font-size: 10px;
+            line-height: 1.05;
+            letter-spacing: 0.8px;
+            color: rgba(255, 255, 255, 0.9);
+            font-family: 'Eixample Regular';
+            font-weight: 700;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+        }
+
+        .draft-container .top .mid .map-name {
+            max-width: 100%;
+            font-size: 20px;
+            line-height: 0.96;
+            color: #fff;
+            font-family: 'Eixample Extrabold';
+            text-transform: uppercase;
+            white-space: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+        }
+
+        .draft-container .bottom .mid {
+            width: 398px;
+            height: 245px;
+            background: url('../assets/DRAFTPICK/bg-middle.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .draft-container .bottom .mid .progress-bar {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 5px;
+            min-height: 5px;
+            display: flex;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.22);
+        }
+
+        .draft-container .bottom .mid .progress-half {
+            width: 50%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .draft-container .bottom .mid .progress-fill {
+            width: 100%;
+            height: 100%;
+            background: #e23636;
+            box-shadow: 0 0 8px rgba(226, 54, 54, 0.55);
+            transition: transform .95s linear;
+            will-change: transform;
+        }
+
+        .draft-container .bottom .mid .progress-half.left .progress-fill {
+            transform-origin: right center;
+            transform: scaleX(var(--progress-scale, 1));
+        }
+
+        .draft-container .bottom .mid .progress-half.right .progress-fill {
+            transform-origin: left center;
+            transform: scaleX(var(--progress-scale, 1));
+        }
+
+        .draft-container .bottom .mid .mid-inner {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
+            gap: 3px;
+            padding: 5px 12px 6px;
+            box-sizing: border-box;
+        }
+
+        .draft-container .bottom .mid .center-stack-top {
+            flex: 0 0 auto;
+        }
+
+        .draft-container .bottom .mid .center-stack-bottom {
+            flex: 0 0 auto;
+            gap: 2px;
+        }
+
+        /* Podium hierarchy: MPL logo first, timer/arrow second, teams on one shared baseline below. */
+        .draft-container .bottom .mid .center-stack {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 3px;
+            text-align: center;
+        }
+
+        .draft-container .bottom .mid .league-logo {
+            width: 76px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1b1f25;
+            font-family: 'Eixample Extrabold';
+            font-size: 22px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, .98) 0%, rgba(245, 248, 252, .95) 65%, rgba(232, 238, 244, .92) 100%);
+            clip-path: polygon(50% 0%, 88% 20%, 100% 56%, 77% 100%, 23% 100%, 0% 56%, 12% 20%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .12);
+            flex: 0 0 auto;
+        }
+
+        .draft-container .bottom .mid .timer-row {
+            /* Three fixed columns keep the timer exactly centered. The arrow occupies
+               a side column and never participates in the timer's centering. */
+            display: grid;
+            grid-template-columns: minmax(42px, 1fr) auto minmax(42px, 1fr);
+            align-items: center;
+            justify-items: center;
+            column-gap: 0;
+            min-height: 57px;
+            width: 100%;
+        }
+
+        .draft-container .bottom .mid .timer {
+            grid-column: 2;
+            grid-row: 1;
+            justify-self: center;
+            font-size: 54px;
+            line-height: 0.9;
+            color: #101114;
+            font-family: 'Eixample Extrabold';
+            font-variant-numeric: tabular-nums;
+            min-width: 2ch;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .draft-container .bottom .mid .phase-arrow {
+            grid-row: 1;
+            justify-self: center;
+            display: block;
+            width: 42px;
+            height: 30px;
+            object-fit: contain;
+            background: transparent;
+            transform: none;
+            transition: none;
+            z-index: 2;
+            opacity: 0;
+        }
+
+        .draft-container .bottom .mid .phase-arrow-left {
+            grid-column: 1;
+            transform: none;
+        }
+
+        .draft-container .bottom .mid .phase-arrow-right {
+            grid-column: 3;
+            transform: rotate(180deg);
+        }
+
+        .draft-container .bottom .mid .phase-arrow.active {
+            opacity: 1;
+        }
+
+        .draft-container .bottom .mid .phase-label {
+            min-height: 12px;
+            font-size: 10px;
+            line-height: 1;
+            color: #5a6472;
+            font-family: 'Eixample Regular';
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .draft-container .bottom .mid .mid-teams {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 2px;
+        }
+
+        .draft-container .bottom .mid .team-side {
+            flex: 1 1 0;
+            min-width: 0;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-align: center;
+            height: 34px;
+        }
+
+        .draft-container .bottom .mid .team-side.right {
+            flex-direction: row;
+        }
+
+        .draft-container .bottom .mid .team-logo {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex: 0 0 30px;
+        }
+
+        .draft-container .bottom .mid .team-logo img {
+            width: 88%;
+            height: 88%;
+            object-fit: contain;
+        }
+
+        .draft-container .bottom .mid .team-logo .logo-fallback {
+            font-family: 'Eixample Extrabold';
+            font-size: 14px;
+            color: #16181d;
+            text-transform: uppercase;
+        }
+
+        .draft-container .bottom .mid .team-name {
+            font-size: 16px;
+            line-height: 1;
+            color: #15161b;
+            font-family: 'Eixample Extrabold';
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .draft-container .bottom .mid .score-boxes {
+            display: flex;
+            gap: 3px;
+            flex: 0 0 auto;
+        }
+
+        .draft-container .bottom .mid .score-box {
+            width: 13px;
+            height: 8px;
+            background: #d8dde3;
+        }
+
+        .draft-container .bottom .mid .score-box.active {
+            background: #e23636;
+        }
+
+        .draft-container .bottom .mid .match-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            margin-top: auto;
+            padding-top: 2px;
+        }
+
+        .draft-container .bottom .mid .match-text {
+            font-size: 17px;
+            color: #17181c;
+            font-family: 'Eixample Extrabold';
+            text-transform: uppercase;
+        }
+
+        .draft-container .bottom .mid .sponsor-text {
+            font-size: 15px;
+            color: #17181c;
+            font-family: 'Eixample Extrabold';
+            text-transform: none;
+        }
+    </style>
+    <script src="../shared/sync-client.js"></script>
+</head>
+
+<body>
+    <div class="draft-container">
+        <div class="recap-container">
+            <div class="draft-pick-recap left">
+                <div class="top">DRAFT PICK RECAP</div>
+                <div class="mid">
+                    <div class="pick-recap"></div>
+                    <div class="pick-recap"></div>
+                    <div class="pick-recap"></div>
+                    <div class="pick-recap"></div>
+                    <div class="pick-recap"></div>
+                </div>
+                <div class="bottom">
+                    <div class="ban-recap"></div>
+                    <div class="ban-recap"></div>
+                    <div class="ban-recap"></div>
+                    <div class="ban-recap"></div>
+                    <div class="ban-recap"></div>
+                </div>
+            </div>
+            <div class="draft-pick-recap right">
+                <div class="top">DRAFT PICK RECAP</div>
+                <div class="mid">
+                    <div class="pick-recap"></div>
+                    <div class="pick-recap"></div>
+                    <div class="pick-recap"></div>
+                    <div class="pick-recap"></div>
+                    <div class="pick-recap"></div>
+                </div>
+                <div class="bottom">
+                    <div class="ban-recap"></div>
+                    <div class="ban-recap"></div>
+                    <div class="ban-recap"></div>
+                    <div class="ban-recap"></div>
+                    <div class="ban-recap"></div>
+                </div>
+            </div>
+        </div>
+        <div class="top">
+            <div class="left">
+                <div class="coach-container">
+                    <img src="../assets/DRAFTPICK/coach-icon.webp" alt="">
+                    <div class="coach-name">EPRAN</div>
+                </div>
+                <div class="ban-container">
+                    <div class="ban-hero" id="ban1"></div>
+                    <div class="ban-hero" id="ban2"></div>
+                    <div class="ban-hero" id="ban3"></div>
+                    <div class="ban-hero" id="ban4"></div>
+                    <div class="ban-hero" id="ban5"></div>
+                </div>
+            </div>
+            <div class="mid">
+                <div class="selected-map-thumb" id="selected-map-thumb">
+                    <img src="../assets/DRAFTPICK/map/healing-turtle.png" alt="Selected map: Healing Turtle">
+                </div>
+                <div class="selected-map-info">
+                    <div class="map-label" id="selected-map-label">STARWARD DECADE 1014</div>
+                    <div class="map-name" id="selected-map-name">Healing Turtle</div>
+                </div>
+            </div>
+            <div class="right">
+                <div class="coach-container">
+                    <img src="../assets/DRAFTPICK/coach-icon.webp" alt="">
+                    <div class="coach-name">YUDI</div>
+                </div>
+                <div class="ban-container">
+                    <div class="ban-hero" id="ban1"></div>
+                    <div class="ban-hero" id="ban2"></div>
+                    <div class="ban-hero" id="ban3"></div>
+                    <div class="ban-hero" id="ban4"></div>
+                    <div class="ban-hero" id="ban5"></div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="left">
+                <div class="pick-container">
+                    <div class="pick-hero" id="pick1">
+                        <div class="pick-image"></div>
+                        <div class="players-name"></div>
+                    </div>
+                    <div class="pick-hero" id="pick2">
+                        <div class="pick-image"></div>
+                        <div class="players-name"></div>
+                    </div>
+                    <div class="pick-hero" id="pick3">
+                        <div class="pick-image"></div>
+                        <div class="players-name"></div>
+                    </div>
+                    <div class="pick-hero" id="pick4">
+                        <div class="pick-image"></div>
+                        <div class="players-name"></div>
+                    </div>
+                    <div class="pick-hero" id="pick5">
+                        <div class="pick-image"></div>
+                        <div class="players-name">asuu</div>
+                    </div>
+                </div>
+            </div>
+            <div class="mid" id="draft-mid-panel" style="--progress-scale: 1;">
+                <div class="progress-bar">
+                    <div class="progress-half left">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div class="progress-half right">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+                <div class="mid-inner">
+                    <div class="center-stack center-stack-top">
+                        <div class="league-logo">MPL</div>
+                    </div>
+                    <div class="mid-teams">
+                        <div class="team-side left">
+                            <div class="team-logo">
+                                <img src="../assets/TEAMS/tlid.png" alt="TLID"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                <span class="logo-fallback" style="display:none;">TL</span>
+                            </div>
+                            <div class="score-boxes" id="team-left-score">
+                                <span class="score-box"></span>
+                                <span class="score-box active"></span>
+                            </div>
+                            <div class="team-name" id="team-left-name">TLID</div>
+                        </div>
+                        <div class="team-side right">
+                            <div class="team-logo">
+                                <img src="../assets/TEAMS/onic.png" alt="ONIC"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                <span class="logo-fallback" style="display:none;">ON</span>
+                            </div>
+                            <div class="score-boxes" id="team-right-score">
+                                <span class="score-box"></span>
+                                <span class="score-box"></span>
+                            </div>
+                            <div class="team-name" id="team-right-name">ONIC</div>
+                        </div>
+                    </div>
+                    <div class="center-stack center-stack-bottom">
+                        <div class="timer-row" id="draft-timer-row">
+                            <video class="phase-arrow phase-arrow-left active" id="draft-phase-arrow-left" autoplay loop
+                                muted playsinline preload="auto" aria-label="Left team phase indicator">
+                                <source src="../assets/DRAFTPICK/phase-arrow.webm" type="video/webm">
+                                <source src="../assets/DRAFTPICK/phase-arrow.mp4" type="video/mp4">
+                            </video>
+                            <div class="timer" id="draft-timer-value">45</div>
+                            <video class="phase-arrow phase-arrow-right" id="draft-phase-arrow-right" autoplay loop
+                                muted playsinline preload="auto" aria-label="Right team phase indicator">
+                                <source src="../assets/DRAFTPICK/phase-arrow.webm" type="video/webm">
+                                <source src="../assets/DRAFTPICK/phase-arrow.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="phase-label" id="draft-phase-label" style="opacity: 0;">BLUE BAN</div>
+                    </div>
+                    <div class="match-meta">
+                        <div class="match-text" id="draft-match-text">Match 72 - Game 2</div>
+                        <div class="sponsor-text" id="draft-sponsor-text">Infinix GT50 Pro</div>
+                    </div>
+                </div>
+            </div>
+            <div class="right">
+                <div class="pick-container">
+                    <div class="pick-hero" id="pick1">
+                        <div class="pick-image"></div>
+                        <div class="players-name"></div>
+                    </div>
+                    <div class="pick-hero" id="pick2">
+                        <div class="pick-image"></div>
+                        <div class="players-name"></div>
+                    </div>
+                    <div class="pick-hero" id="pick3">
+                        <div class="pick-image"></div>
+                        <div class="players-name"></div>
+                    </div>
+                    <div class="pick-hero" id="pick4">
+                        <div class="pick-image"></div>
+                        <div class="players-name"></div>
+                    </div>
+                    <div class="pick-hero" id="pick5">
+                        <div class="pick-image"></div>
+                        <div class="players-name"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Display receiver. Control and display must be served from the same origin.
+        // BroadcastChannel is primary; localStorage events/state provide a fallback.
+        const DRAFT_SYNC_CHANNEL_NAME = 'mlbb-draft-sync-v1';
+        const DRAFT_SYNC_STORAGE_KEY = 'mlbb-draft-sync-state-v1';
+        const draftSyncChannel = ('BroadcastChannel' in window)
+            ? new BroadcastChannel(DRAFT_SYNC_CHANNEL_NAME)
+            : null;
+
+        const draftMidPanel = document.getElementById('draft-mid-panel');
+        const timerValue = document.getElementById('draft-timer-value');
+        const phaseLabel = document.getElementById('draft-phase-label');
+        const arrowLeft = document.getElementById('draft-phase-arrow-left');
+        const arrowRight = document.getElementById('draft-phase-arrow-right');
+        const mapThumbEl = document.getElementById('selected-map-thumb');
+        let lastReceivedState = null;
+
+        function setImageBackground(element, imageUrl, fallback = 'none') {
+            if (!element) return;
+            if (imageUrl) {
+                const safeUrl = String(imageUrl).replace(/["\\\\]/g, '\\\\$&');
+                element.style.backgroundImage = `url("${safeUrl}")`;
+                element.style.backgroundSize = 'cover';
+                element.style.backgroundPosition = 'center';
+                element.style.backgroundRepeat = 'no-repeat';
+            } else {
+                element.style.backgroundImage = fallback;
+            }
+        }
+
+        function setHeroImage(element, hero) {
+            if (!element) return;
+            const imageUrl = hero && hero.image ? hero.image : '';
+            setImageBackground(element, imageUrl, 'none');
+            element.dataset.heroName = hero && hero.name ? hero.name : '';
+            element.setAttribute('aria-label', hero && hero.name ? hero.name : 'Empty hero slot');
+        }
+
+        function setTeamLogo(side, team) {
+            const teamSide = document.querySelector(`.draft-container .bottom .mid .team-side.${side}`);
+            const img = teamSide && teamSide.querySelector('.team-logo img');
+            const fallback = teamSide && teamSide.querySelector('.logo-fallback');
+            if (!img || !fallback) return;
+
+            if (team && team.logo) {
+                img.src = team.logo;
+                img.alt = team.name || `${side} team logo`;
+                img.style.display = 'block';
+                fallback.style.display = 'none';
+            } else {
+                img.removeAttribute('src');
+                img.style.display = 'none';
+                fallback.textContent = (team && team.name ? team.name : side).slice(0, 2).toUpperCase();
+                fallback.style.display = 'block';
+            }
+        }
+
+        function setScoreBoxes(side, score, bestOf) {
+            const container = document.getElementById(side === 'left' ? 'team-left-score' : 'team-right-score');
+            if (!container) return;
+            const bo = Number(bestOf) || 3;
+            const maxWins = Math.max(1, Math.ceil(bo / 2));
+            const wins = Math.max(0, Math.min(maxWins, Number(score) || 0));
+            container.replaceChildren();
+            for (let i = 0; i < maxWins; i++) {
+                const box = document.createElement('span');
+                box.className = 'score-box' + (i < wins ? ' active' : '');
+                container.appendChild(box);
+            }
+        }
+
+        function renderArrowSide(side) {
+            // Both videos stay in fixed positions. Only active state changes instantly.
+            // Last Change is neutral, so both indicators are active.
+            arrowLeft.classList.toggle('active', side === 'left' || side === 'both');
+            arrowRight.classList.toggle('active', side === 'right' || side === 'both');
+        }
+
+        function updateBanSide(side, bans) {
+            const nodes = Array.from(document.querySelectorAll(
+                `.draft-container .top .${side} .ban-container .ban-hero`
+            ));
+            // Right-side control slots are visually arranged 5→1 from left to right.
+            const ordered = side === 'right' ? [...bans].reverse() : bans;
+            nodes.forEach((node, index) => setHeroImage(node, ordered[index] || null));
+        }
+
+        function updatePickSide(side, picks, players) {
+            const nodes = Array.from(document.querySelectorAll(
+                `.draft-container .bottom .${side} .pick-container .pick-hero`
+            ));
+            // Left visual order is 1→5; right visual order is 5→1.
+            const orderedPicks = side === 'right' ? [...picks].reverse() : picks;
+            const orderedPlayers = side === 'right' ? [...players].reverse() : players;
+            nodes.forEach((node, index) => {
+                const image = node.querySelector('.pick-image');
+                const name = node.querySelector('.players-name');
+                const hero = orderedPicks[index] || null;
+                setHeroImage(image, hero);
+                if (name) name.textContent = orderedPlayers[index] || '';
+            });
+        }
+
+        function applyDraftState(state) {
+            if (!state || state.type !== 'mlbb-draft-state') return;
+            lastReceivedState = state;
+
+            const left = state.teams && state.teams.left ? state.teams.left : {};
+            const right = state.teams && state.teams.right ? state.teams.right : {};
+            const leftName = document.getElementById('team-left-name');
+            const rightName = document.getElementById('team-right-name');
+
+            if (leftName) leftName.textContent = left.name || 'BLUE';
+            if (rightName) rightName.textContent = right.name || 'RED';
+            setTeamLogo('left', left);
+            setTeamLogo('right', right);
+
+            const bestOf = Number(state.bestOf) || 3;
+            setScoreBoxes('left', left.score, bestOf);
+            setScoreBoxes('right', right.score, bestOf);
+
+            const coachEls = {
+                left: document.querySelector('.draft-container .top .left .coach-name'),
+                right: document.querySelector('.draft-container .top .right .coach-name')
+            };
+            if (coachEls.left) coachEls.left.textContent = left.coach || '';
+            if (coachEls.right) coachEls.right.textContent = right.coach || '';
+
+            const heroes = state.heroes || {};
+            const players = state.players || {};
+            for (const side of ['left', 'right']) {
+                const sideHeroes = heroes[side] || {};
+                updateBanSide(side, sideHeroes.ban || []);
+                updatePickSide(side, sideHeroes.pick || [], players[side] || []);
+            }
+
+            timerValue.textContent = String(Math.max(0, Math.floor(Number(state.remaining) || 0))).padStart(2, '0');
+            phaseLabel.textContent = state.label || (state.phase || 'DRAFT').replace('-', ' ').toUpperCase();
+            renderArrowSide(state.side || 'left');
+
+            const duration = Math.max(1, Number(state.duration) || 45);
+            const remaining = Math.max(0, Math.min(duration, Number(state.remaining) || 0));
+            draftMidPanel.style.setProperty('--progress-scale', remaining / duration);
+
+            if (state.matchText) {
+                const match = document.getElementById('draft-match-text');
+                if (match) match.textContent = state.matchText;
+            }
+            if (state.sponsorText) {
+                const sponsor = document.getElementById('draft-sponsor-text');
+                if (sponsor) sponsor.textContent = state.sponsorText;
+            }
+            if (state.map && state.map.name) {
+                const mapName = document.getElementById('selected-map-name');
+                if (mapName) mapName.textContent = state.map.name;
+                const mapImage = mapThumbEl && mapThumbEl.querySelector('img');
+                if (mapImage && state.map.image) mapImage.src = state.map.image;
+            }
+
+            document.documentElement.dataset.draftSync = 'connected';
+        }
+
+        if (draftSyncChannel) {
+            draftSyncChannel.addEventListener('message', event => applyDraftState(event.data));
+        }
+
+        window.addEventListener('storage', event => {
+            if (event.key !== DRAFT_SYNC_STORAGE_KEY || !event.newValue) return;
+            try { applyDraftState(JSON.parse(event.newValue)); } catch (error) {
+                console.warn('[Draft Display] Invalid saved state', error);
+            }
+        });
+
+        try {
+            const saved = localStorage.getItem(DRAFT_SYNC_STORAGE_KEY);
+            if (saved) applyDraftState(JSON.parse(saved));
+        } catch (error) {
+            console.warn('[Draft Display] Could not read saved state', error);
+        }
+    </script>
+
+
+    <script>
+        // Terima state draft dari server.
+        if (window.MLBBOverlaySync &&
+            typeof applyDraftState === 'function') {
+            window.MLBBOverlaySync.subscribe('draft', payload => {
+                applyDraftState(payload);
+            });
+        }
+    </script>
+</body>
+
+</html>

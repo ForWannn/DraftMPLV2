@@ -617,7 +617,13 @@
                 if (castersDirty) renderCasters();
                 if (adsDirty) renderAds();
             }
-
+            if (window.MLBBOverlaySync) {
+                window.MLBBOverlaySync.subscribe('countdown', payload => {
+                    if (payload) {
+                        applyFullState(payload);
+                    }
+                });
+            }
             // Sync channel between tabs & preview iframe
             const channel = new BroadcastChannel('mlbb_countdown_channel');
             channel.onmessage = (event) => {

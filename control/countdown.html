@@ -1241,15 +1241,29 @@
             const channel = new BroadcastChannel('mlbb_countdown_channel');
             let ws = null;
 
-            function postLocalMirror() {
-                channel.postMessage({
-                    timer: state.timer,
+
+            function postLocalMirror(publishToServer = true) {
+                const snapshot = {
+                    timer: { ...state.timer },
                     activeMatch: state.activeMatch,
-                    matches: state.matches,
-                    casters: state.casters,
-                    ad: state.ad
-                });
+                    matches: state.matches.map(m => ({
+                        ...m,
+                        a: m.a ? { ...m.a } : m.a,
+                        b: m.b ? { ...m.b } : m.b
+                    })),
+                    casters: state.casters.map(c => ({ ...c })),
+                    ad: state.ad ? { ...state.ad } : state.ad
+                };
+
+                // Tetap mendukung preview lokal.
+                channel.postMessage(snapshot);
+
+                // Sinkronisasi universal melalui Node.js.
+                if (publishToServer && window.MLBBOverlaySync) {
+                    window.MLBBOverlaySync.publish('countdown', snapshot);
+                }
             }
+
 
             function sendPatch(key, value) {
                 if (ws && ws.readyState === 1) {
@@ -1728,9 +1742,15 @@
                 }
 
                 // Forward to local mirror preview iframe without looping to server
-                postLocalMirror();
+                postLocalMirror(false);
             }
-
+            if (window.MLBBOverlaySync) {
+                window.MLBBOverlaySync.subscribe('countdown', payload => {
+                    if (payload) {
+                        applyStateFromServer(payload);
+                    }
+                });
+            }
             // WebSocket connection
             function connectWebSocket() {
                 try {

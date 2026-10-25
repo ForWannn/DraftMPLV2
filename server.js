@@ -67,7 +67,17 @@ app.use(express.static(__dirname));
 
 const wss = new WebSocketServer({ server });
 const OPEN = 1;
-const LEGACY_COUNTDOWN_KEYS = ['mode', 'playing', 'matches', 'casters', 'playlist'];
+
+const LEGACY_COUNTDOWN_KEYS = [
+    'mode',
+    'playing',
+    'matches',
+    'casters',
+    'playlist',
+    'activeMatch',
+    'ad'
+];
+
 
 function saveState() {
     fs.writeFile(STATE_FILE, JSON.stringify(state), error => {
@@ -182,9 +192,16 @@ wss.on('connection', ws => {
                 timer.left = Math.max(0, Number(message.ms) || 0);
                 timer.endsAt = now + timer.left;
                 timer.running = true;
+
             } else if (message.action === 'stop') {
-                timer.left = Math.max(0, Number(timer.endsAt) - now);
+                timer.left = Math.max(0, timer.endsAt - now);
                 timer.running = false;
+
+            } else if (message.action === 'set') {
+                timer.left = Math.max(0, Number(message.ms) || 0);
+                timer.endsAt = now + timer.left;
+                timer.running = false;
+
             } else {
                 return;
             }
