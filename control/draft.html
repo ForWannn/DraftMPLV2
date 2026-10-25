@@ -668,6 +668,7 @@
             z-index: 4;
         }
     </style>
+    <script src="../shared/sync-client.js"></script>
 </head>
 
 <body>
@@ -1693,7 +1694,12 @@
                 if (draftSyncChannel) draftSyncChannel.postMessage(state);
                 try { localStorage.setItem(DRAFT_SYNC_STORAGE_KEY, JSON.stringify(state)); }
                 catch (error) { console.warn('[Draft Control] State saved to BroadcastChannel only', error); }
-            }
+            
+        // Kirim state draft ke server WebSocket.
+        if (window.MLBBOverlaySync) {
+            window.MLBBOverlaySync.publish('draft', state);
+        }
+    }
 
             // Changes to team, coach, score, player names, BO, and hero selectors sync immediately.
             document.addEventListener('input', event => {

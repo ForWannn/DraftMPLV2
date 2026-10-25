@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draft Control</title>
+    <link rel="stylesheet" href="../ASSETS/css/style.css">
+    <style>
+        * {
+            font-family: 'Eixample Light', sans-serif;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            padding: 45px 25px;
+            background-color: #191919;
+        }
+
+        .upper {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .team-panel {
+            width: 700px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background-color: #222;
+            padding: 20px 25px;
+            border-radius: 28px;
+        }
+
+        .team-panel h2 {
+            color: #ffffff;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin: 0;
+            padding-left: 2px;
+        }
+
+        .match-detail {
+            width: 440px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background-color: #222;
+            padding: 20px 25px;
+            border-radius: 28px;
+            box-sizing: border-box;
+        }
+
+        .match-detail h2 {
+            color: #ffffff;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin: 0;
+            padding-left: 2px;
+        }
+
+        .inside-container-match-detail {
+            background-color: #101010;
+            width: 100%;
+            border-radius: 24px;
+            color: white;
+            padding: 24px 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            box-sizing: border-box;
+        }
+
+        .match-detail-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .match-detail-row .detail-label {
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 19px;
+            font-weight: 700;
+            color: #ffffff;
+            width: 82px;
+            flex-shrink: 0;
+        }
+
+        .bo-group {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .bo-btn {
+            flex: 1;
+            height: 44px;
+            background-color: #202125;
+            border: 1px solid #2e3037;
+            border-radius: 12px;
+            color: #ffffff;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+
+        .bo-btn.active {
+            background-color: #0d7cf2;
+            border-color: #0d7cf2;
+            color: #ffffff;
+        }
+
+        .phase-group {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .phase-btn {
+            flex: 1;
+            height: 44px;
+            background-color: #202125;
+            border: 1px solid #2e3037;
+            border-radius: 12px;
+            color: #ffffff;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+
+        .phase-btn.active {
+            background-color: #0d7cf2;
+            border-color: #0d7cf2;
+            color: #ffffff;
+        }
+
+        .timer-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            margin-top: 2px;
+        }
+
+        .timer-label {
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 19px;
+            font-weight: 700;
+            color: #ffffff;
+            text-align: center;
+            width: 100%;
+        }
+
+        .timer-turn-label {
+            width: 100%;
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 10px;
+            border: 1px solid #2e3037;
+            border-radius: 9px;
+            background: #17181c;
+            color: #50d3f3;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .6px;
+            text-align: center;
+        }
+
+        .timer-custom-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .timer-custom-row label {
+            flex: 1;
+            color: #aeb2bd;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .timer-custom-row input {
+            width: 92px;
+            height: 38px;
+            padding: 0 10px;
+            border: 1px solid #2e3037;
+            border-radius: 9px;
+            outline: none;
+            background: #202125;
+            color: #fff;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .timer-custom-row input:focus {
+            border-color: #50d3f3;
+        }
+
+        .timer-custom-row input::-webkit-outer-spin-button,
+        .timer-custom-row input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .timer-custom-row input {
+            -moz-appearance: textfield;
+        }
+
+        .phase-group .phase-btn {
+            min-width: 0;
+            padding: 0 6px;
+            font-size: 13px;
+        }
+
+        .timer-display {
+            width: 100%;
+            height: 90px;
+            background-color: #202125;
+            border: 1px solid #2e3037;
+            border-radius: 14px;
+            color: #ffffff;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 66px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 2px;
+            user-select: none;
+            box-sizing: border-box;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .timer-btn {
+            flex: 1;
+            height: 40px;
+            background-color: #202125;
+            border: 1px solid #2e3037;
+            border-radius: 10px;
+            color: #ffffff;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+
+        .timer-btn.active {
+            background-color: #0d7cf2;
+            border-color: #0d7cf2;
+            color: #ffffff;
+        }
+
+        .timer-btn:hover:not(.active),
+        .bo-btn:hover:not(.active),
+        .phase-btn:hover:not(.active) {
+            background-color: #282a30;
+            border-color: #3b3f49;
+        }
+
+        .timer-btn:active,
+        .bo-btn:active,
+        .phase-btn:active {
+            transform: scale(0.98);
+        }
+
+        .inside-container-team-panel {
+            background-color: #101010;
+            width: 655px;
+            border-radius: 24px;
+            color: white;
+            padding: 26px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            box-sizing: border-box;
+        }
+
+        .inside-upper {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .tcs {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            flex: 1;
+            max-width: 320px;
+        }
+
+        .team-panel label:not(.upload-logo-btn) {
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .team-panel .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .team-panel input[type="text"],
+        .team-panel input[type="number"] {
+            width: 100%;
+            height: 48px;
+            background-color: #202125;
+            border: 1px solid #2e3037;
+            border-radius: 12px;
+            padding: 0 14px;
+            color: #ffffff;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            outline: none;
+            transition: border-color 0.2s, background-color 0.2s;
+            box-sizing: border-box;
+        }
+
+        .team-panel input[type="text"]:focus,
+        .team-panel input[type="number"]:focus {
+            border-color: #50d3f3;
+            background-color: #24262c;
+        }
+
+        .team-panel input[type="number"]::-webkit-outer-spin-button,
+        .team-panel input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .team-panel input[type="number"] {
+            -moz-appearance: textfield;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .coach-score {
+            display: flex;
+            gap: 14px;
+        }
+
+        .coach-score .coach {
+            flex: 1;
+        }
+
+        .coach-score .score {
+            width: 105px;
+        }
+
+        .team-logo-wrapper {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .team-logo-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-preview-box {
+            width: 135px;
+            height: 135px;
+            background-color: #202125;
+            border: 1px solid #2e3037;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .logo-preview-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: none;
+        }
+
+        .team-panel .upload-logo-btn,
+        .upload-logo-btn {
+            margin-top: 25px;
+            margin-bottom: 0;
+            width: 145px;
+            height: 48px;
+            background-color: #25262b;
+            border: 1px solid #32353c;
+            border-radius: 14px;
+            color: #ffffff;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1;
+            padding: 0;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s, transform 0.1s;
+            user-select: none;
+            box-sizing: border-box;
+        }
+
+        .upload-logo-btn span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .upload-logo-btn:hover {
+            background-color: #2f3137;
+            border-color: #40444d;
+        }
+
+        .upload-logo-btn:active {
+            transform: scale(0.98);
+        }
+
+        .inside-bottom {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .inside-bottom .players-name {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .inside-bottom .players-name input {
+            flex: 1;
+            min-width: 0;
+            height: 48px;
+            text-align: center;
+        }
+
+        .helper-text {
+            color: #ffffff;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        /* Hero Ban & Pick Section */
+        .middle1,
+        .middle2 {
+            margin-top: 24px;
+            width: 100%;
+        }
+
+        .ban-hero,
+        .pick-hero {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .hero-card {
+            flex: 1;
+            background-color: #222;
+            padding: 20px 25px;
+            border-radius: 28px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .hero-card h2 {
+            color: #ffffff;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin: 0;
+            padding: 0 2px;
+        }
+
+        .hero-card.right h2 {
+            text-align: right;
+        }
+
+        .inside-container-hero {
+            background-color: #101010;
+            width: 100%;
+            border-radius: 24px;
+            color: white;
+            padding: 20px 22px;
+            display: flex;
+            gap: 14px;
+            box-sizing: border-box;
+        }
+
+        .hero-slot {
+            flex: 1;
+            height: 180px;
+            background-color: #141518;
+            border: 1px solid #282a30;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        .hero-slot-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            display: none;
+        }
+
+        .hero-slot.has-hero .hero-slot-img {
+            display: block;
+        }
+
+        .hero-slot-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.1) 40%, rgba(0, 0, 0, 0.7) 100%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .hero-slot-top {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+        }
+
+        .hero-slot-num {
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1;
+        }
+
+        .hero-slot-clear {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+            opacity: 0.85;
+            transition: opacity 0.15s, transform 0.1s;
+        }
+
+        .hero-slot-clear:hover {
+            opacity: 1;
+            transform: scale(1.15);
+        }
+
+        .hero-slot-bottom {
+            position: relative;
+            z-index: 3;
+            padding: 0 10px 10px 10px;
+        }
+
+        .hero-selector-btn {
+            height: 32px;
+            background-color: #1e1f23;
+            border: 1px solid #30333a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            color: #ffffff;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            box-sizing: border-box;
+            transition: background-color 0.15s, border-color 0.15s;
+        }
+
+        .hero-slot:hover .hero-selector-btn {
+            border-color: #444852;
+        }
+
+        .hero-selected-name {
+            flex: 1;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            padding-left: 10px;
+        }
+
+        .hero-select-arrow {
+            font-size: 11px;
+            font-weight: 700;
+            color: #a0a4b0;
+            line-height: 1;
+        }
+
+        .hero-slot-select {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 4;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="upper">
+            <div class="team-panel left">
+                <h2>Left Team</h2>
+                <div class="inside-container-team-panel">
+                    <div class="inside-upper">
+                        <div class="tcs">
+                            <div class="form-group team-name">
+                                <label for="team-name-left">Team Name</label>
+                                <input type="text" id="team-name-left" class="input">
+                            </div>
+                            <div class="coach-score">
+                                <div class="form-group coach">
+                                    <label for="coach-left">Coach</label>
+                                    <input type="text" id="coach-left" class="input">
+                                </div>
+                                <div class="form-group score">
+                                    <label for="score-left">Score</label>
+                                    <input type="number" id="score-left" class="input score-input" min="0" value="0">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="team-logo-wrapper">
+                            <div class="team-logo-section">
+                                <label>Team Logo</label>
+                                <div class="logo-preview-box" id="logo-preview-box-left">
+                                    <img id="logo-img-left" alt="Left Logo Preview">
+                                </div>
+                            </div>
+                            <label class="upload-logo-btn" for="upload-logo-left">
+                                <span>Upload Logo</span>
+                                <input type="file" id="upload-logo-left" accept="image/*" style="display: none;">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="inside-bottom">
+                        <label>Players Name</label>
+                        <div class="players-name">
+                            <input type="text" id="player-left-1" class="player-input">
+                            <input type="text" id="player-left-2" class="player-input">
+                            <input type="text" id="player-left-3" class="player-input">
+                            <input type="text" id="player-left-4" class="player-input">
+                            <input type="text" id="player-left-5" class="player-input">
+                        </div>
+                        <span class="helper-text">Left to Right (1-5)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="match-detail">
+                <h2>Match Detail</h2>
+                <div class="inside-container-match-detail">
+                    <div class="match-detail-row">
+                        <span class="detail-label">Best Of</span>
+                        <div class="bo-group">
+                            <button type="button" class="bo-btn" data-bo="1">BO 1</button>
+                            <button type="button" class="bo-btn active" data-bo="3">BO 3</button>
+                            <button type="button" class="bo-btn" data-bo="5">BO 5</button>
+                            <button type="button" class="bo-btn" data-bo="7">BO 7</button>
+                        </div>
+                    </div>
+                    <div class="match-detail-row">
+                        <span class="detail-label">Phase</span>
+                        <div class="phase-group">
+                            <button type="button" class="phase-btn" data-phase="ban">Ban</button>
+                            <button type="button" class="phase-btn active" data-phase="pick">Pick</button>
+                            <button type="button" class="phase-btn" data-phase="last-change">Last Change</button>
+                        </div>
+                    </div>
+                    <div class="timer-section">
+                        <span class="timer-label">Draft Timer</span>
+                        <div class="timer-turn-label" id="draft-turn-label">BLUE TEAM · BAN 1</div>
+                        <div class="timer-display" id="draft-timer-display">00:45</div>
+                        <div class="timer-custom-row">
+                            <label for="timer-custom-seconds">Custom (sec)</label>
+                            <input type="number" id="timer-custom-seconds" min="1" max="599" value="45"
+                                inputmode="numeric">
+                            <button type="button" class="timer-btn" id="btn-timer-apply">Set</button>
+                        </div>
+                        <div class="timer-controls">
+                            <button type="button" class="timer-btn active" id="btn-timer-start">Start</button>
+                            <button type="button" class="timer-btn" id="btn-timer-next">Next</button>
+                            <button type="button" class="timer-btn" id="btn-timer-reset">Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="team-panel right">
+                <h2>Right Team</h2>
+                <div class="inside-container-team-panel">
+                    <div class="inside-upper">
+                        <div class="tcs">
+                            <div class="form-group team-name">
+                                <label for="team-name-right">Team Name</label>
+                                <input type="text" id="team-name-right" class="input">
+                            </div>
+                            <div class="coach-score">
+                                <div class="form-group coach">
+                                    <label for="coach-right">Coach</label>
+                                    <input type="text" id="coach-right" class="input">
+                                </div>
+                                <div class="form-group score">
+                                    <label for="score-right">Score</label>
+                                    <input type="number" id="score-right" class="input score-input" min="0" value="0">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="team-logo-wrapper">
+                            <div class="team-logo-section">
+                                <label>Team Logo</label>
+                                <div class="logo-preview-box" id="logo-preview-box-right">
+                                    <img id="logo-img-right" alt="Right Logo Preview">
+                                </div>
+                            </div>
+                            <label class="upload-logo-btn" for="upload-logo-right">
+                                <span>Upload Logo</span>
+                                <input type="file" id="upload-logo-right" accept="image/*" style="display: none;">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="inside-bottom">
+                        <label>Players Name</label>
+                        <div class="players-name">
+                            <input type="text" id="player-right-1" class="player-input">
+                            <input type="text" id="player-right-2" class="player-input">
+                            <input type="text" id="player-right-3" class="player-input">
+                            <input type="text" id="player-right-4" class="player-input">
+                            <input type="text" id="player-right-5" class="player-input">
+                        </div>
+                        <span class="helper-text">Left to Right (1-5)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="middle1">
+            <div class="ban-hero">
+                <div class="hero-card left">
+                    <h2>Hero Ban</h2>
+                    <div class="inside-container-hero">
+                        <div class="hero-slot has-hero" id="left-ban-slot-1">
+                            <img src="" class="hero-slot-img" alt="">
+                            <div class="hero-slot-overlay"></div>
+                            <div class="hero-slot-top">
+                                <span class="hero-slot-num">1</span>
+                                <button type="button" class="hero-slot-clear">X</button>
+                            </div>
+                            <div class="hero-slot-bottom">
+                                <div class="hero-selector-btn">
+                                    <span class="hero-selected-name"></span>
+                                    <span class="hero-select-arrow">v</span>
+                                </div>
+                                <select class="hero-slot-select" data-default=""></select>
+                            </div>
+                        </div>
+                        <div class="hero-slot" id="left-ban-slot-2">
+                            <img src="" class="hero-slot-img" alt="">
+                            <div class="hero-slot-overlay"></div>
+                            <div class="hero-slot-top">
+                                <span class="hero-slot-num">2</span>
+                                <button type="button" class="hero-slot-clear">X</button>
+                            </div>
+                            <div class="hero-slot-bottom">
+                                <div class="hero-selector-btn">
+                                    <span class="hero-selected-name">Select</span>
+                                    <span class="hero-select-arrow">v</span>
+                                </div>
+                                <select class="hero-slot-select"></select>
+                            </div>
+                        </div>
+                        <div class="hero-slot" id="left-ban-slot-3">
+                            <img src="" class="hero-slot-img" alt="">
+                            <div class="hero-slot-overlay"></div>
+                            <div class="hero-slot-top">
+                                <span class="hero-slot-num">3</span>
+                                <button type="button" class="hero-slot-clear">X</button>
+                            </div>
+                            <div class="hero-slot-bottom">
+                                <div class="hero-selector-btn">
+                                    <span class="hero-selected-name">Select</span>
+                                    <span class="hero-select-arrow">v</span>
+                                </div>
+                                <select class="hero-slot-select"></select>
+                            </div>
+                        </div>
+                        <div class="hero-slot" id="left-ban-slot-4">
+                            <img src="" class="hero-slot-img" alt="">
+                            <div class="hero-slot-overlay"></div>
+                            <div class="hero-slot-top">
+                                <span class="hero-slot-num">4</span>
+                                <button type="button" class="hero-slot-clear">X</button>
+                            </div>
+                            <div class="hero-slot-bottom">
+                                <div class="hero-selector-btn">
+                                    <span class="hero-selected-name">Select</span>
+                                    <span class="hero-select-arrow">v</span>
+                                </div>
+                                <select class="hero-slot-select"></select>
+                            </div>
+                        </div>
+                        <div class="hero-slot" id="left-ban-slot-5">
+                            <img src="" class="hero-slot-img" alt="">
+                            <div class="hero-slot-overlay"></div>
+                            <div class="hero-slot-top">
+                                <span class="hero-slot-num">5</span>
+                                <button type="button" class="hero-slot-clear">X</button>
+                            </div>
+                            <div class="hero-slot-bottom">
+                                <div class="hero-selector-btn">
+                                    <span class="hero-selected-name">Select</span>
+                                    <span class="hero-select-arrow">v</span>
+                                </div>
+                                <select class="hero-slot-select"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-card right">
+                    <h2>Hero Ban</h2>
+                    <div class="inside-container-hero">
+                        <div class="hero-slot" id="right-ban-slot-5">
+                            <img src="" class="hero-slot-img" alt="">
+                            <div class="hero-slot-overlay"></div>
+                            <div class="hero-slot-top">
+                                <span class="hero-slot-num">5</span>
+                                <button type="button" class="hero-slot-clear">X</button>
+                            </div>
+                            <div class="hero-slot-bottom">
+                                <div class="hero-selector-btn">
+                                    <span class="hero-selected-name">Select</span>
+                                    <span class="hero-select-arrow">v</span>
+                                </div>
+                                <select class="hero-slot-select"></select>
+                            </div>
+                        </div>
+                        <div class="hero-slot" id="right-ban-slot-4">
+                            <img src="" class="hero-slot-img" alt="">
+                            <div class="hero-slot-overlay"></div>
+                            <div class="hero-slot-top">
+                                <span class="hero-slot-num">4</span>
+                                <button type="button" class="hero-slot-clear">X</button>
+                            </div>
+                            <div class="hero-slot-bottom">
+                                <div class="hero-selector-btn">
+                                    <span class="hero-selected-name">Select</span>
+                                    <span class="hero-select-arrow">v</span>
+                                </div>
+                                <select class="hero-slot-select"></select>
+                            </div>
+                        </div>
+                        <div class="hero-slot" id="right-ban-slot-3">
+                            <img src="" class="hero-slot-img" alt="">
+                            <div class="hero-slot-overlay"></div>
+                            <div class="hero-slot-top">
+                                <span class="hero-slot-num">3</span>
+                                <button type="button" class="hero-slot-clear">X</button>
+                            </div>
+                            <div class="hero-slot-bottom">
+                                <div class="hero-selector-btn">
+                                    <span class="hero-selected-name">Select</span>
+                                    <span class="hero-select-arrow">v</span>
+                                </div>
+                                <select class="hero-slot-select"></select>
+                            </div>
+                        </div>
+                        <div class="hero-slot" id="right-ban-slot-2">
+                            <img src="" class="hero-slot-img" alt="">
+                            <div class="hero-slot-overlay"></div>
+                            <div class="hero-slot-top">
+                                <span class="hero-slot-num">2</span>
+                                <button type="button" class="hero-slot-clear">X</button>
+                            </div>
+                            <div class="hero-slot-bottom">
+                                <div class="hero-selector-btn">
+                                    <span class="hero-selected-name">Select</span>
+                                    <span class="hero-select-arrow">v</span>
+                                </div>
+                                <select class="hero-slot-select"></select>
+                            </div>
+                        </div>
+                        <div class="hero-slot has-hero" id="right-ban-slot-1">
+                            <img src="" class="hero-slot-img" alt="">
+                            <div class="hero-slot-overlay"></div>
+                            <div class="hero-slot-top">
+                                <span class="hero-slot-num">1</span>
+                                <button type="button" class="hero-slot-clear">X</button>
+                            </div>
+                            <div class="hero-slot-bottom">
+                                <div class="hero-selector-btn">
+                                    <span class="hero-selected-name"></span>
+                                    <span class="hero-select-arrow">v</span>
+                                </div>
+                                <select class="hero-slot-select" data-default=""></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="middle2">
+            <div class="pick-hero">
+                <div class="hero-card left">
+                    <h2>Hero Pick</h2>
+                    <div class="inside-container-hero">
+                        <div class="hero-slot has-hero" id="left-pick-slot-1">
+                            <img src="" class="hero-slot-img" alt="">
+                            <div class="hero-slot-overlay"></div>
+                            <div class="hero-slot-top">
+                                <span class="hero-slot-num">1</span>
+                                <button type="button" class="hero-slot-clear">X</button>
+                            </div>
+                            <div class="hero-slot-bottom">
+                                <div class="hero-selector-btn">
+                                    <span class="hero-selected-name"></span>
+                                    <span class="hero-select-arrow">v</span>
+                                </div>
+                                <select class="hero-slot-select" data-default=""></select>
+                            </div>
+                        </div>
+                        <div class="hero-slot" id="left-pick-slot-2">
+                            <img src="" class="hero-slot-img" alt="">
+                            <div class="hero-slot-overlay"></div>
+                            <div class="hero-slot-top">
+                                <span class="hero-slot-num">2</span>
+                                <button type="button" class="hero-slot-clear">X</button>
+                            </div>
+                            <div class="hero-slot-bottom">
+                                <div class="hero-selector-btn">
+                                    <span class="hero-selected-name">Select</span>
+                                    <span class="hero-select-arrow">v</span>
+                                </div>
+                                <select class="hero-slot-select"></select>
+                            </div>
+                        </div>
+                        <div class="hero-slot" id="left-pick-slot-3">
+                            <img src="" class="hero-slot-img" alt="">
+                            <div class="hero-slot-overlay"></div>
+                            <div class="hero-slot-top">
+                                <span class="hero-slot-num">3</span>
+                                <button type="button" class="hero-slot-clear">X</button>
+                            </div>
+                            <div class="hero-slot-bottom">
+                                <div class="hero-selector-btn">
+                                    <span class="hero-selected-name">Select</span>
+                                    <span class="hero-select-arrow">v</span>
+                                </div>
+                                <select class="hero-slot-select"></select>
+                            </div>
+                        </div>
+                        <div class="hero-slot" id="left-pick-slot-4">
+                            <img src="" class="hero-slot-img" alt="">
+                            <div class="hero-slot-overlay"></div>
+                            <div class="hero-slot-top">
+                                <span class="hero-slot-num">4</span>
+                                <button type="button" class="hero-slot-clear">X</button>
+                            </div>
+                            <div class="hero-slot-bottom">
+                                <div class="hero-selector-btn">
+                                    <span class="hero-selected-name">Select</span>
+                                    <span class="hero-select-arrow">v</span>
+                                </div>
+                                <select class="hero-slot-select"></select>
+                            </div>
+                        </div>
+                        <div class="hero-slot" id="left-pick-slot-5">
+                            <img src="" class="hero-slot-img" alt="">
+                            <div class="hero-slot-overlay"></div>
+                            <div class="hero-slot-top">
+                                <span class="hero-slot-num">5</span>
+                                <button type="button" class="hero-slot-clear">X</button>
+                            </div>
+                            <div class="hero-slot-bottom">
+                                <div class="hero-selector-btn">
+                                    <span class="hero-selected-name">Select</span>
+                                    <span class="hero-select-arrow">v</span>
+                                </div>
+                                <select class="hero-slot-select"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-card right">
+                    <h2>Hero Pick</h2>
+                    <div class="inside-container-hero">
+                        <div class="hero-slot" id="right-pick-slot-5">
+                            <img src="" class="hero-slot-img" alt="">
+                            <div class="hero-slot-overlay"></div>
+                            <div class="hero-slot-top">
+                                <span class="hero-slot-num">5</span>
+                                <button type="button" class="hero-slot-clear">X</button>
+                            </div>
+                            <div class="hero-slot-bottom">
+                                <div class="hero-selector-btn">
+                                    <span class="hero-selected-name">Select</span>
+                                    <span class="hero-select-arrow">v</span>
+                                </div>
+                                <select class="hero-slot-select"></select>
+                            </div>
+                        </div>
+                        <div class="hero-slot" id="right-pick-slot-4">
+                            <img src="" class="hero-slot-img" alt="">
+                            <div class="hero-slot-overlay"></div>
+                            <div class="hero-slot-top">
+                                <span class="hero-slot-num">4</span>
+                                <button type="button" class="hero-slot-clear">X</button>
+                            </div>
+                            <div class="hero-slot-bottom">
+                                <div class="hero-selector-btn">
+                                    <span class="hero-selected-name">Select</span>
+                                    <span class="hero-select-arrow">v</span>
+                                </div>
+                                <select class="hero-slot-select"></select>
+                            </div>
+                        </div>
+                        <div class="hero-slot" id="right-pick-slot-3">
+                            <img src="" class="hero-slot-img" alt="">
+                            <div class="hero-slot-overlay"></div>
+                            <div class="hero-slot-top">
+                                <span class="hero-slot-num">3</span>
+                                <button type="button" class="hero-slot-clear">X</button>
+                            </div>
+                            <div class="hero-slot-bottom">
+                                <div class="hero-selector-btn">
+                                    <span class="hero-selected-name">Select</span>
+                                    <span class="hero-select-arrow">v</span>
+                                </div>
+                                <select class="hero-slot-select"></select>
+                            </div>
+                        </div>
+                        <div class="hero-slot" id="right-pick-slot-2">
+                            <img src="" class="hero-slot-img" alt="">
+                            <div class="hero-slot-overlay"></div>
+                            <div class="hero-slot-top">
+                                <span class="hero-slot-num">2</span>
+                                <button type="button" class="hero-slot-clear">X</button>
+                            </div>
+                            <div class="hero-slot-bottom">
+                                <div class="hero-selector-btn">
+                                    <span class="hero-selected-name">Select</span>
+                                    <span class="hero-select-arrow">v</span>
+                                </div>
+                                <select class="hero-slot-select"></select>
+                            </div>
+                        </div>
+                        <div class="hero-slot has-hero" id="right-pick-slot-1">
+                            <img src="" class="hero-slot-img" alt="">
+                            <div class="hero-slot-overlay"></div>
+                            <div class="hero-slot-top">
+                                <span class="hero-slot-num">1</span>
+                                <button type="button" class="hero-slot-clear">X</button>
+                            </div>
+                            <div class="hero-slot-bottom">
+                                <div class="hero-selector-btn">
+                                    <span class="hero-selected-name"></span>
+                                    <span class="hero-select-arrow">v</span>
+                                </div>
+                                <select class="hero-slot-select" data-default=""></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function bindLogoUpload(inputId, imgId) {
+                const input = document.getElementById(inputId);
+                const img = document.getElementById(imgId);
+                if (!input || !img) return;
+                input.addEventListener('change', function (e) {
+                    const file = e.target.files && e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        img.src = String(reader.result || '');
+                        img.dataset.syncData = String(reader.result || '');
+                        img.style.display = 'block';
+                        if (typeof publishDraftState === 'function') publishDraftState();
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+            bindLogoUpload('upload-logo-left', 'logo-img-left');
+            bindLogoUpload('upload-logo-right', 'logo-img-right');
+
+            document.querySelectorAll('.bo-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.bo-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    if (typeof publishDraftState === 'function') publishDraftState();
+                });
+            });
+
+            // Match timer + configurable turn-by-turn draft sequence.
+            // Left panel is treated as Blue Team and right panel as Red Team.
+            // Change TEAM_LABELS or DRAFT_SEQUENCE if your tournament order differs.
+            const TEAM_LABELS = {
+                left: 'BLUE TEAM',
+                right: 'RED TEAM'
+            };
+
+            const PHASE_DURATIONS = {
+                ban: 45,
+                pick: 45,
+                'last-change': 30
+            };
+
+            // Each entry is one operator turn. For double-pick turns, each hero slot
+            // gets its own timer step. Reorder these entries to match your event rules.
+            const DRAFT_SEQUENCE = [
+                // BAN PHASE 1 — first three bans per team, alternating.
+                { side: 'left', phase: 'ban', turn: 1, label: 'BLUE TEAM · BAN 1', slots: ['left-ban-slot-1'] },
+                { side: 'right', phase: 'ban', turn: 1, label: 'RED TEAM · BAN 1', slots: ['right-ban-slot-1'] },
+                { side: 'left', phase: 'ban', turn: 2, label: 'BLUE TEAM · BAN 2', slots: ['left-ban-slot-2'] },
+                { side: 'right', phase: 'ban', turn: 2, label: 'RED TEAM · BAN 2', slots: ['right-ban-slot-2'] },
+                { side: 'left', phase: 'ban', turn: 3, label: 'BLUE TEAM · BAN 3', slots: ['left-ban-slot-3'] },
+                { side: 'right', phase: 'ban', turn: 3, label: 'RED TEAM · BAN 3', slots: ['right-ban-slot-3'] },
+
+                // PICK PHASE 1 — Blue 1, Red 2, Blue 2, Red 1.
+                { side: 'left', phase: 'pick', turn: 1, label: 'BLUE TEAM · PICK 1', slots: ['left-pick-slot-1'] },
+                { side: 'right', phase: 'pick', turn: '1 + 2', label: 'RED TEAM · PICK 1 + 2', slots: ['right-pick-slot-1', 'right-pick-slot-2'] },
+                { side: 'left', phase: 'pick', turn: '2 + 3', label: 'BLUE TEAM · PICK 2 + 3', slots: ['left-pick-slot-2', 'left-pick-slot-3'] },
+                { side: 'right', phase: 'pick', turn: 3, label: 'RED TEAM · PICK 3', slots: ['right-pick-slot-3'] },
+
+                // BAN PHASE 2 — fourth and fifth bans per team, alternating.
+                { side: 'left', phase: 'ban', turn: 4, label: 'BLUE TEAM · BAN 4', slots: ['left-ban-slot-4'] },
+                { side: 'right', phase: 'ban', turn: 4, label: 'RED TEAM · BAN 4', slots: ['right-ban-slot-4'] },
+                { side: 'left', phase: 'ban', turn: 5, label: 'BLUE TEAM · BAN 5', slots: ['left-ban-slot-5'] },
+                { side: 'right', phase: 'ban', turn: 5, label: 'RED TEAM · BAN 5', slots: ['right-ban-slot-5'] },
+
+                // PICK PHASE 2 — Blue 1, Red 2, Blue 1.
+                { side: 'left', phase: 'pick', turn: 4, label: 'BLUE TEAM · PICK 4', slots: ['left-pick-slot-4'] },
+                { side: 'right', phase: 'pick', turn: '4 + 5', label: 'RED TEAM · PICK 4 + 5', slots: ['right-pick-slot-4', 'right-pick-slot-5'] },
+                { side: 'left', phase: 'pick', turn: 5, label: 'BLUE TEAM · PICK 5', slots: ['left-pick-slot-5'] },
+
+                { side: 'both', phase: 'last-change', turn: null, label: 'LAST CHANGE', slots: [] }
+            ];
+
+            let timerSeconds = PHASE_DURATIONS.pick;
+            let timerInterval = null;
+            let currentStepIndex = 0;
+            let currentTimerMode = 'pick';
+            let currentDurationSeconds = PHASE_DURATIONS.pick;
+            let customDurationForCurrentStep = null;
+
+            const timerDisplay = document.getElementById('draft-timer-display');
+            const turnLabel = document.getElementById('draft-turn-label');
+            const customSecondsInput = document.getElementById('timer-custom-seconds');
+            const btnStart = document.getElementById('btn-timer-start');
+            const btnNext = document.getElementById('btn-timer-next');
+            const btnReset = document.getElementById('btn-timer-reset');
+            const btnApplyCustom = document.getElementById('btn-timer-apply');
+            const phaseButtons = Array.from(document.querySelectorAll('.phase-btn'));
+
+            function isTimerRunning() {
+                return timerInterval !== null;
+            }
+
+            function stopTimer() {
+                if (timerInterval !== null) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                }
+                btnStart.classList.remove('active');
+            }
+
+            function updateTimerDisplay() {
+                const safeSeconds = Math.max(0, Math.floor(timerSeconds));
+                const minutes = Math.floor(safeSeconds / 60);
+                const seconds = safeSeconds % 60;
+                timerDisplay.textContent =
+                    `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }
+
+            function updatePhaseButtons(phase) {
+                phaseButtons.forEach(button => {
+                    button.classList.toggle('active', button.dataset.phase === phase);
+                });
+            }
+
+            function updateTurnLabel() {
+                const step = DRAFT_SEQUENCE[currentStepIndex];
+                if (!step) {
+                    turnLabel.textContent = 'DRAFT COMPLETE';
+                    return;
+                }
+
+                const label = step.label || (
+                    step.phase === 'last-change'
+                        ? 'LAST CHANGE'
+                        : `${TEAM_LABELS[step.side] || String(step.side).toUpperCase()} · ${step.phase.toUpperCase()} ${step.turn}`
+                );
+                turnLabel.textContent = `${label} · ${currentStepIndex + 1}/${DRAFT_SEQUENCE.length}`;
+            }
+
+            function applyTimerMode(mode, options = {}) {
+                const autoStart = Boolean(options.autoStart);
+                const resetCustomOverride = options.resetCustomOverride !== false;
+
+                if (!Object.prototype.hasOwnProperty.call(PHASE_DURATIONS, mode)) return;
+
+                stopTimer();
+                currentTimerMode = mode;
+                if (resetCustomOverride) customDurationForCurrentStep = null;
+                currentDurationSeconds = customDurationForCurrentStep ?? PHASE_DURATIONS[mode];
+                timerSeconds = currentDurationSeconds;
+
+                updatePhaseButtons(mode);
+                btnReset.classList.remove('active');
+                btnNext.classList.remove('active');
+                customSecondsInput.value = String(currentDurationSeconds);
+                updateTimerDisplay();
+
+                if (autoStart) startTimer();
+                else publishDraftState();
+            }
+
+            function applyCurrentSequenceStep(options = {}) {
+                const step = DRAFT_SEQUENCE[currentStepIndex];
+                if (!step) return;
+
+                const autoStart = options.autoStart !== false;
+                customDurationForCurrentStep = null;
+                currentTimerMode = step.phase;
+                currentDurationSeconds = PHASE_DURATIONS[step.phase] || PHASE_DURATIONS.pick;
+                timerSeconds = currentDurationSeconds;
+
+                updatePhaseButtons(step.phase);
+                btnReset.classList.remove('active');
+                btnNext.classList.remove('active');
+                customSecondsInput.value = String(currentDurationSeconds);
+                updateTurnLabel();
+                updateTimerDisplay();
+
+                if (autoStart) startTimer();
+            }
+
+            function startTimer() {
+                if (timerInterval !== null || timerSeconds <= 0) return;
+
+                btnReset.classList.remove('active');
+                btnNext.classList.remove('active');
+                btnStart.classList.add('active');
+                publishDraftState();
+                timerInterval = setInterval(() => {
+                    if (timerSeconds > 0) {
+                        timerSeconds -= 1;
+                        updateTimerDisplay();
+                    }
+
+                    if (timerSeconds <= 0) {
+                        timerSeconds = 0;
+                        updateTimerDisplay();
+                        stopTimer();
+                    }
+                    publishDraftState();
+                }, 1000);
+            }
+
+            function nextDraftStep() {
+                stopTimer();
+
+                // Last Change appears only once. After that, keep the draft complete
+                // instead of cyc back and triggering another Last Change sequence.
+                if (draftComplete) return;
+                if (currentStepIndex >= DRAFT_SEQUENCE.length - 1) {
+                    draftComplete = true;
+                    timerSeconds = 0;
+                    updateTimerDisplay();
+                    turnLabel.textContent = 'DRAFT COMPLETE';
+                    btnStart.classList.remove('active');
+                    btnNext.classList.remove('active');
+                    publishDraftState();
+                    return;
+                }
+
+                currentStepIndex += 1;
+                applyCurrentSequenceStep({ autoStart: true });
+                publishDraftState();
+            }
+
+            btnStart.addEventListener('click', startTimer);
+            btnNext.addEventListener('click', nextDraftStep);
+
+            btnReset.addEventListener('click', () => {
+                stopTimer();
+                timerSeconds = currentDurationSeconds;
+                updateTimerDisplay();
+                btnReset.classList.remove('active');
+                btnNext.classList.remove('active');
+                draftComplete = false;
+                publishDraftState();
+            });
+
+            btnApplyCustom.addEventListener('click', () => {
+                const seconds = Number.parseInt(customSecondsInput.value, 10);
+                if (!Number.isFinite(seconds) || seconds < 1 || seconds > 599) {
+                    customSecondsInput.setCustomValidity('Enter a number from 1 to 599 seconds.');
+                    customSecondsInput.reportValidity();
+                    return;
+                }
+
+                customSecondsInput.setCustomValidity('');
+                stopTimer();
+                customDurationForCurrentStep = seconds;
+                currentDurationSeconds = seconds;
+                timerSeconds = seconds;
+                customSecondsInput.value = String(seconds);
+                updateTimerDisplay();
+                btnReset.classList.remove('active');
+                btnNext.classList.remove('active');
+                publishDraftState();
+            });
+
+            customSecondsInput.addEventListener('input', () => {
+                customSecondsInput.setCustomValidity('');
+            });
+
+            phaseButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const mode = button.dataset.phase;
+                    // Phase buttons are manual timer presets. Last Change is a single neutral phase.
+                    draftComplete = false;
+                    applyTimerMode(mode, { autoStart: false });
+                });
+            });
+
+            // Keep the current turn and timer aligned when the page first opens.
+            applyCurrentSequenceStep({ autoStart: false });
+
+            // Hero List & Slot Initialization — use hero-manifest-assets.json as the source of truth.
+            const HERO_MANIFEST_URLS = [
+                '../ASSETS/hero-manifest-assets.json',
+                '../ASSETS/HEROES/hero-manifest-assets.json',
+                '../hero-assets-manifest.json',
+                '../ASSETS/hero-assets-manifest.json',
+                '../ASSETS/HEROES/hero-assets-manifest.json'
+            ];
+
+            function normalizeHeroKey(value) {
+                return String(value || '').normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .toLowerCase().replace(/[^a-z0-9]/g, '');
+            }
+
+            function getManifestEntries(payload) {
+                if (Array.isArray(payload)) return payload;
+                if (!payload || typeof payload !== 'object') {
+                    throw new Error('Manifest JSON must contain a hero list.');
+                }
+
+                for (const key of ['heroes', 'heroList', 'assets', 'manifest', 'data']) {
+                    const value = payload[key];
+                    if (Array.isArray(value)) return value;
+                    if (value && typeof value === 'object') {
+                        const entries = Object.values(value);
+                        if (entries.length && entries.every(item => item && typeof item === 'object')) {
+                            return entries;
+                        }
+                    }
+                }
+
+                const entries = Object.values(payload).filter(item => item && typeof item === 'object');
+                if (entries.length) return entries;
+                throw new Error('No hero entries found in the manifest.');
+            }
+
+            function getHeroName(hero) {
+                return String(hero.name || hero.heroName || hero.title || hero.id || hero.heroId || '').trim();
+            }
+
+            function getHeroImageSrc(hero) {
+                const localValue = hero.imageFile || hero.imagePath || hero.localImage ||
+                    hero.localPath || hero.fileName || hero.filename || hero.file || hero.path || '';
+
+                if (typeof localValue === 'string' && localValue.trim()) {
+                    const value = localValue.trim().replace(/\\/g, '/');
+                    if (/^(https?:\/\/|data:|blob:)/i.test(value)) return value;
+
+                    if (/^(\/|\.\.?\/)/.test(value) &&
+                        !/\/?assets\/HEROES\//i.test(value) &&
+                        !/\/?ASSETS\/HEROES\//i.test(value)) {
+                        return value;
+                    }
+
+                    const filename = value.split('/').pop();
+                    return '../ASSETS/HEROES/' + encodeURIComponent(filename);
+                }
+
+                if (typeof hero.imageUrl === 'string' && hero.imageUrl.trim()) {
+                    return hero.imageUrl.trim();
+                }
+                return '';
+            }
+
+            async function loadHeroManifest() {
+                let lastError;
+                for (const url of HERO_MANIFEST_URLS) {
+                    try {
+                        const response = await fetch(url, { cache: 'no-store' });
+                        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+                        const payload = await response.json();
+                        const heroes = getManifestEntries(payload)
+                            .map(item => ({ ...item, name: getHeroName(item) }))
+                            .filter(item => item.name);
+
+                        if (!heroes.length) throw new Error('Manifest contains no valid hero entries.');
+                        console.info(`[Draft] Loaded ${heroes.length} heroes from ${url}`);
+                        return heroes;
+                    } catch (error) {
+                        lastError = error;
+                    }
+                }
+                throw new Error(
+                    'Cannot load hero-manifest-assets.json. Check its path and serve this page through Node.js. ' +
+                    (lastError ? `Last error: ${lastError.message}` : '')
+                );
+            }
+
+            function resetHeroSlot(slot, select, nameLabel, img) {
+                select.value = '';
+                nameLabel.textContent = 'Select';
+                slot.classList.remove('has-hero');
+                if (img) {
+                    img.removeAttribute('src');
+                    img.alt = '';
+                    img.style.display = 'none';
+                }
+            }
+
+            function setHeroSlot(slot, select, nameLabel, img, hero) {
+                if (!hero) {
+                    resetHeroSlot(slot, select, nameLabel, img);
+                    return;
+                }
+
+                nameLabel.textContent = hero.name;
+                slot.classList.add('has-hero');
+
+                if (img) {
+                    const imageSrc = getHeroImageSrc(hero);
+                    if (!imageSrc) {
+                        img.removeAttribute('src');
+                        img.alt = '';
+                        img.style.display = 'none';
+                        return;
+                    }
+                    img.onerror = () => {
+                        img.style.display = 'none';
+                        console.warn(`[Draft] Missing image for ${hero.name}: ${imageSrc}`);
+                    };
+                    img.onload = () => { img.style.display = 'block'; };
+                    img.src = imageSrc;
+                    img.alt = hero.name;
+                    img.style.display = 'block';
+                }
+            }
+
+            async function initializeHeroSlots() {
+                const slots = Array.from(document.querySelectorAll('.hero-slot')).map(slot => ({
+                    slot,
+                    select: slot.querySelector('.hero-slot-select'),
+                    nameLabel: slot.querySelector('.hero-selected-name'),
+                    img: slot.querySelector('.hero-slot-img'),
+                    clearBtn: slot.querySelector('.hero-slot-clear'),
+                    defaultHero: slot.querySelector('.hero-slot-select')?.getAttribute('data-default') || ''
+                })).filter(item => item.select && item.nameLabel);
+
+                let heroList;
+                try {
+                    heroList = await loadHeroManifest();
+                } catch (error) {
+                    console.error('[Draft] Hero manifest load failed:', error);
+                    slots.forEach(({ slot, select, nameLabel, img }) => {
+                        select.replaceChildren(new Option('Manifest unavailable', ''));
+                        select.disabled = true;
+                        resetHeroSlot(slot, select, nameLabel, img);
+                        nameLabel.textContent = 'Manifest unavailable';
+                    });
+                    return;
+                }
+
+                heroList.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
+
+                slots.forEach(({ slot, select, nameLabel, img, clearBtn, defaultHero }) => {
+                    select.replaceChildren(new Option('Select', ''));
+                    heroList.forEach(hero => select.add(new Option(hero.name, hero.name)));
+                    select.disabled = false;
+
+                    const selectedHero = defaultHero
+                        ? heroList.find(hero => normalizeHeroKey(hero.name) === normalizeHeroKey(defaultHero))
+                        : null;
+
+                    if (selectedHero) {
+                        select.value = selectedHero.name;
+                        setHeroSlot(slot, select, nameLabel, img, selectedHero);
+                    } else {
+                        resetHeroSlot(slot, select, nameLabel, img);
+                    }
+
+                    select.addEventListener('change', () => {
+                        const selected = heroList.find(hero => hero.name === select.value);
+                        setHeroSlot(slot, select, nameLabel, img, selected || null);
+                        if (typeof publishDraftState === 'function') publishDraftState();
+                    });
+
+                    if (clearBtn) {
+                        clearBtn.addEventListener('click', event => {
+                            event.stopPropagation();
+                            resetHeroSlot(slot, select, nameLabel, img);
+                            if (typeof publishDraftState === 'function') publishDraftState();
+                        });
+                    }
+                });
+                if (typeof publishDraftState === 'function') publishDraftState();
+            }
+
+
+            // Live link to the display page. Open both pages from the same Node.js origin.
+            const DRAFT_SYNC_CHANNEL_NAME = 'mlbb-draft-sync-v1';
+            const DRAFT_SYNC_STORAGE_KEY = 'mlbb-draft-sync-state-v1';
+            const draftSyncChannel = ('BroadcastChannel' in window)
+                ? new BroadcastChannel(DRAFT_SYNC_CHANNEL_NAME)
+                : null;
+            let draftComplete = false;
+
+            function readTeamState(side) {
+                const name = document.getElementById(`team-name-${side}`);
+                const coach = document.getElementById(`coach-${side}`);
+                const score = document.getElementById(`score-${side}`);
+                const logo = document.getElementById(`logo-img-${side}`);
+                const logoValue = logo && logo.dataset.syncData
+                    ? logo.dataset.syncData
+                    : (logo && logo.src && logo.style.display !== 'none' ? logo.src : '');
+                return {
+                    name: name ? name.value.trim() : '',
+                    coach: coach ? coach.value.trim() : '',
+                    score: score ? Math.max(0, Number(score.value) || 0) : 0,
+                    logo: logoValue
+                };
+            }
+
+            function readHeroesState(side, phase) {
+                return Array.from({ length: 5 }, (_, index) => {
+                    const slotNumber = index + 1;
+                    const slot = document.getElementById(`${side}-${phase}-slot-${slotNumber}`);
+                    if (!slot || !slot.classList.contains('has-hero')) return null;
+                    const nameNode = slot.querySelector('.hero-selected-name');
+                    const imageNode = slot.querySelector('.hero-slot-img');
+                    const name = nameNode ? nameNode.textContent.trim() : '';
+                    const image = imageNode && imageNode.getAttribute('src')
+                        ? imageNode.src
+                        : '';
+                    return name ? { name, image } : null;
+                });
+            }
+
+            function getSelectedBestOf() {
+                const active = document.querySelector('.bo-btn.active');
+                return active ? Number(active.dataset.bo) || 3 : 3;
+            }
+
+            function getSyncSideAndLabel() {
+                const step = DRAFT_SEQUENCE[currentStepIndex] || {};
+                let side = currentTimerMode === 'last-change' ? 'both' : (step.side || 'left');
+                let label;
+                if (draftComplete) {
+                    label = 'DRAFT COMPLETE';
+                    side = 'both';
+                } else if (currentTimerMode === 'last-change') {
+                    label = 'LAST CHANGE';
+                } else if (step.phase === currentTimerMode && step.label) {
+                    label = step.label;
+                } else {
+                    const team = side === 'right' ? TEAM_LABELS.right : TEAM_LABELS.left;
+                    label = `${team} · ${String(currentTimerMode).toUpperCase()}`;
+                }
+                return { side, label };
+            }
+
+            function publishDraftState() {
+                // Function may be called by inputs after this script section initializes.
+                if (typeof timerSeconds === 'undefined' || typeof currentStepIndex === 'undefined') return;
+                const stepInfo = getSyncSideAndLabel();
+                const activeBO = getSelectedBestOf();
+                const players = { left: [], right: [] };
+                for (const side of ['left', 'right']) {
+                    players[side] = Array.from({ length: 5 }, (_, index) => {
+                        const input = document.getElementById(`player-${side}-${index + 1}`);
+                        return input ? input.value.trim() : '';
+                    });
+                }
+
+                const state = {
+                    type: 'mlbb-draft-state',
+                    timestamp: Date.now(),
+                    teams: {
+                        left: readTeamState('left'),
+                        right: readTeamState('right')
+                    },
+                    players,
+                    heroes: {
+                        left: {
+                            ban: readHeroesState('left', 'ban'),
+                            pick: readHeroesState('left', 'pick')
+                        },
+                        right: {
+                            ban: readHeroesState('right', 'ban'),
+                            pick: readHeroesState('right', 'pick')
+                        }
+                    },
+                    bestOf: activeBO,
+                    phase: currentTimerMode,
+                    side: stepInfo.side,
+                    label: stepInfo.label,
+                    duration: Math.max(1, Number(currentDurationSeconds) || 45),
+                    remaining: Math.max(0, Number(timerSeconds) || 0),
+                    running: isTimerRunning(),
+                    complete: draftComplete
+                };
+
+                if (draftSyncChannel) draftSyncChannel.postMessage(state);
+                try { localStorage.setItem(DRAFT_SYNC_STORAGE_KEY, JSON.stringify(state)); }
+                catch (error) { console.warn('[Draft Control] State saved to BroadcastChannel only', error); }
+            }
+
+            // Changes to team, coach, score, player names, BO, and hero selectors sync immediately.
+            document.addEventListener('input', event => {
+                if (event.target.matches(
+                    '#team-name-left, #team-name-right, #coach-left, #coach-right, ' +
+                    '#score-left, #score-right, .player-input'
+                )) publishDraftState();
+            });
+            document.addEventListener('change', event => {
+                if (event.target.matches(
+                    '#team-name-left, #team-name-right, #coach-left, #coach-right, ' +
+                    '#score-left, #score-right, .player-input, .hero-slot-select, .bo-btn'
+                )) publishDraftState();
+            });
+
+            // Publish initial values, then hero initialization publishes again when manifest is ready.
+            publishDraftState();
+
+            initializeHeroSlots();
+
+        </script>
+</body>
+
+</html>

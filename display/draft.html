@@ -566,6 +566,7 @@
             text-transform: none;
         }
     </style>
+    <script src="../shared/sync-client.js"></script>
 </head>
 
 <body>
@@ -937,6 +938,16 @@
         }
     </script>
 
+
+    <script>
+        // Terima state draft dari server.
+        if (window.MLBBOverlaySync &&
+            typeof applyDraftState === 'function') {
+            window.MLBBOverlaySync.subscribe('draft', payload => {
+                applyDraftState(payload);
+            });
+        }
+    </script>
 </body>
 
 </html>
