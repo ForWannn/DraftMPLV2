@@ -9,6 +9,7 @@ const { WebSocketServer } = require('ws');
 const PORT = process.env.PORT || 3000;
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
 const STATE_FILE = path.join(__dirname, 'state.json');
+const MATCH_ARCHIVE_FILE = path.join(__dirname, 'match-archive.json');
 
 fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
@@ -21,6 +22,14 @@ const createMatch = () => ({
     sa: 0,
     sb: 0
 });
+
+let matchArchive = { version: 1, games: [] };
+try {
+    const savedArchive = JSON.parse(fs.readFileSync(MATCH_ARCHIVE_FILE, 'utf8'));
+    if (savedArchive && Array.isArray(savedArchive.games)) matchArchive = savedArchive;
+} catch (_) {
+    // A separate archive file is created when the first game is finished.
+}
 
 let state = {
     countdown: {
@@ -49,18 +58,68 @@ if (!state.overlayRevisions || typeof state.overlayRevisions !== 'object') state
 const app = express();
 const server = http.createServer(app);
 
+// Match archive payloads can include compressed player portraits and team logos.
+app.use(express.json({ limit: '50mb' }));
+
 app.post('/upload', express.raw({ type: '*/*', limit: '300mb' }), (req, res) => {
     if (!req.body || !req.body.length) {
         return res.status(400).json({ error: 'empty' });
     }
 
+    const isPlayerPhoto = String(req.query.kind || '') === 'player-photo';
+    if (isPlayerPhoto) {
+        const pngSignature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
+        const body = req.body;
+        const contentType = String(req.headers['content-type'] || '').toLowerCase();
+        if (body.length > 15 * 1024 * 1024) {
+            return res.status(413).json({ error: 'Player PNG exceeds the 15 MB limit.' });
+        }
+        if (!contentType.startsWith('image/png') || body.length < 33 || !body.subarray(0, 8).equals(pngSignature)) {
+            return res.status(415).json({ error: 'Player photo upload accepts PNG files only.' });
+        }
+
+        // PNG IHDR color type 4/6 carries alpha; indexed PNG may carry transparency via tRNS.
+        let offset = 8;
+        let hasAlpha = false;
+        let validPngChunks = false;
+        while (offset + 12 <= body.length) {
+            const chunkLength = body.readUInt32BE(offset);
+            const chunkType = body.toString('ascii', offset + 4, offset + 8);
+            const chunkEnd = offset + 12 + chunkLength;
+            if (chunkEnd > body.length) break;
+            if (chunkType === 'IHDR') {
+                const colorType = body[offset + 17];
+                hasAlpha = colorType === 4 || colorType === 6;
+                validPngChunks = true;
+            } else if (chunkType === 'tRNS') {
+                hasAlpha = true;
+            } else if (chunkType === 'IEND') {
+                break;
+            }
+            offset = chunkEnd;
+        }
+        if (!validPngChunks || !hasAlpha) {
+            return res.status(415).json({ error: 'Player PNG must support transparency (alpha channel). Remove the background first.' });
+        }
+
+        const filename = `player-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.png`;
+        fs.writeFileSync(path.join(UPLOADS_DIR, filename), body);
+        return res.json({ url: `/uploads/${filename}`, mimeType: 'image/png', format: 'png' });
+    }
+
+    // Preserve the existing generic upload behavior for logos and other overlay assets.
     const ext = path.extname(String(req.query.name || ''))
         .toLowerCase()
         .replace(/[^.a-z0-9]/g, '');
     const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}${ext}`;
 
     fs.writeFileSync(path.join(UPLOADS_DIR, filename), req.body);
-    res.json({ url: `/uploads/${filename}` });
+    const response = { url: `/uploads/${filename}` };
+    if (ext === '.png') {
+        response.mimeType = 'image/png';
+        response.format = 'png';
+    }
+    res.json(response);
 });
 
 app.use(express.static(__dirname));
@@ -104,6 +163,66 @@ function broadcastLegacyState() {
 function isValidChannel(channel) {
     return typeof channel === 'string' && /^[a-z0-9_-]{1,64}$/i.test(channel);
 }
+
+function saveMatchArchive() {
+    const tempFile = `${MATCH_ARCHIVE_FILE}.tmp`;
+    fs.writeFileSync(tempFile, JSON.stringify(matchArchive, null, 2), 'utf8');
+    fs.renameSync(tempFile, MATCH_ARCHIVE_FILE);
+}
+
+// Read persisted overlay snapshots (used to restore the active Match Management session).
+app.get('/api/overlays/:channel', (req, res) => {
+    const channel = req.params.channel;
+    if (!isValidChannel(channel)) return res.status(400).json({ error: 'invalid_channel' });
+    res.json(Object.prototype.hasOwnProperty.call(state.overlays, channel)
+        ? state.overlays[channel]
+        : null);
+});
+
+// Read all archived games, or filter them by match ID.
+app.get('/api/match-archive', (req, res) => {
+    const matchId = String(req.query.matchId || '');
+    const games = matchId
+        ? matchArchive.games.filter(game => game && game.matchId === matchId)
+        : matchArchive.games;
+    res.json({ version: matchArchive.version, games });
+});
+
+// Save one completed game. A match/game pair is unique to prevent duplicate Finish Game clicks.
+app.post('/api/match-archive/game', (req, res) => {
+    const record = req.body;
+    if (!record || typeof record !== 'object' ||
+        typeof record.matchId !== 'string' || !record.matchId.trim() ||
+        !Number.isInteger(Number(record.gameNumber)) || Number(record.gameNumber) < 1 ||
+        !record.heroes || !record.teams) {
+        return res.status(400).json({ error: 'invalid_game_record' });
+    }
+
+    const duplicate = matchArchive.games.find(game =>
+        game.matchId === record.matchId &&
+        Number(game.gameNumber) === Number(record.gameNumber)
+    );
+    if (duplicate) {
+        return res.status(409).json({ error: 'game_already_archived', recordId: duplicate.recordId });
+    }
+
+    const savedRecord = {
+        ...record,
+        gameNumber: Number(record.gameNumber),
+        archivedAt: Date.now()
+    };
+    matchArchive.games.push(savedRecord);
+
+    try {
+        saveMatchArchive();
+    } catch (error) {
+        matchArchive.games.pop();
+        console.error('[Match Archive] Save failed:', error);
+        return res.status(500).json({ error: 'archive_save_failed' });
+    }
+
+    res.status(201).json({ ok: true, record: savedRecord });
+});
 
 function publishOverlayState(channel, payload, sender) {
     state.overlays[channel] = payload;

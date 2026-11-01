@@ -89,6 +89,118 @@
             background-color: red;
         }
 
+        .draft-container .recap-container .draft-pick-recap .pick-recap,
+        .draft-container .recap-container .draft-pick-recap .ban-recap {
+            position: relative;
+            flex: 1 1 0;
+            min-width: 0;
+            overflow: hidden;
+            background-color: #17191d;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: 1px solid rgba(255, 255, 255, .12);
+            box-sizing: border-box;
+        }
+
+        .draft-container .recap-container .draft-pick-recap .pick-recap::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, .10), transparent 45%, rgba(0, 0, 0, .45));
+            pointer-events: none;
+        }
+
+        .recap-role-icon {
+            position: absolute;
+            z-index: 2;
+            top: 5px;
+            left: 5px;
+            min-width: 24px;
+            height: 22px;
+            padding: 0 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            background: rgba(12, 18, 28, .88);
+            border: 1px solid rgba(255, 255, 255, .65);
+            color: #fff;
+            font-family: 'Eixample ExtraBold';
+            font-size: 10px;
+            line-height: 1;
+            text-shadow: 0 1px 2px #000;
+        }
+
+        .recap-pick-bar,
+        .recap-ban-bar {
+            position: absolute;
+            z-index: 3;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            min-height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Eixample ExtraBold';
+            font-size: 12px;
+            line-height: 1;
+            letter-spacing: .3px;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, .5);
+        }
+
+        .recap-pick-bar {
+            background: #16a65a;
+        }
+
+        .recap-pick-bar.repicked {
+            background: #f1c52c;
+            color: #151515;
+            text-shadow: none;
+        }
+
+        .recap-pick-bar.stolen {
+            background: #16a65a;
+        }
+
+        .recap-pick-bar.empty {
+            min-height: 5px;
+            height: 5px;
+        }
+
+        .recap-ban-bar {
+            min-height: 5px;
+            height: 5px;
+            background: #e53945;
+        }
+
+        .recap-ban-bar.empty {
+            background: #16a65a;
+        }
+
+        .draft-container .recap-container .draft-pick-recap .top {
+            gap: 8px;
+            padding: 0 8px;
+            box-sizing: border-box;
+            font-size: 22px;
+            white-space: nowrap;
+        }
+
+        .recap-team-name {
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 14px;
+            opacity: .9;
+        }
+
+        .recap-game-number {
+            margin-left: 4px;
+            font-size: 20px;
+        }
+
         .draft-container .top {
             height: 80px;
             width: 1900px;
@@ -600,21 +712,127 @@
             overflow: hidden;
         }
 
-        .draft-container .bottom .pick-container .pick-hero .pick-image .player-photo {
-            position: absolute;
-            z-index: 2;
-            left: 8px;
-            bottom: 8px;
-            width: 54px;
-            height: 54px;
-            display: none;
-            object-fit: cover;
-            object-position: center;
-            border: 2px solid rgba(255, 255, 255, 0.95);
-            border-radius: 50%;
-            background: #17191d;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+        /* PICK-CARD ROLE + PLAYER REVEAL ANIMATION */
+        .draft-container .bottom .pick-container {
+            width: 740px;
+            max-width: 740px;
+            min-width: 0;
             box-sizing: border-box;
+            display: flex;
+            gap: 2px;
+            overflow: hidden;
+        }
+
+        .draft-container .bottom .pick-container .pick-hero {
+            width: 148px;
+            min-width: 0;
+            flex: 1 1 148px;
+            box-sizing: border-box;
+            overflow: hidden;
+            transition:
+                flex-basis 300ms cubic-bezier(.22, .75, .25, 1),
+                width 300ms cubic-bezier(.22, .75, .25, 1);
+            will-change: flex-basis;
+        }
+
+        /* Keep the established 170px active-pick behavior. */
+        .draft-container .bottom .pick-container .pick-hero.is-active-pick {
+            width: 170px;
+            flex: 0 0 170px;
+        }
+
+        .draft-container .bottom .pick-container .pick-hero .pick-image {
+            width: 100%;
+            min-width: 0;
+            height: 215px;
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+            background-color: #eafaff;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Large role icon is the default placeholder, centered in the image area. */
+        .draft-container .bottom .pick-container .player-role-icon {
+            position: absolute;
+            z-index: 4;
+            left: 50%;
+            top: 50%;
+            width: 84px;
+            height: 84px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #63d8d0;
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+            transform-origin: top left;
+            filter: drop-shadow(0 2px 3px rgba(17, 86, 91, .10));
+            transition:
+                left 520ms cubic-bezier(.22, 1, .36, 1),
+                top 520ms cubic-bezier(.22, 1, .36, 1),
+                width 520ms cubic-bezier(.22, 1, .36, 1),
+                height 520ms cubic-bezier(.22, 1, .36, 1),
+                transform 520ms cubic-bezier(.22, 1, .36, 1),
+                opacity 220ms ease;
+            pointer-events: none;
+        }
+
+        .draft-container .bottom .pick-container .player-role-icon svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .draft-container .bottom .pick-container .player-role-icon[hidden] {
+            display: none;
+        }
+
+        /* Player portrait is mounted immediately but stays below the image until reveal. */
+        .draft-container .bottom .pick-container .player-photo {
+            position: absolute;
+            z-index: 3;
+            left: 50%;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            display: block !important;
+            object-fit: contain;
+            object-position: center bottom;
+            opacity: 0;
+            visibility: hidden;
+            transform: translate(-50%, 110%);
+            transform-origin: center bottom;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .14));
+            transition:
+                transform 560ms cubic-bezier(.22, .8, .25, 1),
+                opacity 420ms ease,
+                visibility 0s linear 560ms;
+            pointer-events: none;
+        }
+
+        /* Reveal is triggered by the active pick turn, not by hero selection. */
+        .draft-container .bottom .pick-container .pick-hero.is-revealed .player-role-icon {
+            left: 8px;
+            top: 8px;
+            width: 30px;
+            height: 30px;
+            transform: translate(0, 0) scale(1);
+        }
+
+        .draft-container .bottom .pick-container .pick-hero.is-revealed.has-player-photo .player-photo {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, 0);
+            transition:
+                transform 560ms cubic-bezier(.22, .8, .25, 1),
+                opacity 420ms ease,
+                visibility 0s;
         }
 
         .draft-container .bottom .pick-container .pick-hero .players-name {
@@ -641,25 +859,7 @@
             text-align: center;
         }
 
-        .draft-container .bottom .pick-container .pick-hero .player-role {
-            flex: 0 0 auto;
-            max-width: 42%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            padding: 2px 5px;
-            border-radius: 4px;
-            background: rgba(0, 0, 0, 0.16);
-            font-family: 'Eixample Extrabold';
-            font-size: 10px;
-            line-height: 1;
-            text-transform: uppercase;
-        }
-
-        .draft-container .bottom .pick-container .pick-hero .player-role[hidden] {
-            display: none;
-        }
-
-        /* END PICK-CARD ACTIVE TURN ANIMATION */
+        /* END PICK-CARD ROLE + PLAYER REVEAL ANIMATION */
     </style>
     <script src="../shared/sync-client.js"></script>
 </head>
@@ -668,7 +868,11 @@
     <div class="draft-container">
         <div class="recap-container">
             <div class="draft-pick-recap left">
-                <div class="top">DRAFT PICK RECAP</div>
+                <div class="top">
+                    <span>DRAFT PICK RECAP</span>
+                    <span class="recap-team-name" id="recap-left-team-name">BLUE TEAM</span>
+                    <span class="recap-game-number" id="recap-game-number">GAME 1</span>
+                </div>
                 <div class="mid">
                     <div class="pick-recap"></div>
                     <div class="pick-recap"></div>
@@ -685,7 +889,10 @@
                 </div>
             </div>
             <div class="draft-pick-recap right">
-                <div class="top">DRAFT PICK RECAP</div>
+                <div class="top">
+                    <span>DRAFT PICK RECAP</span>
+                    <span class="recap-team-name" id="recap-right-team-name">RED TEAM</span>
+                </div>
                 <div class="mid">
                     <div class="pick-recap"></div>
                     <div class="pick-recap"></div>
@@ -939,6 +1146,47 @@
             nodes.forEach((node, index) => setHeroImage(node, ordered[index] || null));
         }
 
+        const ROLE_ICON_SVGS = {
+            jungler: `<svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M79 9C48 9 22 22 15 49 9 72 24 90 45 86c25-5 38-31 34-77Z"/><path d="M20 78C37 54 53 37 77 16" fill="none" stroke="#eafaff" stroke-width="5" stroke-linecap="round"/><path d="M43 54c-1-11-8-18-17-22M55 42c10 0 17 4 22 11" fill="none" stroke="#eafaff" stroke-width="4" stroke-linecap="round"/></svg>`,
+            roam: `<svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M50 7 86 21v25c0 22-13 38-36 51C27 84 14 68 14 46V21L50 7Z"/><path d="m31 51 13 13 27-30" fill="none" stroke="#eafaff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+            exp: `<svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M67 7 88 28 45 71 24 50 67 7Z"/><path fill="currentColor" d="m17 56 27 27-9 9L8 65l9-9Z"/><path fill="currentColor" d="m22 80 8 8-13 7-2-2 7-13Z"/><path d="m45 71 10 10" fill="none" stroke="#eafaff" stroke-width="5" stroke-linecap="round"/></svg>`,
+            gold: `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="39" fill="currentColor"/><circle cx="50" cy="50" r="28" fill="none" stroke="#eafaff" stroke-width="5"/><path fill="#eafaff" d="m50 27 7 15 16 2-12 11 3 16-14-8-14 8 3-16-12-11 16-2 7-15Z"/></svg>`,
+            mid: `<svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="m50 5 12 29 31 3-24 20 8 31-27-17-27 17 8-31L7 37l31-3L50 5Z"/><circle cx="50" cy="49" r="10" fill="#eafaff"/></svg>`
+        };
+
+        function normalizeRoleKey(role) {
+            const value = String(role || '').trim().toLowerCase();
+            if (value === 'jungler' || value === 'jungle' || value === 'jg') return 'jungler';
+            if (value === 'roam' || value === 'roamer' || value === 'tank') return 'roam';
+            if (value === 'exp' || value === 'exp lane' || value === 'explaner') return 'exp';
+            if (value === 'gold' || value === 'gold lane' || value === 'goldlaner') return 'gold';
+            if (value === 'mid' || value === 'mid lane' || value === 'midlaner') return 'mid';
+            return '';
+        }
+
+        function ensureRoleIcon(image, role) {
+            if (!image) return;
+            let icon = image.querySelector('.player-role-icon');
+            if (!icon) {
+                icon = document.createElement('div');
+                icon.className = 'player-role-icon';
+                image.appendChild(icon);
+            }
+
+            const roleKey = normalizeRoleKey(role);
+            icon.hidden = !roleKey;
+            icon.dataset.role = roleKey;
+            icon.setAttribute('aria-label', role ? `${role} role` : 'Player role not assigned');
+            icon.title = role || '';
+            const svg = ROLE_ICON_SVGS[roleKey] || '';
+            if (icon.innerHTML !== svg) icon.innerHTML = svg;
+        }
+
+        function getPlayerPhotoUrl(player) {
+            if (!player || typeof player !== 'object') return '';
+            return player.photo || player.photoUrl || player.portrait || player.image || '';
+        }
+
         function updatePickSide(side, picks, players) {
             const nodes = Array.from(document.querySelectorAll(
                 `.draft-container .bottom .${side} .pick-container .pick-hero`
@@ -952,10 +1200,16 @@
                 const name = node.querySelector('.players-name');
                 const hero = orderedPicks[index] || null;
                 const player = orderedPlayers[index] || null;
+                const playerName = typeof player === 'string'
+                    ? player
+                    : (player && player.name ? player.name : '');
+                const playerRole = player && typeof player === 'object' ? (player.role || '') : '';
+                const photoUrl = getPlayerPhotoUrl(player);
 
-                // Keep the existing hero artwork as the card background and show
-                // the uploaded player portrait as a small overlay avatar.
+                // Hero artwork remains the card background; role and portrait are separate layers.
                 setHeroImage(image, hero);
+                ensureRoleIcon(image, playerRole);
+
                 if (image) {
                     let photo = image.querySelector('.player-photo');
                     if (!photo) {
@@ -963,44 +1217,39 @@
                         photo.className = 'player-photo';
                         photo.alt = '';
                         photo.loading = 'eager';
+                        photo.decoding = 'async';
                         image.appendChild(photo);
                     }
 
-                    const photoUrl = player && typeof player === 'object' ? (player.photo || '') : '';
                     if (photoUrl) {
-                        if (photo.getAttribute('src') !== photoUrl) photo.src = photoUrl;
-                        photo.alt = player.name ? `${player.name} photo` : 'Player photo';
-                        photo.style.display = 'block';
+                        if (photo.getAttribute('src') !== photoUrl) {
+                            photo.onload = () => node.classList.add('has-player-photo');
+                            photo.onerror = () => node.classList.remove('has-player-photo');
+                            photo.src = photoUrl;
+                        }
+                        photo.alt = playerName ? `${playerName} photo` : 'Player photo';
+                        // Data URLs are already available immediately; normal URLs add the class on load.
+                        if (photo.complete && photo.naturalWidth > 0) {
+                            node.classList.add('has-player-photo');
+                        } else if (String(photoUrl).startsWith('data:image/')) {
+                            node.classList.add('has-player-photo');
+                        }
                     } else {
                         if (photo.hasAttribute('src')) photo.removeAttribute('src');
                         photo.alt = '';
-                        photo.style.display = 'none';
+                        node.classList.remove('has-player-photo');
                     }
                 }
 
                 if (name) {
-                    const playerName = typeof player === 'string'
-                        ? player
-                        : (player && player.name ? player.name : '');
-                    const playerRole = player && typeof player === 'object' ? (player.role || '') : '';
-
                     let nameText = name.querySelector('.player-name-text');
                     if (!nameText) {
+                        name.replaceChildren();
                         nameText = document.createElement('span');
                         nameText.className = 'player-name-text';
-                        name.replaceChildren(nameText);
+                        name.appendChild(nameText);
                     }
-
-                    let roleBadge = name.querySelector('.player-role');
-                    if (!roleBadge) {
-                        roleBadge = document.createElement('span');
-                        roleBadge.className = 'player-role';
-                        name.appendChild(roleBadge);
-                    }
-
                     if (nameText.textContent !== playerName) nameText.textContent = playerName;
-                    if (roleBadge.textContent !== playerRole) roleBadge.textContent = playerRole;
-                    roleBadge.hidden = !playerRole;
                 }
             });
         }
@@ -1048,6 +1297,140 @@
             });
         }
 
+
+        function updatePickRevealStates(state) {
+            const allCards = Array.from(document.querySelectorAll(
+                '.draft-container .bottom .pick-container .pick-hero'
+            ));
+
+            allCards.forEach(card => {
+                const image = card.querySelector('.pick-image');
+                const heroName = image ? (image.dataset.heroName || '') : '';
+                const hasHero = Boolean(heroName);
+                const isActiveTurn = Boolean(
+                    state && state.phase === 'pick' && !state.complete &&
+                    card.classList.contains('is-active-pick')
+                );
+                const roleIcon = image && image.querySelector('.player-role-icon');
+                const roleKey = roleIcon ? (roleIcon.dataset.role || '') : '';
+                const photo = image && image.querySelector('.player-photo');
+                const photoUrl = photo ? (photo.getAttribute('src') || '') : '';
+                const shouldReveal = isActiveTurn || hasHero;
+
+                if (!shouldReveal) {
+                    card.classList.remove('is-revealed');
+                    delete card.dataset.revealKey;
+                    delete card.dataset.revealPendingKey;
+                    return;
+                }
+
+                // Active pick cards reveal after the width transition has completed.
+                // Already-picked cards stay revealed when the turn moves elsewhere.
+                const revealKey = [heroName, roleKey, photoUrl, isActiveTurn ? 'active' : 'locked'].join('|');
+                if (card.classList.contains('is-revealed')) {
+                    // Keep a revealed card stable across timer ticks and unrelated state updates.
+                    card.dataset.revealKey = revealKey;
+                    return;
+                }
+
+                if (card.dataset.revealPendingKey === revealKey) return;
+                card.dataset.revealPendingKey = revealKey;
+                const delay = isActiveTurn ? 320 : 20;
+                window.setTimeout(() => {
+                    if (!card.isConnected || card.dataset.revealPendingKey !== revealKey) return;
+                    card.classList.add('is-revealed');
+                    card.dataset.revealKey = revealKey;
+                    delete card.dataset.revealPendingKey;
+                }, delay);
+            });
+        }
+
+        function setRecapCardBackground(node, hero) {
+            if (!node) return;
+            node.replaceChildren();
+            node.style.backgroundImage = hero && hero.image
+                ? `url("${String(hero.image).replace(/["\\]/g, '\\$&')}")`
+                : 'none';
+            node.style.backgroundColor = hero && hero.image ? '#17191d' : '#22252b';
+        }
+
+        function renderDraftRecap(recap) {
+            if (!recap || recap.type !== 'mlbb-draft-recap') return;
+
+            const recapContainer = document.querySelector('.draft-container .recap-container');
+            if (recapContainer) recapContainer.style.display = 'flex';
+
+            const gameLabel = document.getElementById('recap-game-number');
+            const leftTeamLabel = document.getElementById('recap-left-team-name');
+            const rightTeamLabel = document.getElementById('recap-right-team-name');
+            if (gameLabel) gameLabel.textContent = `GAME ${recap.gameNumber || 1}`;
+            if (leftTeamLabel) leftTeamLabel.textContent =
+                (recap.teams && recap.teams.left && recap.teams.left.name) || 'BLUE TEAM';
+            if (rightTeamLabel) rightTeamLabel.textContent =
+                (recap.teams && recap.teams.right && recap.teams.right.name) || 'RED TEAM';
+
+            for (const side of ['left', 'right']) {
+                const panel = document.querySelector(`.draft-pick-recap.${side}`);
+                if (!panel) continue;
+
+                const pickNodes = Array.from(panel.querySelectorAll('.pick-recap'));
+                const banNodes = Array.from(panel.querySelectorAll('.ban-recap'));
+                const sideHeroes = recap.heroes && recap.heroes[side] ? recap.heroes[side] : {};
+                const picks = Array.isArray(sideHeroes.pick) ? sideHeroes.pick : [];
+                const bans = Array.isArray(sideHeroes.ban) ? sideHeroes.ban : [];
+
+                pickNodes.forEach((node, index) => {
+                    const hero = picks[index] || null;
+                    setRecapCardBackground(node, hero);
+
+                    if (!hero) return;
+
+                    if (hero.role) {
+                        const role = document.createElement('span');
+                        role.className = 'recap-role-icon';
+                        const roleLabels = {
+                            Jungler: 'JG',
+                            Roam: 'RO',
+                            EXP: 'EXP',
+                            Gold: 'GOLD',
+                            Mid: 'MID'
+                        };
+                        role.textContent = roleLabels[hero.role] || String(hero.role).slice(0, 4).toUpperCase();
+                        role.title = hero.role;
+                        node.appendChild(role);
+                    }
+
+                    const bar = document.createElement('span');
+                    const status = String(hero.status || '').toUpperCase();
+                    bar.className = 'recap-pick-bar';
+                    if (status === 'REPICKED') {
+                        bar.classList.add('repicked');
+                        bar.textContent = 'REPICKED';
+                    } else if (status === 'STOLEN') {
+                        bar.classList.add('stolen');
+                        bar.textContent = 'STOLEN';
+                    } else {
+                        bar.classList.add('empty');
+                        bar.textContent = '';
+                    }
+                    node.appendChild(bar);
+                    node.title = `${hero.name || ''}${status ? ` · ${status}` : ''}`;
+                });
+
+                banNodes.forEach((node, index) => {
+                    const hero = bans[index] || null;
+                    setRecapCardBackground(node, hero);
+                    if (!hero) return;
+
+                    const bar = document.createElement('span');
+                    bar.className = 'recap-ban-bar';
+                    bar.title = 'BANNED';
+                    node.appendChild(bar);
+                    node.title = `${hero.name || ''} · BANNED`;
+                });
+            }
+        }
+
         function applyDraftState(state) {
             if (!state || state.type !== 'mlbb-draft-state') return;
             lastReceivedState = state;
@@ -1075,16 +1458,18 @@
 
             const heroes = state.heroes || {};
             const players = state.players || {};
+            updateActivePickCards(state);
             for (const side of ['left', 'right']) {
                 const sideHeroes = heroes[side] || {};
                 updateBanSide(side, sideHeroes.ban || []);
                 updatePickSide(side, sideHeroes.pick || [], players[side] || []);
             }
+            // Run reveal after player portraits and role icons exist in the DOM.
+            updatePickRevealStates(state);
 
             timerValue.textContent = String(Math.max(0, Math.floor(Number(state.remaining) || 0))).padStart(2, '0');
             phaseLabel.textContent = state.label || (state.phase || 'DRAFT').replace('-', ' ').toUpperCase();
             renderArrowSide(state.side || 'left');
-            updateActivePickCards(state);
 
             const duration = Math.max(1, Number(state.duration) || 45);
             const remaining = Math.max(0, Math.min(duration, Number(state.remaining) || 0));
@@ -1134,6 +1519,13 @@
             typeof applyDraftState === 'function') {
             window.MLBBOverlaySync.subscribe('draft', payload => {
                 applyDraftState(payload);
+            });
+        }
+
+        if (window.MLBBOverlaySync &&
+            typeof renderDraftRecap === 'function') {
+            window.MLBBOverlaySync.subscribe('draft-recap', payload => {
+                renderDraftRecap(payload);
             });
         }
     </script>

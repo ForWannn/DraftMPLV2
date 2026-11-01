@@ -66,6 +66,200 @@
             padding-left: 2px;
         }
 
+        .switch-teams-btn {
+            width: 100%;
+            min-height: 46px;
+            padding: 0 16px;
+            background: linear-gradient(135deg, #0d7cf2, #0759b8);
+            border: 1px solid #2588f5;
+            border-radius: 12px;
+            color: #ffffff;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: .7px;
+            cursor: pointer;
+            transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
+            box-shadow: 0 5px 16px rgba(13, 124, 242, .16);
+        }
+
+        .switch-teams-btn:hover {
+            filter: brightness(1.12);
+            box-shadow: 0 7px 20px rgba(13, 124, 242, .24);
+        }
+
+        .switch-teams-btn:active {
+            transform: scale(.985);
+        }
+
+        .switch-teams-btn:focus-visible {
+            outline: 2px solid #50d3f3;
+            outline-offset: 3px;
+        }
+
+        .match-management {
+            width: 100%;
+            margin-top: 4px;
+            padding-top: 16px;
+            border-top: 1px solid #2e3037;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .mm-heading,
+        .mm-stat-row,
+        .mm-actions,
+        .mm-winner-picker {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .mm-heading {
+            color: #fff;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .mm-status {
+            color: #aeb2bd;
+            font-size: 10px;
+            letter-spacing: .7px;
+            font-weight: 700;
+        }
+
+        .mm-status.active {
+            color: #51d69a;
+        }
+
+        .mm-status.complete {
+            color: #50d3f3;
+        }
+
+        .mm-name-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .mm-name-row label {
+            color: #aeb2bd;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .mm-name-row input {
+            width: 100%;
+            height: 38px;
+            padding: 0 11px;
+            border: 1px solid #2e3037;
+            border-radius: 9px;
+            background: #202125;
+            color: #fff;
+            outline: none;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 13px;
+        }
+
+        .mm-name-row input:focus {
+            border-color: #50d3f3;
+        }
+
+        .mm-stat-row {
+            justify-content: stretch;
+        }
+
+        .mm-stat {
+            flex: 1;
+            min-width: 0;
+            padding: 9px 10px;
+            border: 1px solid #2e3037;
+            border-radius: 9px;
+            background: #17181c;
+            color: #aeb2bd;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .5px;
+            text-align: center;
+        }
+
+        .mm-stat strong {
+            display: block;
+            margin-top: 3px;
+            color: #fff;
+            font-size: 18px;
+            letter-spacing: 0;
+        }
+
+        .mm-action-btn,
+        .mm-winner-btn {
+            flex: 1;
+            min-height: 39px;
+            padding: 0 9px;
+            border: 1px solid #32353c;
+            border-radius: 9px;
+            background: #25262b;
+            color: #fff;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .mm-action-btn.primary {
+            background: #0d7cf2;
+            border-color: #0d7cf2;
+        }
+
+        .mm-action-btn.danger {
+            background: #8e2630;
+            border-color: #a63742;
+        }
+
+        .mm-action-btn:disabled,
+        .mm-winner-btn:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+        .mm-winner-picker {
+            display: none;
+            flex-wrap: wrap;
+            padding: 9px;
+            border: 1px solid #3b3f49;
+            border-radius: 10px;
+            background: #17181c;
+        }
+
+        .mm-winner-picker.visible {
+            display: flex;
+        }
+
+        .mm-winner-picker .mm-winner-label {
+            flex: 0 0 100%;
+            color: #aeb2bd;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .mm-winner-btn.blue {
+            border-color: #176fc9;
+        }
+
+        .mm-winner-btn.red {
+            border-color: #bd414b;
+        }
+
+        .mm-help {
+            color: #8e95a5;
+            font-size: 10px;
+            line-height: 1.4;
+        }
+
         .inside-container-match-detail {
             background-color: #101010;
             width: 100%;
@@ -530,10 +724,11 @@
 
         .player-photo-preview {
             width: 34px;
+            background: transparent;
             height: 34px;
             flex: 0 0 34px;
             display: none;
-            object-fit: cover;
+            object-fit: contain;
             border-radius: 8px;
             border: 1px solid #3a3d46;
             background: #202125;
@@ -764,7 +959,7 @@
     <div>
         <div class="upper">
             <div class="team-panel left">
-                <h2>Left Team</h2>
+                <h2>Blue Team</h2>
                 <div class="inside-container-team-panel">
                     <div class="inside-upper">
                         <div class="tcs">
@@ -814,8 +1009,8 @@
                                     <img id="player-photo-preview-left-1" class="player-photo-preview"
                                         alt="Player 1 photo preview">
                                     <label class="player-photo-upload" for="player-photo-left-1">
-                                        Upload Photo
-                                        <input type="file" id="player-photo-left-1" accept="image/*">
+                                        Upload PNG
+                                        <input type="file" id="player-photo-left-1" accept="image/png">
                                     </label>
                                 </div>
                             </div>
@@ -834,8 +1029,8 @@
                                     <img id="player-photo-preview-left-2" class="player-photo-preview"
                                         alt="Player 2 photo preview">
                                     <label class="player-photo-upload" for="player-photo-left-2">
-                                        Upload Photo
-                                        <input type="file" id="player-photo-left-2" accept="image/*">
+                                        Upload PNG
+                                        <input type="file" id="player-photo-left-2" accept="image/png">
                                     </label>
                                 </div>
                             </div>
@@ -854,8 +1049,8 @@
                                     <img id="player-photo-preview-left-3" class="player-photo-preview"
                                         alt="Player 3 photo preview">
                                     <label class="player-photo-upload" for="player-photo-left-3">
-                                        Upload Photo
-                                        <input type="file" id="player-photo-left-3" accept="image/*">
+                                        Upload PNG
+                                        <input type="file" id="player-photo-left-3" accept="image/png">
                                     </label>
                                 </div>
                             </div>
@@ -874,8 +1069,8 @@
                                     <img id="player-photo-preview-left-4" class="player-photo-preview"
                                         alt="Player 4 photo preview">
                                     <label class="player-photo-upload" for="player-photo-left-4">
-                                        Upload Photo
-                                        <input type="file" id="player-photo-left-4" accept="image/*">
+                                        Upload PNG
+                                        <input type="file" id="player-photo-left-4" accept="image/png">
                                     </label>
                                 </div>
                             </div>
@@ -894,8 +1089,8 @@
                                     <img id="player-photo-preview-left-5" class="player-photo-preview"
                                         alt="Player 5 photo preview">
                                     <label class="player-photo-upload" for="player-photo-left-5">
-                                        Upload Photo
-                                        <input type="file" id="player-photo-left-5" accept="image/*">
+                                        Upload PNG
+                                        <input type="file" id="player-photo-left-5" accept="image/png">
                                     </label>
                                 </div>
                             </div>
@@ -907,6 +1102,10 @@
             </div>
             <div class="match-detail">
                 <h2>Match Detail</h2>
+                <button type="button" class="switch-teams-btn" id="btn-switch-teams"
+                    aria-label="Switch all team data between Blue Team and Red Team">
+                    ⇄ &nbsp; SWITCH TEAMS
+                </button>
                 <div class="inside-container-match-detail">
                     <div class="match-detail-row">
                         <span class="detail-label">Best Of</span>
@@ -941,10 +1140,41 @@
                             <button type="button" class="timer-btn" id="btn-timer-reset">Reset</button>
                         </div>
                     </div>
+
+                    <div class="match-management" id="match-management">
+                        <div class="mm-heading">
+                            <span>Match Management</span>
+                            <span class="mm-status" id="mm-status">NOT STARTED</span>
+                        </div>
+                        <div class="mm-name-row">
+                            <label for="mm-match-name">Match Name / Match ID</label>
+                            <input type="text" id="mm-match-name" value="Match 1" maxlength="80"
+                                placeholder="Example: Grand Final">
+                        </div>
+                        <div class="mm-stat-row">
+                            <div class="mm-stat">CURRENT GAME<strong id="mm-game-number">—</strong></div>
+                            <div class="mm-stat">SERIES SCORE<strong id="mm-series-score">0 - 0</strong></div>
+                        </div>
+                        <div class="mm-actions">
+                            <button type="button" class="mm-action-btn primary" id="btn-start-match">Start
+                                Match</button>
+                            <button type="button" class="mm-action-btn danger" id="btn-finish-game" disabled>Finish
+                                Game</button>
+                        </div>
+                        <div class="mm-winner-picker" id="mm-winner-picker">
+                            <span class="mm-winner-label">Select the winner of this game:</span>
+                            <button type="button" class="mm-winner-btn blue" data-winner="left"
+                                id="btn-winner-blue">Blue Team Wins</button>
+                            <button type="button" class="mm-winner-btn red" data-winner="right" id="btn-winner-red">Red
+                                Team Wins</button>
+                        </div>
+                        <div class="mm-help" id="mm-help">Start a match before finishing a game. The winner's score is
+                            added automatically, and sides alternate for the next game.</div>
+                    </div>
                 </div>
             </div>
             <div class="team-panel right">
-                <h2>Right Team</h2>
+                <h2>Red Team</h2>
                 <div class="inside-container-team-panel">
                     <div class="inside-upper">
                         <div class="tcs">
@@ -994,8 +1224,8 @@
                                     <img id="player-photo-preview-right-1" class="player-photo-preview"
                                         alt="Player 1 photo preview">
                                     <label class="player-photo-upload" for="player-photo-right-1">
-                                        Upload Photo
-                                        <input type="file" id="player-photo-right-1" accept="image/*">
+                                        Upload PNG
+                                        <input type="file" id="player-photo-right-1" accept="image/png">
                                     </label>
                                 </div>
                             </div>
@@ -1014,8 +1244,8 @@
                                     <img id="player-photo-preview-right-2" class="player-photo-preview"
                                         alt="Player 2 photo preview">
                                     <label class="player-photo-upload" for="player-photo-right-2">
-                                        Upload Photo
-                                        <input type="file" id="player-photo-right-2" accept="image/*">
+                                        Upload PNG
+                                        <input type="file" id="player-photo-right-2" accept="image/png">
                                     </label>
                                 </div>
                             </div>
@@ -1034,8 +1264,8 @@
                                     <img id="player-photo-preview-right-3" class="player-photo-preview"
                                         alt="Player 3 photo preview">
                                     <label class="player-photo-upload" for="player-photo-right-3">
-                                        Upload Photo
-                                        <input type="file" id="player-photo-right-3" accept="image/*">
+                                        Upload PNG
+                                        <input type="file" id="player-photo-right-3" accept="image/png">
                                     </label>
                                 </div>
                             </div>
@@ -1054,8 +1284,8 @@
                                     <img id="player-photo-preview-right-4" class="player-photo-preview"
                                         alt="Player 4 photo preview">
                                     <label class="player-photo-upload" for="player-photo-right-4">
-                                        Upload Photo
-                                        <input type="file" id="player-photo-right-4" accept="image/*">
+                                        Upload PNG
+                                        <input type="file" id="player-photo-right-4" accept="image/png">
                                     </label>
                                 </div>
                             </div>
@@ -1074,8 +1304,8 @@
                                     <img id="player-photo-preview-right-5" class="player-photo-preview"
                                         alt="Player 5 photo preview">
                                     <label class="player-photo-upload" for="player-photo-right-5">
-                                        Upload Photo
-                                        <input type="file" id="player-photo-right-5" accept="image/*">
+                                        Upload PNG
+                                        <input type="file" id="player-photo-right-5" accept="image/png">
                                     </label>
                                 </div>
                             </div>
@@ -1436,34 +1666,88 @@
             bindLogoUpload('upload-logo-left', 'logo-img-left');
             bindLogoUpload('upload-logo-right', 'logo-img-right');
 
-            // Player photos are resized before syncing to keep BroadcastChannel,
-            // localStorage and the WebSocket payload reasonably small.
-            function compressPlayerPhoto(file, maxDimension = 512, quality = 0.82) {
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onerror = () => reject(new Error('Could not read the selected photo.'));
-                    reader.onload = () => {
-                        const image = new Image();
-                        image.onerror = () => reject(new Error('The selected file is not a valid image.'));
-                        image.onload = () => {
-                            const scale = Math.min(1, maxDimension / Math.max(image.width, image.height));
-                            const width = Math.max(1, Math.round(image.width * scale));
-                            const height = Math.max(1, Math.round(image.height * scale));
-                            const canvas = document.createElement('canvas');
-                            canvas.width = width;
-                            canvas.height = height;
-                            const context = canvas.getContext('2d');
-                            if (!context) {
-                                reject(new Error('Photo processing is not supported by this browser.'));
-                                return;
-                            }
-                            context.drawImage(image, 0, 0, width, height);
-                            resolve(canvas.toDataURL('image/jpeg', quality));
-                        };
-                        image.src = String(reader.result || '');
-                    };
-                    reader.readAsDataURL(file);
+            // Player portraits must remain transparent PNG assets end-to-end.
+            // Validate the original file, upload its original bytes, and sync only its URL.
+            const MAX_PLAYER_PNG_BYTES = 15 * 1024 * 1024;
+
+            async function validateTransparentPng(file) {
+                if (!file || file.type !== 'image/png' || !/\.png$/i.test(file.name || '')) {
+                    throw new Error('Player photo must be a transparent PNG file.');
+                }
+                if (file.size > MAX_PLAYER_PNG_BYTES) {
+                    throw new Error('PNG is too large. Maximum size is 15 MB.');
+                }
+
+                const signature = new Uint8Array(await file.slice(0, 8).arrayBuffer());
+                const expected = [137, 80, 78, 71, 13, 10, 26, 10];
+                if (signature.length !== 8 || !expected.every((value, index) => signature[index] === value)) {
+                    throw new Error('The selected file is not a valid PNG.');
+                }
+
+                let bitmap;
+                try {
+                    bitmap = await createImageBitmap(file);
+                    const scale = Math.min(1, 512 / Math.max(bitmap.width, bitmap.height));
+                    const width = Math.max(1, Math.round(bitmap.width * scale));
+                    const height = Math.max(1, Math.round(bitmap.height * scale));
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const context = canvas.getContext('2d', { willReadFrequently: true });
+                    if (!context) throw new Error('PNG transparency validation is unavailable in this browser.');
+                    context.clearRect(0, 0, width, height);
+                    context.drawImage(bitmap, 0, 0, width, height);
+                    const pixels = context.getImageData(0, 0, width, height).data;
+                    let hasTransparentPixel = false;
+                    for (let i = 3; i < pixels.length; i += 4) {
+                        if (pixels[i] < 250) {
+                            hasTransparentPixel = true;
+                            break;
+                        }
+                    }
+                    if (!hasTransparentPixel) {
+                        throw new Error('PNG has no transparent pixels. Please remove the background before uploading.');
+                    }
+                } finally {
+                    if (bitmap && typeof bitmap.close === 'function') bitmap.close();
+                }
+            }
+
+            async function uploadTransparentPlayerPng(file, slotKey) {
+                const safeSlot = String(slotKey).replace(/[^a-z0-9_-]/gi, '-');
+                const uploadUrl = `/upload?kind=player-photo&name=${encodeURIComponent(`player-${safeSlot}.png`)}`;
+                const response = await fetch(uploadUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'image/png' },
+                    body: file,
+                    cache: 'no-store'
                 });
+                const responseText = await response.text();
+                let result = {};
+                try {
+                    result = responseText ? JSON.parse(responseText) : {};
+                } catch (_) {
+                    throw new Error(`Upload endpoint returned HTTP ${response.status}, but its response was not valid JSON.`);
+                }
+
+                if (!response.ok) {
+                    throw new Error(result.error || `PNG upload failed (HTTP ${response.status}).`);
+                }
+                if (!result.url) {
+                    throw new Error(`Upload endpoint returned HTTP ${response.status}, but did not return a file URL.`);
+                }
+
+                // Backward compatibility: older /upload routes return only { url }.
+                // The original file is still sent as image/png and named with a .png suffix.
+                if (result.mimeType && String(result.mimeType).toLowerCase() !== 'image/png') {
+                    throw new Error(`Server returned an unexpected image type: ${result.mimeType}. Expected image/png.`);
+                }
+
+                const uploadedUrl = new URL(result.url, window.location.href);
+                if (!/\.png$/i.test(uploadedUrl.pathname)) {
+                    throw new Error('Server saved the player image without a .png filename. Please update the upload route in server.js.');
+                }
+                return uploadedUrl.href;
             }
 
             function bindPlayerPhotoUploads() {
@@ -1471,25 +1755,37 @@
                     input.addEventListener('change', async () => {
                         const file = input.files && input.files[0];
                         if (!file) return;
-                        if (!file.type || !file.type.startsWith('image/')) {
-                            alert('Please select an image file.');
-                            input.value = '';
-                            return;
-                        }
 
                         const sideAndSlot = input.id.replace('player-photo-', '');
                         const preview = document.getElementById(`player-photo-preview-${sideAndSlot}`);
                         if (!preview) return;
 
+                        input.disabled = true;
                         try {
-                            const compressedPhoto = await compressPlayerPhoto(file);
-                            preview.src = compressedPhoto;
-                            preview.dataset.syncData = compressedPhoto;
-                            preview.style.display = 'block';
-                            if (typeof publishDraftState === 'function') publishDraftState();
+                            await validateTransparentPng(file);
+                            const imageUrl = await uploadTransparentPlayerPng(file, sideAndSlot);
+
+                            // Preview and synchronized state both point to the stored original PNG.
+                            preview.onload = () => {
+                                preview.dataset.syncData = imageUrl;
+                                preview.dataset.mimeType = 'image/png';
+                                preview.style.display = 'block';
+                                if (typeof publishDraftState === 'function') publishDraftState();
+                            };
+                            preview.onerror = () => {
+                                preview.removeAttribute('src');
+                                delete preview.dataset.syncData;
+                                delete preview.dataset.mimeType;
+                                preview.style.display = 'none';
+                                alert('The uploaded PNG could not be loaded. Please try again.');
+                            };
+                            preview.src = imageUrl;
                         } catch (error) {
-                            console.error('[Draft Control] Player photo upload failed:', error);
-                            alert(error.message || 'Could not process this player photo.');
+                            console.error('[Draft Control] Transparent PNG upload failed:', error);
+                            alert(error.message || 'Could not upload the transparent PNG.');
+                            input.value = '';
+                        } finally {
+                            input.disabled = false;
                         }
                     });
                 });
@@ -1912,16 +2208,24 @@
                         resetHeroSlot(slot, select, nameLabel, img);
                     }
 
+                    lastHeroSelection.set(slot.id, select.value || '');
+
                     select.addEventListener('change', () => {
+                        const previousHero = lastHeroSelection.get(slot.id) || '';
+                        const nextHero = select.value || '';
+                        if (previousHero && previousHero !== nextHero) repickedSlots.add(slot.id);
                         const selected = heroList.find(hero => hero.name === select.value);
                         setHeroSlot(slot, select, nameLabel, img, selected || null);
+                        lastHeroSelection.set(slot.id, nextHero);
                         if (typeof publishDraftState === 'function') publishDraftState();
                     });
 
                     if (clearBtn) {
                         clearBtn.addEventListener('click', event => {
                             event.stopPropagation();
+                            if (select.value) repickedSlots.add(slot.id);
                             resetHeroSlot(slot, select, nameLabel, img);
+                            lastHeroSelection.set(slot.id, '');
                             if (typeof publishDraftState === 'function') publishDraftState();
                         });
                     }
@@ -1937,6 +2241,8 @@
                 ? new BroadcastChannel(DRAFT_SYNC_CHANNEL_NAME)
                 : null;
             let draftComplete = false;
+            const repickedSlots = new Set();
+            const lastHeroSelection = new Map();
 
             function readTeamState(side) {
                 const name = document.getElementById(`team-name-${side}`);
@@ -1952,6 +2258,152 @@
                     score: score ? Math.max(0, Number(score.value) || 0) : 0,
                     logo: logoValue
                 };
+            }
+
+            function swapInputValues(idA, idB) {
+                const inputA = document.getElementById(idA);
+                const inputB = document.getElementById(idB);
+                if (!inputA || !inputB) return;
+
+                const valueA = inputA.value;
+                inputA.value = inputB.value;
+                inputB.value = valueA;
+            }
+
+            function readPreviewImageState(image) {
+                return {
+                    src: image.getAttribute('src'),
+                    syncData: image.dataset.syncData || '',
+                    display: image.style.display || ''
+                };
+            }
+
+            function applyPreviewImageState(image, state) {
+                if (state.src === null) image.removeAttribute('src');
+                else image.setAttribute('src', state.src);
+
+                if (state.syncData) image.dataset.syncData = state.syncData;
+                else delete image.dataset.syncData;
+
+                image.style.display = state.display;
+            }
+
+            function swapPreviewImages(idA, idB) {
+                const imageA = document.getElementById(idA);
+                const imageB = document.getElementById(idB);
+                if (!imageA || !imageB) return;
+
+                const stateA = readPreviewImageState(imageA);
+                const stateB = readPreviewImageState(imageB);
+                applyPreviewImageState(imageA, stateB);
+                applyPreviewImageState(imageB, stateA);
+            }
+
+            function readHeroSlotState(side, phase, slotNumber) {
+                const slot = document.getElementById(`${side}-${phase}-slot-${slotNumber}`);
+                if (!slot) return null;
+
+                const select = slot.querySelector('.hero-slot-select');
+                const name = slot.querySelector('.hero-selected-name');
+                const image = slot.querySelector('.hero-slot-img');
+
+                return {
+                    value: select ? select.value : '',
+                    name: name ? name.textContent : 'Select',
+                    image: image ? readPreviewImageState(image) : null,
+                    alt: image ? image.alt : '',
+                    hasHero: slot.classList.contains('has-hero')
+                };
+            }
+
+            function applyHeroSlotState(side, phase, slotNumber, state) {
+                const slot = document.getElementById(`${side}-${phase}-slot-${slotNumber}`);
+                if (!slot || !state) return;
+
+                const select = slot.querySelector('.hero-slot-select');
+                const name = slot.querySelector('.hero-selected-name');
+                const image = slot.querySelector('.hero-slot-img');
+
+                if (select) select.value = state.value;
+                if (name) name.textContent = state.name;
+                if (image && state.image) {
+                    applyPreviewImageState(image, state.image);
+                    image.alt = state.alt;
+                }
+                slot.classList.toggle('has-hero', state.hasHero);
+            }
+
+            function swapHeroSlots(phase) {
+                for (let slotNumber = 1; slotNumber <= 5; slotNumber += 1) {
+                    const leftState = readHeroSlotState('left', phase, slotNumber);
+                    const rightState = readHeroSlotState('right', phase, slotNumber);
+
+                    if (!leftState || !rightState) continue;
+
+                    applyHeroSlotState('left', phase, slotNumber, rightState);
+                    applyHeroSlotState('right', phase, slotNumber, leftState);
+                }
+            }
+
+            function switchTeams(options = {}) {
+                const swapHeroes = options.swapHeroes !== false;
+                const shouldPublish = options.publish !== false;
+                // Team identity and match data.
+                [
+                    ['team-name-left', 'team-name-right'],
+                    ['coach-left', 'coach-right'],
+                    ['score-left', 'score-right'],
+                    ['logo-img-left', 'logo-img-right']
+                ].forEach(([leftId, rightId]) => {
+                    if (leftId.startsWith('logo-img-')) {
+                        swapPreviewImages(leftId, rightId);
+                    } else {
+                        swapInputValues(leftId, rightId);
+                    }
+                });
+
+                // Player names, roles, and photos move together by roster position.
+                for (let player = 1; player <= 5; player += 1) {
+                    swapInputValues(`player-left-${player}`, `player-right-${player}`);
+                    swapInputValues(`role-left-${player}`, `role-right-${player}`);
+                    swapPreviewImages(
+                        `player-photo-preview-left-${player}`,
+                        `player-photo-preview-right-${player}`
+                    );
+
+                    // File inputs are only upload controls; clear stale selections after the swap.
+                    const leftUpload = document.getElementById(`player-photo-left-${player}`);
+                    const rightUpload = document.getElementById(`player-photo-right-${player}`);
+                    if (leftUpload) leftUpload.value = '';
+                    if (rightUpload) rightUpload.value = '';
+                }
+
+                // Logo file inputs are also reset; the actual uploaded logo previews are swapped above.
+                const leftLogoUpload = document.getElementById('upload-logo-left');
+                const rightLogoUpload = document.getElementById('upload-logo-right');
+                if (leftLogoUpload) leftLogoUpload.value = '';
+                if (rightLogoUpload) rightLogoUpload.value = '';
+
+                // Keep existing bans and picks attached to the team that selected them.
+                if (swapHeroes) {
+                    swapHeroSlots('ban');
+                    swapHeroSlots('pick');
+
+                    // Repick markers follow the selected hero/team when sides are switched.
+                    for (let player = 1; player <= 5; player += 1) {
+                        const leftId = `left-pick-slot-${player}`;
+                        const rightId = `right-pick-slot-${player}`;
+                        const leftHadRepick = repickedSlots.has(leftId);
+                        const rightHadRepick = repickedSlots.has(rightId);
+                        repickedSlots.delete(leftId);
+                        repickedSlots.delete(rightId);
+                        if (leftHadRepick) repickedSlots.add(rightId);
+                        if (rightHadRepick) repickedSlots.add(leftId);
+                    }
+                }
+
+                // Publish one complete state so the display receives the swap immediately.
+                if (shouldPublish) publishDraftState();
             }
 
             function readHeroesState(side, phase) {
@@ -2031,6 +2483,15 @@
                         }
                     },
                     bestOf: activeBO,
+                    matchId: matchManager.matchId || '',
+                    matchName: matchManager.matchName || '',
+                    gameNumber: Number(matchManager.gameNumber) || 0,
+                    matchText: matchManager.matchId
+                        ? `${matchManager.matchName || 'MATCH'} - GAME ${matchManager.gameNumber}`
+                        : '',
+                    pickMeta: {
+                        repickedSlots: Array.from(repickedSlots)
+                    },
                     phase: currentTimerMode,
                     side: stepInfo.side,
                     label: stepInfo.label,
@@ -2050,18 +2511,323 @@
                 }
             }
 
+
+            // Match Management + Draft Pick Recap archive.
+            // Each finished game is written to match-archive.json through the server API.
+            const matchNameInput = document.getElementById('mm-match-name');
+            const matchStatusEl = document.getElementById('mm-status');
+            const gameNumberEl = document.getElementById('mm-game-number');
+            const seriesScoreEl = document.getElementById('mm-series-score');
+            const matchHelpEl = document.getElementById('mm-help');
+            const startMatchButton = document.getElementById('btn-start-match');
+            const finishGameButton = document.getElementById('btn-finish-game');
+            const winnerPicker = document.getElementById('mm-winner-picker');
+            let matchManager = {
+                matchId: '',
+                matchName: 'Match 1',
+                gameNumber: 0,
+                bo: 3,
+                status: 'idle',
+                startedAt: null,
+                completedAt: null
+            };
+            let archivedGames = [];
+            let isFinishingGame = false;
+
+            function updateMatchManagerUI() {
+                if (matchNameInput && matchManager.matchName) {
+                    matchNameInput.value = matchManager.matchName;
+                }
+                if (matchStatusEl) {
+                    const active = matchManager.status === 'in-progress';
+                    const complete = matchManager.status === 'completed';
+                    matchStatusEl.textContent = complete ? 'MATCH COMPLETE'
+                        : active ? 'IN PROGRESS' : 'NOT STARTED';
+                    matchStatusEl.classList.toggle('active', active);
+                    matchStatusEl.classList.toggle('complete', complete);
+                }
+                if (gameNumberEl) {
+                    gameNumberEl.textContent = matchManager.gameNumber > 0
+                        ? String(matchManager.gameNumber) : '—';
+                }
+                if (seriesScoreEl) {
+                    seriesScoreEl.textContent =
+                        `${Number(document.getElementById('score-left')?.value) || 0} - ${Number(document.getElementById('score-right')?.value) || 0}`;
+                }
+                if (startMatchButton) {
+                    startMatchButton.textContent =
+                        matchManager.status === 'in-progress' ? 'Restart Match' : 'Start Match';
+                }
+                if (finishGameButton) {
+                    finishGameButton.disabled =
+                        matchManager.status !== 'in-progress' || isFinishingGame;
+                }
+                if (matchHelpEl && matchManager.status === 'in-progress') {
+                    matchHelpEl.textContent =
+                        `Game ${matchManager.gameNumber} is active. Finish Game, then select the winner to archive this draft.`;
+                } else if (matchHelpEl && matchManager.status === 'completed') {
+                    matchHelpEl.textContent =
+                        'Series completed. Start a new match to begin another series.';
+                }
+            }
+
+            function publishMatchManager() {
+                updateMatchManagerUI();
+                if (window.MLBBOverlaySync) {
+                    window.MLBBOverlaySync.publish('match-management', matchManager);
+                }
+                publishDraftState();
+            }
+
+            async function fetchMatchArchives(matchId = '') {
+                try {
+                    const url = matchId
+                        ? `/api/match-archive?matchId=${encodeURIComponent(matchId)}`
+                        : '/api/match-archive';
+                    const response = await fetch(url, { cache: 'no-store' });
+                    if (!response.ok) throw new Error(`Archive request failed (${response.status})`);
+                    const payload = await response.json();
+                    archivedGames = Array.isArray(payload.games) ? payload.games : [];
+                    return archivedGames;
+                } catch (error) {
+                    console.warn('[Draft Control] Could not load match archives:', error);
+                    return archivedGames;
+                }
+            }
+
+            async function loadMatchManager() {
+                try {
+                    const response = await fetch('/api/overlays/match-management', { cache: 'no-store' });
+                    if (response.ok) {
+                        const saved = await response.json();
+                        if (saved && typeof saved === 'object' && saved.matchId) {
+                            matchManager = { ...matchManager, ...saved };
+                            await fetchMatchArchives(matchManager.matchId);
+                        }
+                    }
+                } catch (error) {
+                    console.warn('[Draft Control] Could not restore Match Management:', error);
+                }
+                updateMatchManagerUI();
+            }
+
+            function clearAllHeroSlots() {
+                document.querySelectorAll('.hero-slot').forEach(slot => {
+                    const select = slot.querySelector('.hero-slot-select');
+                    const nameLabel = slot.querySelector('.hero-selected-name');
+                    const image = slot.querySelector('.hero-slot-img');
+                    if (select && nameLabel) resetHeroSlot(slot, select, nameLabel, image);
+                    lastHeroSelection.set(slot.id, '');
+                });
+                repickedSlots.clear();
+            }
+
+            function getPreviousOpponentPicks(side) {
+                const currentTeamName = (readTeamState(side).name || '').trim().toLowerCase();
+                const opponentNames = new Set();
+                for (const game of archivedGames) {
+                    if (game.matchId !== matchManager.matchId) continue;
+                    for (const previousSide of ['left', 'right']) {
+                        const previousName = (game.teams && game.teams[previousSide] &&
+                            game.teams[previousSide].name || '').trim().toLowerCase();
+                        if (previousName && previousName !== currentTeamName) {
+                            const picks = game.heroes && game.heroes[previousSide] &&
+                                Array.isArray(game.heroes[previousSide].pick)
+                                ? game.heroes[previousSide].pick : [];
+                            picks.forEach(hero => {
+                                if (hero && hero.name) opponentNames.add(hero.name.toLowerCase());
+                            });
+                        }
+                    }
+                }
+                return opponentNames;
+            }
+
+            function buildRecapRecord(winnerSide) {
+                const teams = {
+                    left: readTeamState('left'),
+                    right: readTeamState('right')
+                };
+                const winningTeam = teams[winnerSide];
+                if (winningTeam) winningTeam.score = Math.max(0, Number(winningTeam.score) || 0) + 1;
+
+                const players = { left: [], right: [] };
+                const heroes = { left: { pick: [], ban: [] }, right: { pick: [], ban: [] } };
+
+                for (const side of ['left', 'right']) {
+                    const opponentPicks = getPreviousOpponentPicks(side);
+                    for (let slot = 1; slot <= 5; slot += 1) {
+                        const playerInput = document.getElementById(`player-${side}-${slot}`);
+                        const roleInput = document.getElementById(`role-${side}-${slot}`);
+                        const photo = document.getElementById(`player-photo-preview-${side}-${slot}`);
+                        const player = {
+                            name: playerInput ? playerInput.value.trim() : '',
+                            role: roleInput ? roleInput.value : '',
+                            photo: photo && photo.dataset.syncData ? photo.dataset.syncData : ''
+                        };
+                        players[side].push(player);
+
+                        const pick = readHeroesState(side, 'pick')[slot - 1];
+                        const ban = readHeroesState(side, 'ban')[slot - 1];
+                        if (pick) {
+                            const slotId = `${side}-pick-slot-${slot}`;
+                            const status = repickedSlots.has(slotId) ? 'REPICKED'
+                                : opponentPicks.has(pick.name.toLowerCase()) ? 'STOLEN' : '';
+                            heroes[side].pick.push({
+                                ...pick,
+                                role: player.role,
+                                playerName: player.name,
+                                status
+                            });
+                        } else {
+                            heroes[side].pick.push(null);
+                        }
+                        heroes[side].ban.push(ban ? { ...ban, status: 'BANNED' } : null);
+                    }
+                }
+
+                return {
+                    type: 'mlbb-draft-recap',
+                    recordId: `${matchManager.matchId}-game-${matchManager.gameNumber}`,
+                    matchId: matchManager.matchId,
+                    matchName: matchManager.matchName,
+                    gameNumber: matchManager.gameNumber,
+                    bestOf: matchManager.bo,
+                    winnerSide,
+                    winnerTeam: winningTeam ? winningTeam.name : '',
+                    teams,
+                    players,
+                    heroes,
+                    timestamp: Date.now()
+                };
+            }
+
+            async function finishGame(winnerSide) {
+                if (matchManager.status !== 'in-progress' || isFinishingGame) return;
+                isFinishingGame = true;
+                updateMatchManagerUI();
+
+                const record = buildRecapRecord(winnerSide);
+                try {
+                    const response = await fetch('/api/match-archive/game', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(record)
+                    });
+                    const result = await response.json().catch(() => ({}));
+                    if (!response.ok) {
+                        throw new Error(result.error || `Could not archive game (${response.status})`);
+                    }
+
+                    archivedGames.push(record);
+
+                    // Update the winner's score in the control panel.
+                    const winnerScoreInput = document.getElementById(`score-${winnerSide}`);
+                    if (winnerScoreInput) winnerScoreInput.value = String(record.teams[winnerSide].score);
+
+                    // Publish the completed game's recap independently from the live draft state.
+                    if (window.MLBBOverlaySync) {
+                        window.MLBBOverlaySync.publish('draft-recap', record);
+                    }
+
+                    const targetWins = Math.ceil(Number(matchManager.bo || 3) / 2);
+                    const seriesComplete = Number(record.teams[winnerSide].score) >= targetWins;
+
+                    if (seriesComplete) {
+                        matchManager.status = 'completed';
+                        matchManager.completedAt = Date.now();
+                        matchManager.winnerTeam = record.winnerTeam;
+                    } else {
+                        // Alternate Blue/Red sides for the next game. The team identity,
+                        // score, coach, logo, player names, roles, and photos move together.
+                        switchTeams({ swapHeroes: false, publish: false });
+                        clearAllHeroSlots();
+                        matchManager.gameNumber += 1;
+                        matchManager.status = 'in-progress';
+                        currentStepIndex = 0;
+                        draftComplete = false;
+                        applyCurrentSequenceStep({ autoStart: false });
+                    }
+
+                    winnerPicker.classList.remove('visible');
+                    matchManager.lastWinnerSide = winnerSide;
+                    isFinishingGame = false;
+                    publishMatchManager();
+                } catch (error) {
+                    console.error('[Draft Control] Finish Game failed:', error);
+                    if (matchHelpEl) matchHelpEl.textContent = error.message || 'Could not save this game.';
+                    isFinishingGame = false;
+                    updateMatchManagerUI();
+                }
+            }
+
+            if (startMatchButton) {
+                startMatchButton.addEventListener('click', async () => {
+                    const isRestart = matchManager.status === 'in-progress';
+                    if (isRestart && !window.confirm('Restart the current match? The active game will not be archived.')) {
+                        return;
+                    }
+
+                    const title = (matchNameInput.value || '').trim() || 'Match 1';
+                    matchManager = {
+                        matchId: `match-${Date.now()}`,
+                        matchName: title,
+                        gameNumber: 1,
+                        bo: getSelectedBestOf(),
+                        status: 'in-progress',
+                        startedAt: Date.now(),
+                        completedAt: null,
+                        winnerTeam: null
+                    };
+
+                    document.getElementById('score-left').value = '0';
+                    document.getElementById('score-right').value = '0';
+                    clearAllHeroSlots();
+                    currentStepIndex = 0;
+                    draftComplete = false;
+                    applyCurrentSequenceStep({ autoStart: false });
+                    archivedGames = [];
+                    winnerPicker.classList.remove('visible');
+                    publishMatchManager();
+                });
+            }
+
+            if (finishGameButton) {
+                finishGameButton.addEventListener('click', () => {
+                    if (matchManager.status !== 'in-progress') return;
+                    winnerPicker.classList.toggle('visible');
+                });
+            }
+
+            winnerPicker.querySelectorAll('[data-winner]').forEach(button => {
+                button.addEventListener('click', () => finishGame(button.dataset.winner));
+            });
+
+            loadMatchManager();
+
+            const switchTeamsButton = document.getElementById('btn-switch-teams');
+            if (switchTeamsButton) {
+                switchTeamsButton.addEventListener('click', switchTeams);
+            }
+
             // Changes to team, coach, score, player names, BO, and hero selectors sync immediately.
             document.addEventListener('input', event => {
                 if (event.target.matches(
                     '#team-name-left, #team-name-right, #coach-left, #coach-right, ' +
                     '#score-left, #score-right, .player-input'
-                )) publishDraftState();
+                )) {
+                    publishDraftState();
+                    if (typeof updateMatchManagerUI === 'function') updateMatchManagerUI();
+                }
             });
             document.addEventListener('change', event => {
                 if (event.target.matches(
                     '#team-name-left, #team-name-right, #coach-left, #coach-right, ' +
                     '#score-left, #score-right, .player-input, .player-role-select, .hero-slot-select, .bo-btn'
-                )) publishDraftState();
+                )) {
+                    publishDraftState();
+                    if (typeof updateMatchManagerUI === 'function') updateMatchManagerUI();
+                }
             });
 
             // Publish initial values, then hero initialization publishes again when manifest is ready.
