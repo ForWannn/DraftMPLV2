@@ -596,15 +596,67 @@
         .draft-container .bottom .pick-container .pick-hero .pick-image {
             width: 100%;
             min-width: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .draft-container .bottom .pick-container .pick-hero .pick-image .player-photo {
+            position: absolute;
+            z-index: 2;
+            left: 8px;
+            bottom: 8px;
+            width: 54px;
+            height: 54px;
+            display: none;
+            object-fit: cover;
+            object-position: center;
+            border: 2px solid rgba(255, 255, 255, 0.95);
+            border-radius: 50%;
+            background: #17191d;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+            box-sizing: border-box;
         }
 
         .draft-container .bottom .pick-container .pick-hero .players-name {
             min-width: 0;
             box-sizing: border-box;
-            padding: 0 4px;
+            padding: 0 5px;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-size: 16px;
+        }
+
+        .draft-container .bottom .pick-container .pick-hero .player-name-text {
+            min-width: 0;
+            max-width: 100%;
+            flex: 0 1 auto;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            text-align: center;
+        }
+
+        .draft-container .bottom .pick-container .pick-hero .player-role {
+            flex: 0 0 auto;
+            max-width: 42%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 2px 5px;
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.16);
+            font-family: 'Eixample Extrabold';
+            font-size: 10px;
+            line-height: 1;
+            text-transform: uppercase;
+        }
+
+        .draft-container .bottom .pick-container .pick-hero .player-role[hidden] {
+            display: none;
         }
 
         /* END PICK-CARD ACTIVE TURN ANIMATION */
@@ -708,7 +760,7 @@
                     </div>
                     <div class="pick-hero" id="pick5">
                         <div class="pick-image"></div>
-                        <div class="players-name">asuu</div>
+                        <div class="players-name"></div>
                     </div>
                 </div>
             </div>
@@ -894,12 +946,62 @@
             // Left visual order is 1→5; right visual order is 5→1.
             const orderedPicks = side === 'right' ? [...picks].reverse() : picks;
             const orderedPlayers = side === 'right' ? [...players].reverse() : players;
+
             nodes.forEach((node, index) => {
                 const image = node.querySelector('.pick-image');
                 const name = node.querySelector('.players-name');
                 const hero = orderedPicks[index] || null;
+                const player = orderedPlayers[index] || null;
+
+                // Keep the existing hero artwork as the card background and show
+                // the uploaded player portrait as a small overlay avatar.
                 setHeroImage(image, hero);
-                if (name) name.textContent = orderedPlayers[index] || '';
+                if (image) {
+                    let photo = image.querySelector('.player-photo');
+                    if (!photo) {
+                        photo = document.createElement('img');
+                        photo.className = 'player-photo';
+                        photo.alt = '';
+                        photo.loading = 'eager';
+                        image.appendChild(photo);
+                    }
+
+                    const photoUrl = player && typeof player === 'object' ? (player.photo || '') : '';
+                    if (photoUrl) {
+                        if (photo.getAttribute('src') !== photoUrl) photo.src = photoUrl;
+                        photo.alt = player.name ? `${player.name} photo` : 'Player photo';
+                        photo.style.display = 'block';
+                    } else {
+                        if (photo.hasAttribute('src')) photo.removeAttribute('src');
+                        photo.alt = '';
+                        photo.style.display = 'none';
+                    }
+                }
+
+                if (name) {
+                    const playerName = typeof player === 'string'
+                        ? player
+                        : (player && player.name ? player.name : '');
+                    const playerRole = player && typeof player === 'object' ? (player.role || '') : '';
+
+                    let nameText = name.querySelector('.player-name-text');
+                    if (!nameText) {
+                        nameText = document.createElement('span');
+                        nameText.className = 'player-name-text';
+                        name.replaceChildren(nameText);
+                    }
+
+                    let roleBadge = name.querySelector('.player-role');
+                    if (!roleBadge) {
+                        roleBadge = document.createElement('span');
+                        roleBadge.className = 'player-role';
+                        name.appendChild(roleBadge);
+                    }
+
+                    if (nameText.textContent !== playerName) nameText.textContent = playerName;
+                    if (roleBadge.textContent !== playerRole) roleBadge.textContent = playerRole;
+                    roleBadge.hidden = !playerRole;
+                }
             });
         }
 
