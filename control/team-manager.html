@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Manager — MLBB Broadcast Tools</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0e13;
+      --panel: #121720;
+      --panel2: #171e29;
+      --line: #263140;
+      --muted: #8e9bad;
+      --text: #edf2f8;
+      --blue: #2585ef;
+      --cyan: #35c4d8;
+      --green: #28b879;
+      --red: #e45b67;
+      --radius: 14px;
+      --shadow: 0 14px 40px rgba(0, 0, 0, .22)
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: radial-gradient(900px 500px at 75% -10%, rgba(37, 133, 239, .12), transparent 60%), var(--bg);
+      color: var(--text);
+      font: 14px/1.45 Inter, Segoe UI, Arial, sans-serif
+    }
+
+    button,
+    input,
+    select {
+      font: inherit
+    }
+
+    button {
+      cursor: pointer
+    }
+
+    .app {
+      max-width: 1500px;
+      margin: auto;
+      padding: 24px
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #2585ef, #19b8c9);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 17px;
+      box-shadow: 0 8px 24px #1678ca33
+    }
+
+    .eyebrow {
+      color: #73b7ff;
+      font-size: 10px;
+      letter-spacing: 1.8px;
+      font-weight: 800
+    }
+
+    .brand h1 {
+      font-size: 21px;
+      letter-spacing: .7px;
+      margin: 2px 0 0
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 9px;
+      align-items: center
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      margin-right: 8px
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 10px #28b87977
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      background: #1a2330;
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 12px;
+      transition: .18s
+    }
+
+    .btn:hover {
+      filter: brightness(1.15);
+      transform: translateY(-1px)
+    }
+
+    .btn.primary {
+      border-color: #2585ef;
+      background: linear-gradient(135deg, #2585ef, #1263c2);
+      box-shadow: 0 7px 18px #1678ca25
+    }
+
+    .btn.ghost {
+      background: transparent
+    }
+
+    .btn.danger {
+      color: #ff9aa3;
+      border-color: #63323b;
+      background: #2a171d
+    }
+
+    .btn.small {
+      padding: 7px 10px;
+      font-size: 11px
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start
+    }
+
+    .sidebar,
+    .panel {
+      background: linear-gradient(180deg, #141b25, #111720);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow)
+    }
+
+    .sidebar {
+      padding: 15px;
+      position: sticky;
+      top: 16px
+    }
+
+    .side-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px
+    }
+
+    .side-head h2,
+    .panel-head h2 {
+      font-size: 13px;
+      letter-spacing: 1px;
+      margin: 0
+    }
+
+    .count {
+      font-size: 10px;
+      color: var(--muted);
+      background: #222c39;
+      border-radius: 20px;
+      padding: 3px 8px
+    }
+
+    .search {
+      width: 100%;
+      margin: 0 0 12px
+    }
+
+    .field input,
+    .field select,
+    .search input,
+    .roster-row select,
+    .preset-form input {
+      width: 100%;
+      background: #0c121a;
+      border: 1px solid #2a3544;
+      border-radius: 9px;
+      padding: 10px 11px;
+      color: var(--text);
+      outline: none
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .search input:focus,
+    .roster-row select:focus {
+      border-color: #318ded;
+      box-shadow: 0 0 0 3px #2585ef20
+    }
+
+    .team-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      max-height: calc(100vh - 250px);
+      overflow: auto
+    }
+
+    .team-item {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid transparent;
+      border-radius: 11px;
+      background: #171f2a;
+      text-align: left;
+      color: var(--text);
+      width: 100%
+    }
+
+    .team-item:hover {
+      border-color: #34465b
+    }
+
+    .team-item.active {
+      border-color: #2585ef;
+      background: #14263b
+    }
+
+    .team-logo {
+      width: 39px;
+      height: 39px;
+      flex: none;
+      border-radius: 9px;
+      background: #0b1119;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      color: #71849b;
+      font-weight: 800
+    }
+
+    .team-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain
+    }
+
+    .team-meta {
+      min-width: 0;
+      flex: 1
+    }
+
+    .team-meta strong {
+      display: block;
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .team-meta small {
+      color: var(--muted);
+      font-size: 10px
+    }
+
+    .empty {
+      padding: 22px 12px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px
+    }
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-width: 0
+    }
+
+    .panel {
+      padding: 19px
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 17px
+    }
+
+    .panel-head p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 11px
+    }
+
+    .panel-head .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 13px
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0
+    }
+
+    .field label,
+    .label {
+      font-size: 10px;
+      color: #9baabd;
+      letter-spacing: .8px;
+      font-weight: 800
+    }
+
+    .field input,
+    .field select {
+      min-height: 40px
+    }
+
+    .logo-field {
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .logo-preview {
+      width: 66px;
+      height: 66px;
+      border: 1px dashed #3b4b60;
+      border-radius: 12px;
+      background: #0b1119;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 10px;
+      text-align: center
+    }
+
+    .logo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain
+    }
+
+    .logo-tools {
+      display: flex;
+      flex-direction: column;
+      gap: 7px
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--line);
+      margin: 18px 0
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 0 12px
+    }
+
+    .section-title h3 {
+      font-size: 12px;
+      letter-spacing: 1px;
+      margin: 0
+    }
+
+    .section-title span {
+      font-size: 10px;
+      color: var(--muted)
+    }
+
+    .roster-list {
+      display: grid;
+      gap: 8px
+    }
+
+    .roster-row {
+      display: grid;
+      grid-template-columns: 35px minmax(150px, 1fr) 150px 76px 76px;
+      gap: 9px;
+      align-items: center;
+      padding: 9px;
+      background: #171f2a;
+      border: 1px solid #222e3c;
+      border-radius: 11px
+    }
+
+    .slot {
+      width: 27px;
+      height: 27px;
+      border-radius: 8px;
+      background: #23364d;
+      color: #8dc4ff;
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 800
+    }
+
+    .roster-row select {
+      padding: 9px;
+      font-size: 12px
+    }
+
+    .asset-mini {
+      display: flex;
+      align-items: center;
+      gap: 5px
+    }
+
+    .mini-img {
+      width: 31px;
+      height: 35px;
+      background-color: #101720;
+      background-image: linear-gradient(45deg, #26303d 25%, transparent 25%), linear-gradient(-45deg, #26303d 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #26303d 75%), linear-gradient(-45deg, transparent 75%, #26303d 75%);
+      background-size: 8px 8px;
+      background-position: 0 0, 0 4px, 4px -4px, -4px 0;
+      border: 1px solid #344255;
+      border-radius: 6px;
+      object-fit: contain
+    }
+
+    .asset-label {
+      font-size: 9px;
+      color: var(--muted)
+    }
+
+    .roster-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 13px
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 10px
+    }
+
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 9px
+    }
+
+    .preset-card {
+      padding: 11px;
+      border-radius: 10px;
+      background: #171f2a;
+      border: 1px solid #293646
+    }
+
+    .preset-card strong {
+      font-size: 11px;
+      display: block
+    }
+
+    .preset-card small {
+      font-size: 10px;
+      color: var(--muted)
+    }
+
+    .preset-card button {
+      float: right
+    }
+
+    .player-toolbar {
+      display: flex;
+      gap: 9px;
+      align-items: center
+    }
+
+    .player-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px
+    }
+
+    .player-card {
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      background: #171f2a;
+      border: 1px solid #283444;
+      border-radius: 11px
+    }
+
+    .player-avatar {
+      width: 54px;
+      height: 62px;
+      object-fit: contain;
+      border: 1px solid #334255;
+      border-radius: 8px;
+      background-color: #101720;
+      background-image: linear-gradient(45deg, #26303d 25%, transparent 25%), linear-gradient(-45deg, #26303d 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #26303d 75%), linear-gradient(-45deg, transparent 75%, #26303d 75%);
+      background-size: 8px 8px;
+      background-position: 0 0, 0 4px, 4px -4px, -4px 0
+    }
+
+    .player-info strong {
+      display: block;
+      font-size: 12px
+    }
+
+    .player-info small {
+      color: var(--muted);
+      font-size: 10px
+    }
+
+    .photo-pills {
+      display: flex;
+      gap: 5px;
+      margin-top: 5px
+    }
+
+    .pill {
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 20px;
+      background: #203329;
+      color: #77d5a8
+    }
+
+    .pill.missing {
+      background: #302b20;
+      color: #d9bd7c
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: #05080dcc;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 20
+    }
+
+    .modal-backdrop.open {
+      display: flex
+    }
+
+    .modal {
+      width: min(650px, 100%);
+      background: #141b25;
+      border: 1px solid #344255;
+      border-radius: 16px;
+      padding: 21px;
+      box-shadow: 0 25px 80px #0009;
+      max-height: 92vh;
+      overflow: auto
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 17px
+    }
+
+    .modal-head h2 {
+      font-size: 15px;
+      margin: 0
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px
+    }
+
+    .upload-box {
+      border: 1px dashed #40536a;
+      border-radius: 11px;
+      padding: 11px;
+      background: #101720
+    }
+
+    .upload-box label {
+      display: block;
+      font-size: 10px;
+      font-weight: 800;
+      color: #a9b8c9;
+      margin-bottom: 8px
+    }
+
+    .upload-preview {
+      height: 135px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border-radius: 8px;
+      background-color: #0b1119;
+      background-image: linear-gradient(45deg, #202a36 25%, transparent 25%), linear-gradient(-45deg, #202a36 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #202a36 75%), linear-gradient(-45deg, transparent 75%, #202a36 75%);
+      background-size: 14px 14px;
+      background-position: 0 0, 0 7px, 7px -7px, -7px 0;
+      margin-bottom: 9px;
+      color: #75869b;
+      font-size: 11px
+    }
+
+    .upload-preview img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain
+    }
+
+    .upload-box input {
+      width: 100%;
+      font-size: 10px;
+      color: var(--muted)
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 18px
+    }
+
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      padding: 12px 16px;
+      border: 1px solid #36516d;
+      border-radius: 11px;
+      background: #152337;
+      color: #eaf4ff;
+      box-shadow: var(--shadow);
+      font-size: 12px;
+      display: none;
+      z-index: 30;
+      max-width: min(420px, calc(100vw - 40px))
+    }
+
+    .toast.show {
+      display: block
+    }
+
+    .toast.error {
+      border-color: #87404a;
+      background: #2a171d
+    }
+
+    .empty-state {
+      border: 1px dashed #354458;
+      border-radius: 12px;
+      padding: 32px;
+      text-align: center;
+      color: var(--muted)
+    }
+
+    .empty-state strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 5px
+    }
+
+    .hidden {
+      display: none !important
+    }
+
+    @media(max-width:1050px) {
+      .layout {
+        grid-template-columns: 230px minmax(0, 1fr)
+      }
+
+      .form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+      }
+
+      .roster-row {
+        grid-template-columns: 30px minmax(120px, 1fr) 120px 68px 68px
+      }
+
+      .preset-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+      }
+    }
+
+    @media(max-width:760px) {
+      .app {
+        padding: 13px
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column
+      }
+
+      .top-actions {
+        width: 100%;
+        flex-wrap: wrap
+      }
+
+      .layout {
+        grid-template-columns: 1fr
+      }
+
+      .sidebar {
+        position: static
+      }
+
+      .team-list {
+        max-height: 220px
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr
+      }
+
+      .roster-row {
+        grid-template-columns: 28px minmax(0, 1fr) 112px
+      }
+
+      .roster-row .asset-mini {
+        display: none
+      }
+
+      .player-grid {
+        grid-template-columns: 1fr
+      }
+
+      .preset-grid {
+        grid-template-columns: 1fr 1fr
+      }
+
+      .modal-grid {
+        grid-template-columns: 1fr 1fr
+      }
+
+      .roster-footer {
+        align-items: flex-start;
+        flex-direction: column
+      }
+    }
+
+    @media(max-width:430px) {
+      .roster-row {
+        grid-template-columns: 25px minmax(0, 1fr) 94px;
+        gap: 6px;
+        padding: 7px
+      }
+
+      .roster-row select {
+        font-size: 10px;
+        padding: 8px 5px
+      }
+
+      .modal-grid {
+        grid-template-columns: 1fr
+      }
+
+      .preset-grid {
+        grid-template-columns: 1fr
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">TM</div>
+        <div>
+          <div class="eyebrow">MLBB BROADCAST TOOLS</div>
+          <h1>TEAM MANAGER</h1>
+        </div>
+      </div>
+      <div class="top-actions">
+        <div class="status"><i class="dot"></i><span id="server-status">Connecting to server…</span></div><button
+          class="btn ghost" id="export-btn">Export JSON</button><button class="btn ghost" id="import-btn">Import
+          JSON</button><input id="import-file" type="file" accept="application/json,.json" hidden><button
+          class="btn primary" id="new-team-btn">＋ New Team</button>
+      </div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="side-head">
+          <h2>TEAM DATABASE</h2><span class="count" id="team-count">0 TEAMS</span>
+        </div>
+        <div class="search"><input id="team-search" placeholder="Search teams…"></div>
+        <div class="team-list" id="team-list">
+          <div class="empty">Loading teams…</div>
+        </div>
+      </aside>
+      <main class="main">
+        <section class="panel" id="team-panel">
+          <div class="panel-head">
+            <div>
+              <h2>TEAM PROFILE</h2>
+              <p>Permanent team identity and broadcast information.</p>
+            </div>
+            <div class="actions"><button class="btn danger small" id="archive-team-btn" disabled>Archive</button><button
+                class="btn primary" id="save-team-btn" disabled>Save Team</button></div>
+          </div>
+          <div id="team-empty" class="empty-state"><strong>Select or create a team</strong>Team profiles and rosters are
+            stored permanently in the Team Library.</div>
+          <div id="team-editor" class="hidden">
+            <div class="form-grid">
+              <div class="field"><label for="team-name">TEAM NAME</label><input id="team-name" maxlength="80"
+                  placeholder="e.g. ONIC Esports"></div>
+              <div class="field"><label for="team-short">SHORT NAME</label><input id="team-short" maxlength="16"
+                  placeholder="e.g. ONIC"></div>
+              <div class="field"><label for="team-coach">COACH</label><input id="team-coach" maxlength="80"
+                  placeholder="Coach name"></div>
+            </div>
+            <div class="divider"></div>
+            <div class="section-title">
+              <h3>TEAM LOGO</h3><span>PNG / SVG / JPG supported</span>
+            </div>
+            <div class="logo-field">
+              <div class="logo-preview" id="logo-preview">NO LOGO</div>
+              <div class="logo-tools"><input type="file" id="team-logo-file"
+                  accept="image/png,image/jpeg,image/webp,image/svg+xml"><span class="hint">Logo is uploaded to the
+                  existing /uploads directory.</span></div>
+            </div>
+            <div class="divider"></div>
+            <div class="section-title">
+              <h3>ROSTER VERSIONING</h3><span id="roster-version-label">No active roster yet</span>
+            </div>
+            <div style="display:flex;gap:8px;align-items:end;flex-wrap:wrap;margin-bottom:13px">
+              <div class="field" style="min-width:230px;flex:1"><label for="roster-history">LOAD SAVED
+                  VERSION</label><select id="roster-history"></select></div>
+              <button class="btn" id="load-roster-btn" type="button">Load Version</button>
+              <div class="field" style="min-width:230px;flex:1"><label for="roster-name">NEW VERSION NAME</label><input
+                  id="roster-name" maxlength="80" placeholder="e.g. MPL Season 18 Main Roster"></div>
+            </div>
+            <div class="roster-list" id="roster-list"></div>
+            <div class="roster-footer"><span class="hint">A saved roster creates a new immutable version. Previous
+                versions remain archived.</span><button class="btn primary" id="save-roster-btn">Save New Roster
+                Version</button></div>
+            <div class="divider"></div>
+            <div class="section-title">
+              <h3>ROSTER PRESETS</h3><span>Reusable lineup shortcuts</span>
+            </div>
+            <div class="preset-form" style="display:flex;gap:8px;max-width:600px;margin-bottom:12px"><input
+                id="preset-name" placeholder="Preset name (e.g. MDL Lineup)"><select id="preset-roster"
+                style="min-width:180px;background:#0c121a;border:1px solid #2a3544;border-radius:9px;padding:9px;color:var(--text)"></select><button
+                class="btn small" id="add-preset-btn">＋ Add</button></div>
+            <div class="preset-grid" id="preset-list">
+              <div class="hint">No presets yet.</div>
+            </div>
+          </div>
+        </section>
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>PLAYER LIBRARY</h2>
+              <p>One player profile can be reused across teams and roster versions.</p>
+            </div>
+            <div class="actions"><input id="player-search" placeholder="Search player…"
+                style="max-width:180px;background:#0c121a;border:1px solid #2a3544;border-radius:9px;padding:9px;color:var(--text)"><button
+                class="btn primary" id="new-player-btn">＋ Add Player</button></div>
+          </div>
+          <div class="player-grid" id="player-grid">
+            <div class="empty">Loading players…</div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <div class="modal-backdrop" id="player-modal">
+    <form class="modal" id="player-form">
+      <div class="modal-head">
+        <h2 id="player-modal-title">ADD PLAYER</h2><button type="button" class="btn ghost small"
+          id="close-player-modal">✕</button>
+      </div>
+      <input type="hidden" id="player-id">
+      <div class="form-grid" style="grid-template-columns:2fr 1fr;margin-bottom:15px">
+        <div class="field"><label for="player-name">PLAYER NAME</label><input id="player-name" maxlength="80" required
+            placeholder="Player nickname"></div>
+        <div class="field"><label for="player-role">DEFAULT ROLE</label><select id="player-role">
+            <option value="">Select role</option>
+            <option>Jungler</option>
+            <option>Roam</option>
+            <option>EXP</option>
+            <option>Gold</option>
+            <option>Mid</option>
+          </select></div>
+      </div>
+      <div class="modal-grid">
+        <div class="upload-box"><label>POSE 1 · PRIMARY</label>
+          <div class="upload-preview" id="pose1-preview">PNG TRANSPARENT</div><input id="pose1-file" type="file"
+            accept="image/png">
+        </div>
+        <div class="upload-box"><label>POSE 2 · ALTERNATIVE</label>
+          <div class="upload-preview" id="pose2-preview">PNG TRANSPARENT</div><input id="pose2-file" type="file"
+            accept="image/png">
+        </div>
+      </div>
+      <p class="hint">Both poses must be transparent PNG files with an alpha channel. Original PNG bytes are stored
+        without JPEG conversion. Existing assets are retained when replaced to protect historical match references.</p>
+      <div class="modal-actions"><button type="button" class="btn" id="cancel-player-btn">Cancel</button><button
+          type="submit" class="btn primary" id="save-player-btn">Save Player</button></div>
+    </form>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+    (() => {
+      'use strict';
+      const API = '/api/team-manager';
+      const ROLES = ['Jungler', 'Roam', 'EXP', 'Gold', 'Mid'];
+      let teams = [], players = [], selectedTeamId = null, selectedTeam = null, editingPlayerId = null;
+      let rosterDraft = Array.from({ length: 5 }, () => ({ playerId: '', role: '' }));
+      const $ = id => document.getElementById(id);
+      const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+      const api = async (url, options = {}) => { const response = await fetch(url, options); let data = {}; try { data = await response.json() } catch (_) { } if (!response.ok) throw new Error(data.error || `Request failed (${response.status})`); return data };
+      const jsonOptions = (method, body) => ({ method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      function toast(message, error = false) { const el = $('toast'); el.textContent = message; el.classList.toggle('error', error); el.classList.add('show'); clearTimeout(toast.timer); toast.timer = setTimeout(() => el.classList.remove('show'), 3600) }
+      function setServerStatus(ok) { $('server-status').textContent = ok ? 'Server connected' : 'Server unavailable'; document.querySelector('.dot').style.background = ok ? 'var(--green)' : 'var(--red)' }
+      async function loadAll() { try { const [teamData, playerData] = await Promise.all([api(`${API}/teams`), api(`${API}/players`)]); teams = teamData.teams || []; players = playerData.players || []; setServerStatus(true); renderTeams(); renderPlayers(); if (selectedTeamId) { const exists = teams.some(t => t.id === selectedTeamId); if (exists) await selectTeam(selectedTeamId); else clearTeam() } else if (teams.length) await selectTeam(teams[0].id); else clearTeam() } catch (e) { setServerStatus(false); toast(e.message, true) } }
+      function renderTeams() { const q = $('team-search').value.toLowerCase(); const filtered = teams.filter(t => t.name.toLowerCase().includes(q) || t.shortName.toLowerCase().includes(q)); $('team-count').textContent = `${teams.length} TEAM${teams.length === 1 ? '' : 'S'}`; $('team-list').innerHTML = filtered.length ? filtered.map(t => `<button class="team-item ${t.id === selectedTeamId ? 'active' : ''}" data-team="${esc(t.id)}"><span class="team-logo">${t.logoUrl ? `<img src="${esc(t.logoUrl)}" alt="">` : 'TM'}</span><span class="team-meta"><strong>${esc(t.name)}</strong><small>${esc(t.shortName || 'No short name')} · ${t.activeRosterName ? `v${t.activeRosterVersion}` : 'Roster not set'}</small></span></button>`).join('') : '<div class="empty">No teams found.</div>'; document.querySelectorAll('[data-team]').forEach(b => b.addEventListener('click', () => selectTeam(b.dataset.team))) }
+      async function selectTeam(id) { try { const data = await api(`${API}/teams/${encodeURIComponent(id)}`); selectedTeam = data.team; selectedTeamId = id; renderTeams(); renderTeamEditor() } catch (e) { toast(e.message, true) } }
+      function clearTeam() { selectedTeam = null; selectedTeamId = null; $('team-empty').classList.remove('hidden'); $('team-editor').classList.add('hidden'); $('save-team-btn').disabled = true; $('archive-team-btn').disabled = true; renderTeams() }
+      function renderTeamEditor() { if (!selectedTeam) return; $('team-empty').classList.add('hidden'); $('team-editor').classList.remove('hidden'); $('save-team-btn').disabled = false; $('archive-team-btn').disabled = false; $('team-name').value = selectedTeam.name || ''; $('team-short').value = selectedTeam.shortName || ''; $('team-coach').value = selectedTeam.coachName || ''; $('logo-preview').innerHTML = selectedTeam.logoUrl ? `<img src="${esc(selectedTeam.logoUrl)}" alt="Team logo">` : 'NO LOGO'; $('roster-version-label').textContent = selectedTeam.activeRoster ? `v${selectedTeam.activeRoster.versionNumber} · ${selectedTeam.activeRoster.name}` : 'No active roster yet'; $('roster-name').value = ''; const members = selectedTeam.activeRoster?.members || []; rosterDraft = Array.from({ length: 5 }, (_, i) => ({ playerId: members[i]?.playerId || '', role: members[i]?.role || '' })); renderRoster(); renderPresets() }
+      function renderRoster() { const options = '<option value="">Select player</option>' + players.map(p => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join(''); $('roster-list').innerHTML = rosterDraft.map((m, i) => { const player = players.find(p => p.id === m.playerId); const photos = player?.photos || {}; return `<div class="roster-row"><span class="slot">${i + 1}</span><select data-roster-player="${i}">${options}</select><select data-roster-role="${i}"><option value="">Role</option>${ROLES.map(r => `<option value="${r}">${r}</option>`).join('')}</select><div class="asset-mini">${photos.pose1 ? `<img class="mini-img" src="${esc(photos.pose1)}" alt="">` : '<span class="mini-img"></span>'}<span class="asset-label">POSE 1</span></div><div class="asset-mini">${photos.pose2 ? `<img class="mini-img" src="${esc(photos.pose2)}" alt="">` : '<span class="mini-img"></span>'}<span class="asset-label">POSE 2</span></div></div>` }).join(''); rosterDraft.forEach((m, i) => { const p = $(`[data-roster-player="${i}"]`), r = $(`[data-roster-role="${i}"]`); p.value = m.playerId; r.value = m.role; p.addEventListener('change', () => { rosterDraft[i].playerId = p.value; const chosen = players.find(x => x.id === p.value); if (!rosterDraft[i].role && chosen?.defaultRole) { rosterDraft[i].role = chosen.defaultRole; renderRoster() } else renderRoster() }); r.addEventListener('change', () => rosterDraft[i].role = r.value) }) }
+      function renderPresets() { const versions = selectedTeam?.rosterVersions || []; $('preset-roster').innerHTML = versions.map(v => `<option value="${esc(v.id)}">v${v.versionNumber} · ${esc(v.name)}</option>`).join('') || '<option value="">No roster versions</option>'; $('roster-history').innerHTML = versions.map(v => `<option value="${esc(v.id)}">v${v.versionNumber} · ${esc(v.name)}${v.status === 'active' ? ' (ACTIVE)' : ''}</option>`).join('') || '<option value="">No saved versions</option>'; const presets = selectedTeam?.presets || []; $('preset-list').innerHTML = presets.length ? presets.map(p => `<div class="preset-card"><button class="btn danger small" data-delete-preset="${esc(p.id)}">×</button><button class="btn small" data-load-preset="${esc(p.rosterVersionId)}" style="float:right;margin-right:5px">Load</button><strong>${esc(p.name)}</strong><small>Roster: ${esc(p.rosterVersionId)}</small></div>`).join('') : '<div class="hint">No presets saved for this team.</div>'; document.querySelectorAll('[data-delete-preset]').forEach(b => b.addEventListener('click', async () => { if (!confirm('Delete this preset?')) return; try { await api(`${API}/presets/${b.dataset.deletePreset}`, { method: 'DELETE' }); await selectTeam(selectedTeamId); toast('Preset deleted') } catch (e) { toast(e.message, true) } })); document.querySelectorAll('[data-load-preset]').forEach(b => b.addEventListener('click', () => loadRosterVersion(b.dataset.loadPreset))) }
+      async function loadRosterVersion(versionId) { if (!selectedTeam) return; try { const data = await api(`${API}/teams/${selectedTeam.id}/rosters`); const roster = (data.rosters || []).find(r => r.id === versionId); if (!roster) throw new Error('Roster version not found'); rosterDraft = Array.from({ length: 5 }, (_, i) => ({ playerId: roster.members[i]?.playerId || '', role: roster.members[i]?.role || '' })); $('roster-name').value = `${roster.name} Copy`; renderRoster(); toast(`Loaded v${roster.versionNumber}. Save as a new version to activate it.`) } catch (e) { toast(e.message, true) } }
+      async function saveTeam() { if (!selectedTeam) return; try { const data = await api(`${API}/teams/${selectedTeam.id}`, jsonOptions('PUT', { name: $('team-name').value, shortName: $('team-short').value, coachName: $('team-coach').value, logoUrl: selectedTeam.logoUrl || '' })); selectedTeam = data.team; await refreshTeamsOnly(); renderTeamEditor(); toast('Team profile saved') } catch (e) { toast(e.message, true) } }
+      async function refreshTeamsOnly() { const data = await api(`${API}/teams`); teams = data.teams || []; renderTeams() }
+      async function uploadLogo() { const file = $('team-logo-file').files[0]; if (!file || !selectedTeam) return; if (!/^image\/(png|jpeg|webp|svg\+xml)$/.test(file.type)) { toast('Choose a PNG, JPG, WEBP, or SVG logo.', true); return } try { const up = await fetch(`/upload?name=${encodeURIComponent(file.name)}`, { method: 'POST', headers: { 'Content-Type': file.type }, body: file }); const result = await up.json(); if (!up.ok || !result.url) throw new Error(result.error || 'Logo upload failed'); const data = await api(`${API}/teams/${selectedTeam.id}`, jsonOptions('PUT', { name: $('team-name').value, shortName: $('team-short').value, coachName: $('team-coach').value, logoUrl: result.url })); selectedTeam = data.team; renderTeamEditor(); await refreshTeamsOnly(); toast('Team logo uploaded') } catch (e) { toast(e.message, true) } finally { $('team-logo-file').value = '' } }
+      async function saveRoster() { if (!selectedTeam) return; const members = rosterDraft.map((m, i) => ({ slotNumber: i + 1, playerId: m.playerId, role: m.role })); if (members.some(m => !m.playerId || !m.role)) { toast('Complete all five player slots and roles first.', true); return } if (new Set(members.map(m => m.playerId)).size !== 5) { toast('A player can only occupy one slot in a roster.', true); return } try { const data = await api(`${API}/teams/${selectedTeam.id}/rosters`, jsonOptions('POST', { name: $('roster-name').value || `Roster ${((selectedTeam.rosterVersions || []).length) + 1}`, members })); selectedTeam = data.team; renderTeamEditor(); await refreshTeamsOnly(); toast(`Roster version v${data.roster.versionNumber} saved and activated`) } catch (e) { toast(e.message, true) } }
+      async function addPreset() { if (!selectedTeam) return; const name = $('preset-name').value.trim(), rosterVersionId = $('preset-roster').value; if (!name || !rosterVersionId) { toast('Enter a preset name and choose a roster version.', true); return } try { await api(`${API}/teams/${selectedTeam.id}/presets`, jsonOptions('POST', { name, rosterVersionId })); $('preset-name').value = ''; await selectTeam(selectedTeam.id); toast('Roster preset saved') } catch (e) { toast(e.message, true) } }
+      function renderPlayers() { const q = $('player-search').value.toLowerCase(); const list = players.filter(p => p.name.toLowerCase().includes(q)); $('player-grid').innerHTML = list.length ? list.map(p => `<article class="player-card"><img class="player-avatar" src="${esc(p.photos?.pose1 || p.photos?.pose2 || '')}" alt=""><div class="player-info"><strong>${esc(p.name)}</strong><small>${esc(p.defaultRole || 'Role not set')}</small><div class="photo-pills"><span class="pill ${p.photos?.pose1 ? '' : 'missing'}">POSE 1 ${p.photos?.pose1 ? '✓' : '—'}</span><span class="pill ${p.photos?.pose2 ? '' : 'missing'}">POSE 2 ${p.photos?.pose2 ? '✓' : '—'}</span></div></div><div style="display:flex;gap:5px;flex-direction:column"><button class="btn small" data-edit-player="${esc(p.id)}">Edit</button><button class="btn danger small" data-archive-player="${esc(p.id)}">×</button></div></article>`).join('') : '<div class="empty">No players in the library. Add a player to begin.</div>'; document.querySelectorAll('[data-edit-player]').forEach(b => b.addEventListener('click', () => openPlayerModal(b.dataset.editPlayer))); document.querySelectorAll('[data-archive-player]').forEach(b => b.addEventListener('click', async () => { if (!confirm('Archive this player? Existing roster history will be retained.')) return; try { await api(`${API}/players/${b.dataset.archivePlayer}`, { method: 'DELETE' }); await loadPlayers(); toast('Player archived') } catch (e) { toast(e.message, true) } })) }
+      async function loadPlayers() { const data = await api(`${API}/players`); players = data.players || []; renderPlayers(); if (selectedTeam) renderRoster() }
+      function openPlayerModal(id = null) { editingPlayerId = id; const player = id ? players.find(p => p.id === id) : null; $('player-modal-title').textContent = player ? 'EDIT PLAYER' : 'ADD PLAYER'; $('player-id').value = id || ''; $('player-name').value = player?.name || ''; $('player-role').value = player?.defaultRole || ''; for (const pose of ['pose1', 'pose2']) { $(`${pose}-file`).value = ''; const url = player?.photos?.[pose]; $(`${pose}-preview`).innerHTML = url ? `<img src="${esc(url)}" alt="${pose}">` : 'PNG TRANSPARENT' } $('player-modal').classList.add('open') }
+      function closePlayerModal() { $('player-modal').classList.remove('open'); editingPlayerId = null }
+      function previewUpload(pose, file) { if (!file) return; if (file.type !== 'image/png') { toast('Only PNG files are accepted for player poses.', true); $(`${pose}-file`).value = ''; return } const url = URL.createObjectURL(file); $(`${pose}-preview`).innerHTML = `<img src="${url}" alt="Preview">` }
+      async function uploadPose(playerId, pose, file) { if (!file) return; const response = await fetch(`${API}/players/${encodeURIComponent(playerId)}/photos/${pose}`, { method: 'POST', headers: { 'Content-Type': 'image/png' }, body: file }); const data = await response.json().catch(() => ({})); if (!response.ok) throw new Error(data.error || `Upload ${pose} failed`); return data }
+      async function savePlayer(event) { event.preventDefault(); const name = $('player-name').value.trim(), defaultRole = $('player-role').value; if (!name) { toast('Player name is required.', true); return } const pose1 = $('pose1-file').files[0], pose2 = $('pose2-file').files[0]; if (pose1 && pose1.type !== 'image/png' || pose2 && pose2.type !== 'image/png') { toast('Both poses must be PNG files.', true); return } try { let playerId = editingPlayerId; if (playerId) { await api(`${API}/players/${playerId}`, jsonOptions('PUT', { name, defaultRole })) } else { const data = await api(`${API}/players`, jsonOptions('POST', { name, defaultRole })); playerId = data.player.id } if (pose1) await uploadPose(playerId, 'pose1', pose1); if (pose2) await uploadPose(playerId, 'pose2', pose2); await loadPlayers(); closePlayerModal(); toast('Player profile saved') } catch (e) { toast(e.message, true) } }
+      $('new-team-btn').addEventListener('click', async () => { const name = prompt('Enter team name:'); if (!name?.trim()) return; try { const data = await api(`${API}/teams`, jsonOptions('POST', { name })); await refreshTeamsOnly(); await selectTeam(data.team.id); $('team-name').focus(); toast('Team created. Complete the profile and roster.') } catch (e) { toast(e.message, true) } });
+      $('save-team-btn').addEventListener('click', saveTeam); $('archive-team-btn').addEventListener('click', async () => { if (!selectedTeam || !confirm(`Archive ${selectedTeam.name}?`)) return; try { await api(`${API}/teams/${selectedTeam.id}`, { method: 'DELETE' }); selectedTeamId = null; await refreshTeamsOnly(); if (teams.length) await selectTeam(teams[0].id); else clearTeam(); toast('Team archived') } catch (e) { toast(e.message, true) } });
+      $('team-logo-file').addEventListener('change', uploadLogo); $('save-roster-btn').addEventListener('click', saveRoster); $('load-roster-btn').addEventListener('click', () => loadRosterVersion($('roster-history').value)); $('add-preset-btn').addEventListener('click', addPreset); $('new-player-btn').addEventListener('click', () => openPlayerModal()); $('close-player-modal').addEventListener('click', closePlayerModal); $('cancel-player-btn').addEventListener('click', closePlayerModal); $('player-form').addEventListener('submit', savePlayer); $('pose1-file').addEventListener('change', e => previewUpload('pose1', e.target.files[0])); $('pose2-file').addEventListener('change', e => previewUpload('pose2', e.target.files[0])); $('team-search').addEventListener('input', renderTeams); $('player-search').addEventListener('input', renderPlayers);
+      $('export-btn').addEventListener('click', () => { window.location.href = `${API}/export` }); $('import-btn').addEventListener('click', () => $('import-file').click()); $('import-file').addEventListener('change', async e => { const file = e.target.files[0]; if (!file) return; try { const backup = JSON.parse(await file.text()); const result = await api(`${API}/import`, jsonOptions('POST', backup)); await loadAll(); toast(`Imported ${result.imported.teams} teams and ${result.imported.players} players. Copy uploads folder too for images.`) } catch (err) { toast(err.message, true) } finally { e.target.value = '' } });
+      loadAll();
+    })();
+  </script>
+</body>
+
+</html>
