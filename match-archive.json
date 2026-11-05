@@ -1,0 +1,513 @@
+{
+  "version": 1,
+  "games": [
+    {
+      "type": "mlbb-draft-recap",
+      "recordId": "match-1793870451428-game-1",
+      "matchId": "match-1793870451428",
+      "matchName": "Match 1",
+      "gameNumber": 1,
+      "bestOf": 3,
+      "winnerSide": "right",
+      "winnerTeam": "RRQ HOSHI",
+      "teams": {
+        "left": {
+          "name": "ONIC ESPORT",
+          "coach": "KUMAR",
+          "score": 0,
+          "logo": "http://localhost:3000/uploads/1793720740078-3fbfx.svg"
+        },
+        "right": {
+          "name": "RRQ HOSHI",
+          "coach": "ADI",
+          "score": 1,
+          "logo": "http://localhost:3000/uploads/1793720232405-v6l6n.webp"
+        }
+      },
+      "players": {
+        "left": [
+          {
+            "name": "LUTPI",
+            "role": "EXP",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-b54c1a5a-8145-4b67-b451-5560d3155735-pose1-1793720786636-49fd51.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-b54c1a5a-8145-4b67-b451-5560d3155735-pose1-1793720786636-49fd51.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-b54c1a5a-8145-4b67-b451-5560d3155735-pose2-1793720786642-1eb617.png"
+          },
+          {
+            "name": "KIBOYYY",
+            "role": "Roam",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-f59f8a54-8c08-49a3-95d3-ff0c50d6844a-pose1-1793720829965-c24350.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-f59f8a54-8c08-49a3-95d3-ff0c50d6844a-pose1-1793720829965-c24350.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-f59f8a54-8c08-49a3-95d3-ff0c50d6844a-pose2-1793720829972-1457aa.png"
+          },
+          {
+            "name": "SKYLAR",
+            "role": "Gold",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-fcf5b92c-c2f8-433a-af6d-968d4d3a1083-pose1-1793720842232-bbd0cf.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-fcf5b92c-c2f8-433a-af6d-968d4d3a1083-pose1-1793720842232-bbd0cf.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-fcf5b92c-c2f8-433a-af6d-968d4d3a1083-pose2-1793720842237-86e042.png"
+          },
+          {
+            "name": "KAIRI",
+            "role": "Jungler",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-1dd28498-4adf-4ad5-800f-bf271264a3d8-pose1-1793720801114-727753.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-1dd28498-4adf-4ad5-800f-bf271264a3d8-pose1-1793720801114-727753.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-1dd28498-4adf-4ad5-800f-bf271264a3d8-pose2-1793720801120-5ea39d.png"
+          },
+          {
+            "name": "SANZ",
+            "role": "Mid",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-9cb3a518-1e9c-4a72-b980-aded62ce36ad-pose1-1793720814821-20969b.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-9cb3a518-1e9c-4a72-b980-aded62ce36ad-pose1-1793720814821-20969b.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-9cb3a518-1e9c-4a72-b980-aded62ce36ad-pose2-1793720814828-3e1d6c.png"
+          }
+        ],
+        "right": [
+          {
+            "name": "R7",
+            "role": "EXP",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-5d0d97a0-ff01-4e7a-98b3-2c2740c5a558-pose1-1793720432942-706ee9.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-5d0d97a0-ff01-4e7a-98b3-2c2740c5a558-pose1-1793720432942-706ee9.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-5d0d97a0-ff01-4e7a-98b3-2c2740c5a558-pose2-1793720432955-e4535d.png"
+          },
+          {
+            "name": "ALBERTTT",
+            "role": "Gold",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-973761f9-b738-4ecd-930f-d3ed247978c8-pose1-1793720446712-f6a17e.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-973761f9-b738-4ecd-930f-d3ed247978c8-pose1-1793720446712-f6a17e.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-973761f9-b738-4ecd-930f-d3ed247978c8-pose2-1793720446722-bfca4b.png"
+          },
+          {
+            "name": "VYN",
+            "role": "Mid",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-e59f6332-d316-43ba-8e21-9f0a682b56a7-pose1-1793720348640-890676.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-e59f6332-d316-43ba-8e21-9f0a682b56a7-pose1-1793720348640-890676.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-e59f6332-d316-43ba-8e21-9f0a682b56a7-pose2-1793720348645-30c00b.png"
+          },
+          {
+            "name": "LEMON",
+            "role": "Roam",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-4067aa08-9061-4a38-82c8-77e311ff7d7e-pose1-1793720374062-583cce.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-4067aa08-9061-4a38-82c8-77e311ff7d7e-pose1-1793720374062-583cce.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-4067aa08-9061-4a38-82c8-77e311ff7d7e-pose2-1793720374076-84d710.png"
+          },
+          {
+            "name": "XINNN",
+            "role": "Jungler",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-fac6353d-248a-4e2a-8ab5-dcab45049310-pose1-1793720421304-99eaf9.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-fac6353d-248a-4e2a-8ab5-dcab45049310-pose1-1793720421304-99eaf9.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-fac6353d-248a-4e2a-8ab5-dcab45049310-pose2-1793720421310-f6a264.png"
+          }
+        ]
+      },
+      "heroes": {
+        "left": {
+          "pick": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "ban": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        },
+        "right": {
+          "pick": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "ban": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        }
+      },
+      "timestamp": 1793870453652,
+      "archivedAt": 1793870453700
+    },
+    {
+      "type": "mlbb-draft-recap",
+      "recordId": "match-1793871866522-game-1",
+      "matchId": "match-1793871866522",
+      "matchName": "Match 1",
+      "gameNumber": 1,
+      "bestOf": 3,
+      "winnerSide": "right",
+      "winnerTeam": "RRQ HOSHI",
+      "teams": {
+        "left": {
+          "name": "ONIC ESPORT",
+          "coach": "KUMAR",
+          "score": 0,
+          "logo": "http://localhost:3000/uploads/1793720740078-3fbfx.svg"
+        },
+        "right": {
+          "name": "RRQ HOSHI",
+          "coach": "ADI",
+          "score": 1,
+          "logo": "http://localhost:3000/uploads/1793720232405-v6l6n.webp"
+        }
+      },
+      "players": {
+        "left": [
+          {
+            "name": "LUTPI",
+            "role": "EXP",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-b54c1a5a-8145-4b67-b451-5560d3155735-pose1-1793720786636-49fd51.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-b54c1a5a-8145-4b67-b451-5560d3155735-pose1-1793720786636-49fd51.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-b54c1a5a-8145-4b67-b451-5560d3155735-pose2-1793720786642-1eb617.png"
+          },
+          {
+            "name": "KIBOYYY",
+            "role": "Roam",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-f59f8a54-8c08-49a3-95d3-ff0c50d6844a-pose1-1793720829965-c24350.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-f59f8a54-8c08-49a3-95d3-ff0c50d6844a-pose1-1793720829965-c24350.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-f59f8a54-8c08-49a3-95d3-ff0c50d6844a-pose2-1793720829972-1457aa.png"
+          },
+          {
+            "name": "SKYLAR",
+            "role": "Gold",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-fcf5b92c-c2f8-433a-af6d-968d4d3a1083-pose1-1793720842232-bbd0cf.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-fcf5b92c-c2f8-433a-af6d-968d4d3a1083-pose1-1793720842232-bbd0cf.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-fcf5b92c-c2f8-433a-af6d-968d4d3a1083-pose2-1793720842237-86e042.png"
+          },
+          {
+            "name": "KAIRI",
+            "role": "Jungler",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-1dd28498-4adf-4ad5-800f-bf271264a3d8-pose1-1793720801114-727753.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-1dd28498-4adf-4ad5-800f-bf271264a3d8-pose1-1793720801114-727753.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-1dd28498-4adf-4ad5-800f-bf271264a3d8-pose2-1793720801120-5ea39d.png"
+          },
+          {
+            "name": "SANZ",
+            "role": "Mid",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-9cb3a518-1e9c-4a72-b980-aded62ce36ad-pose1-1793720814821-20969b.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-9cb3a518-1e9c-4a72-b980-aded62ce36ad-pose1-1793720814821-20969b.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-9cb3a518-1e9c-4a72-b980-aded62ce36ad-pose2-1793720814828-3e1d6c.png"
+          }
+        ],
+        "right": [
+          {
+            "name": "R7",
+            "role": "EXP",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-5d0d97a0-ff01-4e7a-98b3-2c2740c5a558-pose1-1793720432942-706ee9.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-5d0d97a0-ff01-4e7a-98b3-2c2740c5a558-pose1-1793720432942-706ee9.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-5d0d97a0-ff01-4e7a-98b3-2c2740c5a558-pose2-1793720432955-e4535d.png"
+          },
+          {
+            "name": "ALBERTTT",
+            "role": "Gold",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-973761f9-b738-4ecd-930f-d3ed247978c8-pose1-1793720446712-f6a17e.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-973761f9-b738-4ecd-930f-d3ed247978c8-pose1-1793720446712-f6a17e.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-973761f9-b738-4ecd-930f-d3ed247978c8-pose2-1793720446722-bfca4b.png"
+          },
+          {
+            "name": "VYN",
+            "role": "Mid",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-e59f6332-d316-43ba-8e21-9f0a682b56a7-pose1-1793720348640-890676.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-e59f6332-d316-43ba-8e21-9f0a682b56a7-pose1-1793720348640-890676.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-e59f6332-d316-43ba-8e21-9f0a682b56a7-pose2-1793720348645-30c00b.png"
+          },
+          {
+            "name": "LEMON",
+            "role": "Roam",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-4067aa08-9061-4a38-82c8-77e311ff7d7e-pose1-1793720374062-583cce.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-4067aa08-9061-4a38-82c8-77e311ff7d7e-pose1-1793720374062-583cce.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-4067aa08-9061-4a38-82c8-77e311ff7d7e-pose2-1793720374076-84d710.png"
+          },
+          {
+            "name": "XINNN",
+            "role": "Jungler",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-fac6353d-248a-4e2a-8ab5-dcab45049310-pose1-1793720421304-99eaf9.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-fac6353d-248a-4e2a-8ab5-dcab45049310-pose1-1793720421304-99eaf9.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-fac6353d-248a-4e2a-8ab5-dcab45049310-pose2-1793720421310-f6a264.png"
+          }
+        ]
+      },
+      "heroes": {
+        "left": {
+          "pick": [
+            {
+              "name": "Aulus",
+              "image": "http://localhost:3000/ASSETS/HEROES/aulus.png",
+              "role": "EXP",
+              "playerName": "LUTPI",
+              "status": ""
+            },
+            {
+              "name": "Bane",
+              "image": "http://localhost:3000/ASSETS/HEROES/bane.png",
+              "role": "Roam",
+              "playerName": "KIBOYYY",
+              "status": ""
+            },
+            {
+              "name": "Barats",
+              "image": "http://localhost:3000/ASSETS/HEROES/barats.png",
+              "role": "Gold",
+              "playerName": "SKYLAR",
+              "status": ""
+            },
+            {
+              "name": "Benedetta",
+              "image": "http://localhost:3000/ASSETS/HEROES/benedetta.png",
+              "role": "Jungler",
+              "playerName": "KAIRI",
+              "status": ""
+            },
+            {
+              "name": "Chip",
+              "image": "http://localhost:3000/ASSETS/HEROES/chip.png",
+              "role": "Mid",
+              "playerName": "SANZ",
+              "status": ""
+            }
+          ],
+          "ban": [
+            {
+              "name": "Alice",
+              "image": "http://localhost:3000/ASSETS/HEROES/alice.png",
+              "status": "BANNED"
+            },
+            {
+              "name": "Angela",
+              "image": "http://localhost:3000/ASSETS/HEROES/angela.png",
+              "status": "BANNED"
+            },
+            {
+              "name": "Aamon",
+              "image": "http://localhost:3000/ASSETS/HEROES/aamon.png",
+              "status": "BANNED"
+            },
+            {
+              "name": "Arlott",
+              "image": "http://localhost:3000/ASSETS/HEROES/arlott.png",
+              "status": "BANNED"
+            },
+            {
+              "name": "Beatrix",
+              "image": "http://localhost:3000/ASSETS/HEROES/beatrix.png",
+              "status": "BANNED"
+            }
+          ]
+        },
+        "right": {
+          "pick": [
+            {
+              "name": "Badang",
+              "image": "http://localhost:3000/ASSETS/HEROES/badang.png",
+              "role": "EXP",
+              "playerName": "R7",
+              "status": ""
+            },
+            {
+              "name": "Aurora",
+              "image": "http://localhost:3000/ASSETS/HEROES/aurora.png",
+              "role": "Gold",
+              "playerName": "ALBERTTT",
+              "status": ""
+            },
+            {
+              "name": "Balmond",
+              "image": "http://localhost:3000/ASSETS/HEROES/balmond.png",
+              "role": "Mid",
+              "playerName": "VYN",
+              "status": ""
+            },
+            {
+              "name": "Bruno",
+              "image": "http://localhost:3000/ASSETS/HEROES/bruno.png",
+              "role": "Roam",
+              "playerName": "LEMON",
+              "status": ""
+            },
+            {
+              "name": "Carmilla",
+              "image": "http://localhost:3000/ASSETS/HEROES/carmilla.png",
+              "role": "Jungler",
+              "playerName": "XINNN",
+              "status": ""
+            }
+          ],
+          "ban": [
+            {
+              "name": "Alucard",
+              "image": "http://localhost:3000/ASSETS/HEROES/alucard.png",
+              "status": "BANNED"
+            },
+            {
+              "name": "Alpha",
+              "image": "http://localhost:3000/ASSETS/HEROES/alpha.png",
+              "status": "BANNED"
+            },
+            {
+              "name": "Atlas",
+              "image": "http://localhost:3000/ASSETS/HEROES/atlas.png",
+              "status": "BANNED"
+            },
+            {
+              "name": "Belerick",
+              "image": "http://localhost:3000/ASSETS/HEROES/belerick.png",
+              "status": "BANNED"
+            },
+            {
+              "name": "Brody",
+              "image": "http://localhost:3000/ASSETS/HEROES/brody.png",
+              "status": "BANNED"
+            }
+          ]
+        }
+      },
+      "timestamp": 1793871975428,
+      "archivedAt": 1793871975431
+    },
+    {
+      "type": "mlbb-draft-recap",
+      "recordId": "match-1793873598066-game-1",
+      "matchId": "match-1793873598066",
+      "matchName": "Match 1",
+      "gameNumber": 1,
+      "bestOf": 3,
+      "winnerSide": "right",
+      "winnerTeam": "ONIC ESPORT",
+      "teams": {
+        "left": {
+          "name": "RRQ HOSHI",
+          "coach": "ADI",
+          "score": 0,
+          "logo": "http://localhost:3000/uploads/1793720232405-v6l6n.webp"
+        },
+        "right": {
+          "name": "ONIC ESPORT",
+          "coach": "KUMAR",
+          "score": 1,
+          "logo": "http://localhost:3000/uploads/1793720740078-3fbfx.svg"
+        }
+      },
+      "players": {
+        "left": [
+          {
+            "name": "R7",
+            "role": "EXP",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-5d0d97a0-ff01-4e7a-98b3-2c2740c5a558-pose1-1793720432942-706ee9.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-5d0d97a0-ff01-4e7a-98b3-2c2740c5a558-pose1-1793720432942-706ee9.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-5d0d97a0-ff01-4e7a-98b3-2c2740c5a558-pose2-1793720432955-e4535d.png"
+          },
+          {
+            "name": "ALBERTTT",
+            "role": "Gold",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-973761f9-b738-4ecd-930f-d3ed247978c8-pose1-1793720446712-f6a17e.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-973761f9-b738-4ecd-930f-d3ed247978c8-pose1-1793720446712-f6a17e.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-973761f9-b738-4ecd-930f-d3ed247978c8-pose2-1793720446722-bfca4b.png"
+          },
+          {
+            "name": "VYN",
+            "role": "Mid",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-e59f6332-d316-43ba-8e21-9f0a682b56a7-pose1-1793720348640-890676.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-e59f6332-d316-43ba-8e21-9f0a682b56a7-pose1-1793720348640-890676.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-e59f6332-d316-43ba-8e21-9f0a682b56a7-pose2-1793720348645-30c00b.png"
+          },
+          {
+            "name": "LEMON",
+            "role": "Roam",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-4067aa08-9061-4a38-82c8-77e311ff7d7e-pose1-1793720374062-583cce.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-4067aa08-9061-4a38-82c8-77e311ff7d7e-pose1-1793720374062-583cce.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-4067aa08-9061-4a38-82c8-77e311ff7d7e-pose2-1793720374076-84d710.png"
+          },
+          {
+            "name": "XINNN",
+            "role": "Jungler",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-fac6353d-248a-4e2a-8ab5-dcab45049310-pose1-1793720421304-99eaf9.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-fac6353d-248a-4e2a-8ab5-dcab45049310-pose1-1793720421304-99eaf9.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-fac6353d-248a-4e2a-8ab5-dcab45049310-pose2-1793720421310-f6a264.png"
+          }
+        ],
+        "right": [
+          {
+            "name": "LUTPI",
+            "role": "EXP",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-b54c1a5a-8145-4b67-b451-5560d3155735-pose1-1793720786636-49fd51.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-b54c1a5a-8145-4b67-b451-5560d3155735-pose1-1793720786636-49fd51.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-b54c1a5a-8145-4b67-b451-5560d3155735-pose2-1793720786642-1eb617.png"
+          },
+          {
+            "name": "KIBOYYY",
+            "role": "Roam",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-f59f8a54-8c08-49a3-95d3-ff0c50d6844a-pose1-1793720829965-c24350.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-f59f8a54-8c08-49a3-95d3-ff0c50d6844a-pose1-1793720829965-c24350.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-f59f8a54-8c08-49a3-95d3-ff0c50d6844a-pose2-1793720829972-1457aa.png"
+          },
+          {
+            "name": "SKYLAR",
+            "role": "Gold",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-fcf5b92c-c2f8-433a-af6d-968d4d3a1083-pose1-1793720842232-bbd0cf.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-fcf5b92c-c2f8-433a-af6d-968d4d3a1083-pose1-1793720842232-bbd0cf.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-fcf5b92c-c2f8-433a-af6d-968d4d3a1083-pose2-1793720842237-86e042.png"
+          },
+          {
+            "name": "KAIRI",
+            "role": "Jungler",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-1dd28498-4adf-4ad5-800f-bf271264a3d8-pose1-1793720801114-727753.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-1dd28498-4adf-4ad5-800f-bf271264a3d8-pose1-1793720801114-727753.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-1dd28498-4adf-4ad5-800f-bf271264a3d8-pose2-1793720801120-5ea39d.png"
+          },
+          {
+            "name": "SANZ",
+            "role": "Mid",
+            "photo": "http://localhost:3000/uploads/team-manager/players/player-9cb3a518-1e9c-4a72-b980-aded62ce36ad-pose1-1793720814821-20969b.png",
+            "photo1": "http://localhost:3000/uploads/team-manager/players/player-9cb3a518-1e9c-4a72-b980-aded62ce36ad-pose1-1793720814821-20969b.png",
+            "photo2": "http://localhost:3000/uploads/team-manager/players/player-9cb3a518-1e9c-4a72-b980-aded62ce36ad-pose2-1793720814828-3e1d6c.png"
+          }
+        ]
+      },
+      "heroes": {
+        "left": {
+          "pick": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "ban": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        },
+        "right": {
+          "pick": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "ban": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        }
+      },
+      "timestamp": 1793873599106,
+      "archivedAt": 1793873599135
+    }
+  ]
+}

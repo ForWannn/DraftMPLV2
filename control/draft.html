@@ -3898,17 +3898,28 @@
             initializeHeroSlots();
 
             // Recap Toggle Control
+            // Publish through the same sync API used by draft and recap data.
             const recapToggleBtn = document.querySelector('.recap-toggle-btn');
             if (recapToggleBtn) {
                 let recapVisible = true;
+
+                const publishRecapVisibility = () => {
+                    if (window.MLBBOverlaySync &&
+                        typeof window.MLBBOverlaySync.publish === 'function') {
+                        window.MLBBOverlaySync.publish('recap-toggle', {
+                            visible: recapVisible
+                        });
+                    }
+                };
+
                 recapToggleBtn.addEventListener('click', () => {
                     recapVisible = !recapVisible;
                     recapToggleBtn.textContent = recapVisible ? '▲ HIDE RECAP' : '▼ SHOW RECAP';
-                    // Broadcast ke display untuk toggle recap
-                    if (window.MLBBOverlaySync && typeof window.MLBBOverlaySync.broadcast === 'function') {
-                        window.MLBBOverlaySync.broadcast('recap-toggle', { visible: recapVisible });
-                    }
+                    publishRecapVisibility();
                 });
+
+                // Send the initial state so the display and control start in sync.
+                publishRecapVisibility();
             }
 
         </script>

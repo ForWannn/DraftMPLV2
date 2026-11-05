@@ -38,12 +38,30 @@
             width: 1900px;
             height: 195px;
             margin-bottom: 45px;
-            transition: transform 350ms cubic-bezier(0.22, 0.75, 0.25, 1);
+            overflow: visible;
+        }
+
+        /* Recap panels enter and leave from their own side. */
+        .draft-container .recap-container .draft-pick-recap {
+            opacity: 1;
+            transform: translateX(0);
+            transition:
+                transform 2000ms cubic-bezier(0.22, 0.75, 0.25, 1),
+                opacity 550ms ease;
+            will-change: transform, opacity;
+        }
+
+        .draft-container .recap-container.hidden .draft-pick-recap.left {
+            transform: translateX(-105%);
+            opacity: 1;
+        }
+
+        .draft-container .recap-container.hidden .draft-pick-recap.right {
+            transform: translateX(105%);
+            opacity: 1;
         }
 
         .draft-container .recap-container.hidden {
-            transform: translateY(-200px);
-            opacity: 0;
             pointer-events: none;
         }
 
@@ -149,22 +167,21 @@
         .recap-role-icon {
             position: absolute;
             z-index: 2;
-            top: 5px;
-            left: 5px;
-            min-width: 24px;
-            height: 22px;
-            padding: 0 4px;
+            top: 0px;
+            left: 0px;
+            max-width: 20px;
+            height: auto;
+            padding: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 4px;
-            background: rgba(12, 18, 28, .88);
-            border: 1px solid rgba(255, 255, 255, .65);
-            color: #fff;
+            background: rgba(255, 255, 255, 0.88);
+            /* color: #fff; */
             font-family: 'Eixample ExtraBold';
             font-size: 10px;
             line-height: 1;
-            text-shadow: 0 1px 2px #000;
+            /* text-shadow: 0 1px 2px #000; */
         }
 
         .recap-pick-bar,
@@ -280,6 +297,7 @@
             width: 100%;
             height: calc(245px - 215px);
             font-size: 20px;
+            font-weight: 700;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -644,7 +662,6 @@
             height: 80px;
             /* border-radius: 50%; */
             background: rgba(255, 255, 255, 0.96);
-            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -845,9 +862,9 @@
             transform-origin: center bottom;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .14));
             transition:
-                transform 560ms cubic-bezier(.22, .8, .25, 1),
-                opacity 420ms ease,
-                visibility 0s linear 560ms;
+                transform 1000ms cubic-bezier(.22, .8, .25, 1),
+                opacity 500ms ease,
+                visibility 0s linear 1000ms;
             pointer-events: none;
         }
 
@@ -865,15 +882,15 @@
             visibility: visible;
             transform: translate(-50%, 0);
             transition:
-                transform 560ms cubic-bezier(.22, .8, .25, 1),
-                opacity 420ms ease,
+                transform 500ms cubic-bezier(.22, .8, .25, 1),
+                opacity 500ms ease,
                 visibility 0s;
         }
 
         /* Team Manager stores two transparent poses. Cross-fade takes 0.5s total. */
         .draft-container .bottom .pick-container .pick-hero.is-revealed.has-player-photo .player-photo.is-fading {
             opacity: 0 !important;
-            transition: opacity 250ms ease !important;
+            transition: opacity 500ms ease !important;
         }
 
         .draft-container .bottom .pick-container .pick-hero .players-name {
@@ -1254,7 +1271,7 @@
             const nodes = Array.from(document.querySelectorAll(
                 `.draft-container .top .${side} .ban-container .ban-hero`
             ));
-            // Right-side control slots are visually arranged 5→1 from left to right.
+            // Right-side control slots are visually arranged 5â†’1 from left to right.
             const ordered = side === 'right' ? [...bans].reverse() : bans;
             nodes.forEach((node, index) => setHeroImage(node, ordered[index] || null));
         }
@@ -1312,71 +1329,82 @@
 
         function stopPlayerPhotoCycle(photo) {
             if (!photo) return;
-            if (photo._poseCycleTimer) {
-                window.clearInterval(photo._poseCycleTimer);
-                photo._poseCycleTimer = null;
-            }
-            if (photo._poseFadeTimer) {
-                window.clearTimeout(photo._poseFadeTimer);
-                photo._poseFadeTimer = null;
-            }
-            if (photo._poseFadeTimer2) {
-                window.clearTimeout(photo._poseFadeTimer2);
-                photo._poseFadeTimer2 = null;
-            }
+
+            // Clear every pending stage so a stale timeout cannot change the pose later.
+            ['_poseCycleTimer', '_poseFadeTimer', '_poseFadeTimer2', '_poseFadeTimer3']
+                .forEach(key => {
+                    if (photo[key]) {
+                        window.clearTimeout(photo[key]);
+                        photo[key] = null;
+                    }
+                });
+
             photo._poseCycleDone = false;
+            photo._poseCycleStarted = false;
+            photo._poseCycleState = 'pose1';
+            photo.dataset.poseIndex = '0';
             photo.classList.remove('is-fading');
         }
 
         function startPlayerPhotoCycle(photo) {
-            if (!photo || photo._poseCycleTimer || photo._poseCycleDone) return;
+            if (!photo || photo._poseCycleStarted || photo._poseCycleDone) return;
+
             const pose1 = photo.dataset.pose1 || '';
             const pose2 = photo.dataset.pose2 || '';
             if (!pose1 || !pose2 || pose1 === pose2) return;
 
-            // Reset to pose1 when starting new pick phase
-            photo.src = pose1;
+            // The cycle runs once per active pick: pose 1 â†’ pose 2 â†’ pose 1.
+            // The initial slide-up is handled by the CSS reveal transition (1 second).
+            photo._poseCycleStarted = true;
+            photo._poseCycleState = 'pose1';
             photo.dataset.poseIndex = '0';
-            photo._poseCycleState = 'pose1';
+            photo.src = pose1;
 
-            // Logic 1-2-1: slide up selesai → pose2 selama 0.5s → fade ke pose1 → bertahan sampai pick selesai
-            photo._poseCycleState = 'pose1';
-            
-            // Setelah slide up selesai (~500ms delay), ganti ke pose2
+            // Keep pose 1 visible for 1 second after its slide-up has completed.
             photo._poseFadeTimer = window.setTimeout(() => {
                 if (!photo.isConnected) return;
-                
-                // Fade out pose1 ke pose2
+
+                // Fade pose 1 out for 0.5 second, then show pose 2.
                 photo.classList.add('is-fading');
-                setTimeout(() => {
+                photo._poseFadeTimer2 = window.setTimeout(() => {
                     if (!photo.isConnected) return;
+
                     photo.src = pose2;
                     photo._poseCycleState = 'pose2';
                     photo.dataset.poseIndex = '1';
                     requestAnimationFrame(() => photo.classList.remove('is-fading'));
-                    
-                    // 0.5s tampil pose2, lalu fade kembali ke pose1
-                    photo._poseFadeTimer2 = window.setTimeout(() => {
+
+                    // Keep pose 2 visible for 1 second, then return to pose 1.
+                    photo._poseFadeTimer3 = window.setTimeout(() => {
                         if (!photo.isConnected) return;
+
                         photo.classList.add('is-fading');
-                        setTimeout(() => {
+                        photo._poseCycleTimer = window.setTimeout(() => {
                             if (!photo.isConnected) return;
+
                             photo.src = pose1;
                             photo._poseCycleState = 'pose1';
                             photo.dataset.poseIndex = '0';
                             requestAnimationFrame(() => photo.classList.remove('is-fading'));
+
+                            // Lock the final pose. No more cycling until the photo is reset.
                             photo._poseCycleDone = true;
-                        }, 250);
-                    }, 500); // pose2 tampil 0.5s
-                }, 250); // fade duration
-            }, 500); // delay setelah slide up
+                            photo._poseCycleStarted = false;
+                            photo._poseCycleTimer = null;
+                            photo._poseFadeTimer = null;
+                            photo._poseFadeTimer2 = null;
+                            photo._poseFadeTimer3 = null;
+                        }, 500);
+                    }, 1000);
+                }, 500);
+            }, 1000);
         }
 
         function updatePickSide(side, picks, players) {
             const nodes = Array.from(document.querySelectorAll(
                 `.draft-container .bottom .${side} .pick-container .pick-hero`
             ));
-            // Left visual order is 1→5; right visual order is 5→1.
+            // Left visual order is 1â†’5; right visual order is 5â†’1.
             const orderedPicks = side === 'right' ? [...picks].reverse() : picks;
             const orderedPlayers = side === 'right' ? [...players].reverse() : players;
 
@@ -1474,7 +1502,7 @@
             if (!side) return;
 
             // Labels are supplied by the existing DRAFT_SEQUENCE, e.g.
-            // "BLUE TEAM · PICK 1" or "RED TEAM · PICK 1 + 2".
+            // "BLUE TEAM Â· PICK 1" or "RED TEAM Â· PICK 1 + 2".
             const match = String(state.label || '').match(/\bPICK\s+(\d+)(?:\s*\+\s*(\d+))?/i);
             if (!match) return;
 
@@ -1488,8 +1516,8 @@
             ));
 
             sideCards.forEach((card, visualIndex) => {
-                // Blue/left is rendered in logical order 1→5.
-                // Red/right is rendered in reverse visual order 5→1.
+                // Blue/left is rendered in logical order 1â†’5.
+                // Red/right is rendered in reverse visual order 5â†’1.
                 const logicalSlot = side === 'right'
                     ? sideCards.length - visualIndex
                     : visualIndex + 1;
@@ -1535,7 +1563,7 @@
                 if (card.classList.contains('is-revealed')) {
                     // Keep a revealed card stable across timer ticks and unrelated state updates.
                     card.dataset.revealKey = revealKey;
-                    if (photo) startPlayerPhotoCycle(photo);
+                    if (photo && isActiveTurn) startPlayerPhotoCycle(photo);
                     return;
                 }
 
@@ -1547,7 +1575,14 @@
                     card.classList.add('is-revealed');
                     card.dataset.revealKey = revealKey;
                     delete card.dataset.revealPendingKey;
-                    if (photo) window.setTimeout(() => startPlayerPhotoCycle(photo), 600);
+                    if (photo && isActiveTurn) {
+                        // Wait for the 1-second slide-up reveal before starting the pose sequence.
+                        window.setTimeout(() => {
+                            if (card.isConnected && card.classList.contains('is-active-pick')) {
+                                startPlayerPhotoCycle(photo);
+                            }
+                        }, 1000);
+                    }
                 }, delay);
             });
         }
@@ -1606,14 +1641,14 @@
                         role.style.backgroundColor = 'rgba(12, 18, 28, .88)';
                         role.style.borderRadius = '4px';
                         role.style.border = '1px solid rgba(255, 255, 255, .65)';
-                        
+
                         const roleKey = String(hero.role).trim().toLowerCase();
                         const normalized = roleKey === 'jungler' || roleKey === 'jungle' || roleKey === 'jg' ? 'jungler' :
-                                         roleKey === 'roam' || roleKey === 'roamer' || roleKey === 'tank' ? 'roam' :
-                                         roleKey === 'exp' || roleKey === 'exp lane' || roleKey === 'explaner' ? 'exp' :
-                                         roleKey === 'gold' || roleKey === 'gold lane' || roleKey === 'goldlaner' ? 'gold' :
-                                         roleKey === 'mid' || roleKey === 'mid lane' || roleKey === 'midlaner' ? 'mid' : '';
-                        
+                            roleKey === 'roam' || roleKey === 'roamer' || roleKey === 'tank' ? 'roam' :
+                                roleKey === 'exp' || roleKey === 'exp lane' || roleKey === 'explaner' ? 'exp' :
+                                    roleKey === 'gold' || roleKey === 'gold lane' || roleKey === 'goldlaner' ? 'gold' :
+                                        roleKey === 'mid' || roleKey === 'mid lane' || roleKey === 'midlaner' ? 'mid' : '';
+
                         if (normalized && ROLE_ICON_WEBP[normalized]) {
                             role.style.backgroundImage = `url("${ROLE_ICON_WEBP[normalized]}")`;
                         } else {
@@ -1643,7 +1678,7 @@
                         bar.textContent = '';
                     }
                     node.appendChild(bar);
-                    node.title = `${hero.name || ''}${status ? ` · ${status}` : ''}`;
+                    node.title = `${hero.name || ''}${status ? ` Â· ${status}` : ''}`;
                 });
 
                 banNodes.forEach((node, index) => {
@@ -1655,7 +1690,7 @@
                     bar.className = 'recap-ban-bar';
                     bar.title = 'BANNED';
                     node.appendChild(bar);
-                    node.title = `${hero.name || ''} · BANNED`;
+                    node.title = `${hero.name || ''} Â· BANNED`;
                 });
             }
         }
@@ -1746,15 +1781,6 @@
             console.warn('[Draft Display] Could not read saved state', error);
         }
 
-        // Setup Recap Toggle behavior
-        const recapToggleBtn = document.getElementById('recap-toggle');
-        const recapContainerEl = document.querySelector('.recap-container');
-        if (recapToggleBtn && recapContainerEl) {
-            recapToggleBtn.addEventListener('click', () => {
-                const isHidden = recapContainerEl.classList.toggle('hidden');
-                recapToggleBtn.textContent = isHidden ? '▼ SHOW RECAP' : '▲ HIDE RECAP';
-            });
-        }
     </script>
 
 
@@ -1774,17 +1800,13 @@
             });
         }
 
-        // Listen for recap toggle from control
+        // Control page is the source of truth for recap visibility.
         if (window.MLBBOverlaySync) {
             window.MLBBOverlaySync.subscribe('recap-toggle', payload => {
-                if (!payload) return;
+                if (!payload || typeof payload.visible !== 'boolean') return;
                 const recapContainer = document.querySelector('.recap-container');
                 if (recapContainer) {
-                    if (payload.visible) {
-                        recapContainer.classList.remove('hidden');
-                    } else {
-                        recapContainer.classList.add('hidden');
-                    }
+                    recapContainer.classList.toggle('hidden', !payload.visible);
                 }
             });
         }
