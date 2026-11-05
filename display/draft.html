@@ -145,14 +145,14 @@
         .draft-container .recap-container .draft-pick-recap .pick-recap,
         .draft-container .recap-container .draft-pick-recap .ban-recap {
             position: relative;
-            flex: 1 1 0;
+            flex: 1 1 1;
             min-width: 0;
             overflow: hidden;
             background-color: #17191d;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            border: 1px solid rgba(255, 255, 255, .12);
+            /* border: 1px solid rgba(255, 255, 255, .12);2 */
             box-sizing: border-box;
         }
 
@@ -169,19 +169,13 @@
             z-index: 2;
             top: 0px;
             left: 0px;
-            max-width: 20px;
-            height: auto;
+            max-width: 15px;
+            max-height: 15px;
             padding: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 4px;
             background: rgba(255, 255, 255, 0.88);
-            /* color: #fff; */
-            font-family: 'Eixample ExtraBold';
-            font-size: 10px;
-            line-height: 1;
-            /* text-shadow: 0 1px 2px #000; */
         }
 
         .recap-pick-bar,
@@ -1636,12 +1630,9 @@
                         role.style.backgroundSize = 'contain';
                         role.style.backgroundRepeat = 'no-repeat';
                         role.style.backgroundPosition = 'center';
-                        role.style.width = '24px';
-                        role.style.height = '22px';
-                        role.style.backgroundColor = 'rgba(12, 18, 28, .88)';
-                        role.style.borderRadius = '4px';
-                        role.style.border = '1px solid rgba(255, 255, 255, .65)';
-
+                        role.style.width = '15Px';
+                        role.style.height = '15px';
+                        role.style.backgroundColor = 'rgba(255, 255, 255, 1)';
                         const roleKey = String(hero.role).trim().toLowerCase();
                         const normalized = roleKey === 'jungler' || roleKey === 'jungle' || roleKey === 'jg' ? 'jungler' :
                             roleKey === 'roam' || roleKey === 'roamer' || roleKey === 'tank' ? 'roam' :
