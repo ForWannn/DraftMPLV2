@@ -220,6 +220,17 @@
             border-color: #a63742;
         }
 
+        .mm-action-btn.reset {
+            background: #292126;
+            border-color: #75404a;
+            color: #ffb0b8;
+        }
+
+        .mm-action-btn.reset:hover:not(:disabled) {
+            background: #3a252b;
+            border-color: #a34b58;
+        }
+
         .mm-action-btn:disabled,
         .mm-winner-btn:disabled {
             opacity: .4;
@@ -481,6 +492,17 @@
             color: #ffffff;
         }
 
+        .timer-btn:disabled {
+            opacity: .42;
+            cursor: not-allowed;
+            filter: saturate(.45);
+        }
+
+        .timer-btn:disabled:hover {
+            background-color: #202125;
+            border-color: #2e3037;
+        }
+
         .timer-btn:hover:not(.active),
         .bo-btn:hover:not(.active),
         .phase-btn:hover:not(.active) {
@@ -492,6 +514,132 @@
         .bo-btn:active,
         .phase-btn:active {
             transform: scale(0.98);
+        }
+
+
+        /* TEAM MANAGER → DRAFT integration */
+        .team-library-bar {
+            display: grid;
+            grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) 112px;
+            gap: 9px;
+            align-items: end;
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #28313d;
+            border-radius: 13px;
+            background: linear-gradient(135deg, #171c24, #12161d);
+        }
+
+        .team-library-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .team-library-field label {
+            margin: 0 !important;
+            color: #9eabbc !important;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 10px !important;
+            font-weight: 800 !important;
+            letter-spacing: .7px;
+        }
+
+        .team-library-select {
+            width: 100%;
+            min-width: 0;
+            height: 39px;
+            padding: 0 9px;
+            border: 1px solid #343e4c;
+            border-radius: 9px;
+            outline: none;
+            background: #202630;
+            color: #f1f5fb;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .team-library-select:focus {
+            border-color: #2588f5;
+        }
+
+        .team-library-load-btn {
+            height: 39px;
+            padding: 0 10px;
+            border: 1px solid #2588f5;
+            border-radius: 9px;
+            background: linear-gradient(135deg, #0d7cf2, #0759b8);
+            color: #fff;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .4px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .team-library-load-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        .team-library-load-btn:disabled,
+        .team-library-select:disabled {
+            opacity: .45;
+            cursor: not-allowed;
+        }
+
+        .team-library-status {
+            grid-column: 1 / -1;
+            min-height: 13px;
+            color: #7f8da1;
+            font-size: 9px;
+            line-height: 1.4;
+        }
+
+        .team-library-status.error {
+            color: #ff929d;
+        }
+
+        .team-library-status.success {
+            color: #75dca9;
+        }
+
+        .recap-toggle-btn {
+            width: 100%;
+            min-height: 40px;
+            padding: 0 16px;
+            background: linear-gradient(135deg, #00ac28, #008a20);
+            border: 1px solid #00d633;
+            border-radius: 12px;
+            color: #ffffff;
+            font-family: 'Eixample Regular', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: .5px;
+            cursor: pointer;
+            transition: all .15s ease;
+            user-select: none;
+        }
+
+        .recap-toggle-btn:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 5px 16px rgba(0, 212, 51, .2);
+        }
+
+        .recap-toggle-btn:active {
+            transform: scale(.98);
+        }
+
+        @media (max-width: 900px) {
+            .team-library-bar {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .team-library-load-btn {
+                grid-column: 1 / -1;
+            }
         }
 
         .inside-container-team-panel {
@@ -841,6 +989,61 @@
             user-select: none;
         }
 
+        /* V1.7 active turn markers for single and double picks */
+        .hero-slot.turn-active-pick {
+            border: 2px solid #1687ff;
+            box-shadow: 0 0 0 2px rgba(22, 135, 255, .18),
+                0 0 18px rgba(22, 135, 255, .22);
+        }
+
+        .hero-slot.needs-selection {
+            animation: hero-slot-needs-selection .22s ease-in-out 2;
+        }
+
+        @keyframes hero-slot-needs-selection {
+
+            0%,
+            100% {
+                filter: brightness(1);
+            }
+
+            50% {
+                filter: brightness(1.45);
+            }
+        }
+
+        .hero-slot.turn-active-ban {
+            border: 2px solid #e34b55;
+            box-shadow: 0 0 0 2px rgba(227, 75, 85, .14),
+                0 0 16px rgba(227, 75, 85, .18);
+        }
+
+        .hero-slot-turn-tag {
+            margin-left: auto;
+            margin-right: 8px;
+            padding: 4px 6px;
+            border-radius: 5px;
+            background: rgba(13, 124, 242, .92);
+            color: #fff;
+            font: 700 9px/1 'Eixample Regular', sans-serif;
+            letter-spacing: .35px;
+            white-space: nowrap;
+        }
+
+        .hero-slot.turn-active-ban .hero-slot-turn-tag {
+            background: rgba(190, 47, 58, .94);
+        }
+
+        .hero-slot.turn-active-pick .hero-selector-btn {
+            border-color: #1687ff;
+            background: #172b40;
+        }
+
+        .hero-slot.turn-active-ban .hero-selector-btn {
+            border-color: #e34b55;
+            background: #351e23;
+        }
+
         .hero-slot-img {
             position: absolute;
             inset: 0;
@@ -942,14 +1145,138 @@
             line-height: 1;
         }
 
-        .hero-slot-select {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
+        .hero-selector-btn {
             cursor: pointer;
-            z-index: 4;
+        }
+
+        /* V1.6 searchable hero picker */
+        .hero-slot-select {
+            display: none !important;
+        }
+
+        .hero-picker-popover {
+            position: fixed;
+            z-index: 99999;
+            display: none;
+            width: min(300px, calc(100vw - 20px));
+            max-height: min(390px, calc(100vh - 20px));
+            overflow: hidden;
+            border: 1px solid #3b4656;
+            border-radius: 12px;
+            background: #15191f;
+            box-shadow: 0 18px 55px rgba(0, 0, 0, .58);
+            color: #fff;
+        }
+
+        .hero-picker-popover.open {
+            display: flex;
+            flex-direction: column;
+            animation: hero-picker-in .12s ease-out;
+        }
+
+        .hero-picker-head {
+            padding: 11px 12px 9px;
+            border-bottom: 1px solid #2b313b;
+            background: #1b2028;
+        }
+
+        .hero-picker-title {
+            margin-bottom: 8px;
+            color: #aab8c9;
+            font: 700 10px/1.2 'Eixample Regular', sans-serif;
+            letter-spacing: .7px;
+            text-transform: uppercase;
+        }
+
+        .hero-picker-search-wrap {
+            position: relative;
+        }
+
+        .hero-picker-search-icon {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            color: #8d99a9;
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        .hero-picker-search {
+            width: 100%;
+            height: 36px;
+            box-sizing: border-box;
+            padding: 0 10px 0 31px;
+            border: 1px solid #3a4656;
+            border-radius: 8px;
+            outline: none;
+            background: #0e1218;
+            color: #fff;
+            font: 12px 'Eixample Regular', sans-serif;
+        }
+
+        .hero-picker-search:focus {
+            border-color: #287fce;
+            box-shadow: 0 0 0 2px rgba(40, 127, 206, .18);
+        }
+
+        .hero-picker-count {
+            padding: 7px 12px 4px;
+            color: #8794a5;
+            font: 10px 'Eixample Regular', sans-serif;
+        }
+
+        .hero-picker-results {
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            padding: 4px 6px 7px;
+        }
+
+        .hero-picker-option {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            min-height: 34px;
+            padding: 7px 10px;
+            border: 0;
+            border-radius: 7px;
+            background: transparent;
+            color: #e8edf4;
+            text-align: left;
+            font: 12px 'Eixample Regular', sans-serif;
+            cursor: pointer;
+        }
+
+        .hero-picker-option:hover,
+        .hero-picker-option:focus-visible {
+            outline: none;
+            background: #26384d;
+            color: #fff;
+        }
+
+        .hero-picker-empty {
+            padding: 17px 12px;
+            color: #9aa6b5;
+            text-align: center;
+            font: 11px/1.5 'Eixample Regular', sans-serif;
+        }
+
+        @keyframes hero-picker-in {
+            from {
+                opacity: 0;
+                transform: translateY(-4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .hero-picker-popover.open {
+                animation: none;
+            }
         }
     </style>
     <script src="../shared/sync-client.js"></script>
@@ -961,6 +1288,25 @@
             <div class="team-panel left">
                 <h2>Blue Team</h2>
                 <div class="inside-container-team-panel">
+
+                    <div class="team-library-bar" data-team-library-side="left">
+                        <div class="team-library-field">
+                            <label for="team-library-team-left">TEAM LIBRARY · BLUE</label>
+                            <select id="team-library-team-left" class="team-library-select">
+                                <option value="">Loading saved teams…</option>
+                            </select>
+                        </div>
+                        <div class="team-library-field">
+                            <label for="team-library-preset-left">ROSTER / PRESET</label>
+                            <select id="team-library-preset-left" class="team-library-select" disabled>
+                                <option value="">Active roster</option>
+                            </select>
+                        </div>
+                        <button type="button" id="team-library-load-left" class="team-library-load-btn">LOAD
+                            TEAM</button>
+                        <div class="team-library-status" id="team-library-status-left" aria-live="polite">Choose a saved
+                            team to load its roster.</div>
+                    </div>
                     <div class="inside-upper">
                         <div class="tcs">
                             <div class="form-group team-name">
@@ -1160,6 +1506,8 @@
                                 Match</button>
                             <button type="button" class="mm-action-btn danger" id="btn-finish-game" disabled>Finish
                                 Game</button>
+                            <button type="button" class="mm-action-btn reset" id="btn-reset-match" disabled>Reset
+                                Test</button>
                         </div>
                         <div class="mm-winner-picker" id="mm-winner-picker">
                             <span class="mm-winner-label">Select the winner of this game:</span>
@@ -1171,11 +1519,31 @@
                         <div class="mm-help" id="mm-help">Start a match before finishing a game. The winner's score is
                             added automatically, and sides alternate for the next game.</div>
                     </div>
+                    <button type="button" class="recap-toggle-btn">▲ HIDE RECAP</button>
                 </div>
             </div>
             <div class="team-panel right">
                 <h2>Red Team</h2>
                 <div class="inside-container-team-panel">
+
+                    <div class="team-library-bar" data-team-library-side="right">
+                        <div class="team-library-field">
+                            <label for="team-library-team-right">TEAM LIBRARY · RED</label>
+                            <select id="team-library-team-right" class="team-library-select">
+                                <option value="">Loading saved teams…</option>
+                            </select>
+                        </div>
+                        <div class="team-library-field">
+                            <label for="team-library-preset-right">ROSTER / PRESET</label>
+                            <select id="team-library-preset-right" class="team-library-select" disabled>
+                                <option value="">Active roster</option>
+                            </select>
+                        </div>
+                        <button type="button" id="team-library-load-right" class="team-library-load-btn">LOAD
+                            TEAM</button>
+                        <div class="team-library-status" id="team-library-status-right" aria-live="polite">Choose a
+                            saved team to load its roster.</div>
+                    </div>
                     <div class="inside-upper">
                         <div class="tcs">
                             <div class="form-group team-name">
@@ -1768,6 +2136,7 @@
                             // Preview and synchronized state both point to the stored original PNG.
                             preview.onload = () => {
                                 preview.dataset.syncData = imageUrl;
+                                delete preview.dataset.syncPhoto2;
                                 preview.dataset.mimeType = 'image/png';
                                 preview.style.display = 'block';
                                 if (typeof publishDraftState === 'function') publishDraftState();
@@ -1775,6 +2144,7 @@
                             preview.onerror = () => {
                                 preview.removeAttribute('src');
                                 delete preview.dataset.syncData;
+                                delete preview.dataset.syncPhoto2;
                                 delete preview.dataset.mimeType;
                                 preview.style.display = 'none';
                                 alert('The uploaded PNG could not be loaded. Please try again.');
@@ -1849,6 +2219,7 @@
             let timerSeconds = PHASE_DURATIONS.pick;
             let timerInterval = null;
             let currentStepIndex = 0;
+            let draftComplete = false;
             let currentTimerMode = 'pick';
             let currentDurationSeconds = PHASE_DURATIONS.pick;
             let customDurationForCurrentStep = null;
@@ -1861,6 +2232,71 @@
             const btnReset = document.getElementById('btn-timer-reset');
             const btnApplyCustom = document.getElementById('btn-timer-apply');
             const phaseButtons = Array.from(document.querySelectorAll('.phase-btn'));
+
+            function getMissingCurrentDoublePickSlots() {
+                const step = DRAFT_SEQUENCE[currentStepIndex];
+                if (!step || step.phase !== 'pick' || !Array.isArray(step.slots) || step.slots.length < 2) {
+                    return [];
+                }
+
+                return step.slots.filter(slotId => {
+                    const slot = document.getElementById(slotId);
+                    const select = slot ? slot.querySelector('.hero-slot-select') : null;
+                    return !select || !String(select.value || '').trim();
+                });
+            }
+
+            function updateNextButtonAvailability() {
+                if (!btnNext) return;
+                const step = DRAFT_SEQUENCE[currentStepIndex];
+                const isDoublePick = Boolean(
+                    step && step.phase === 'pick' &&
+                    Array.isArray(step.slots) && step.slots.length > 1
+                );
+                const missingSlots = isDoublePick ? getMissingCurrentDoublePickSlots() : [];
+                const blocked = draftComplete || (isDoublePick && missingSlots.length > 0);
+
+                btnNext.disabled = blocked;
+                btnNext.setAttribute('aria-disabled', String(blocked));
+                btnNext.title = draftComplete
+                    ? 'Draft is complete.'
+                    : blocked
+                        ? `Select both active heroes before continuing. ${missingSlots.length} slot(s) remaining.`
+                        : 'Continue to the next draft turn.';
+            }
+
+            function updateActiveHeroSlots(step = DRAFT_SEQUENCE[currentStepIndex]) {
+                document.querySelectorAll('.hero-slot').forEach(slot => {
+                    slot.classList.remove('turn-active-pick', 'turn-active-ban');
+                    const oldTag = slot.querySelector('.hero-slot-turn-tag');
+                    if (oldTag) oldTag.remove();
+                });
+
+                if (!step || !Array.isArray(step.slots) || !step.slots.length) return;
+                if (step.phase !== 'pick' && step.phase !== 'ban') return;
+
+                step.slots.forEach((slotId, index) => {
+                    const slot = document.getElementById(slotId);
+                    if (!slot) return;
+
+                    slot.classList.add(step.phase === 'pick' ? 'turn-active-pick' : 'turn-active-ban');
+
+                    const top = slot.querySelector('.hero-slot-top');
+                    if (!top) return;
+
+                    const tag = document.createElement('span');
+                    tag.className = 'hero-slot-turn-tag';
+                    if (step.phase === 'pick' && step.slots.length > 1) {
+                        tag.textContent = `PICK ${index + 1}/${step.slots.length}`;
+                    } else {
+                        tag.textContent = step.phase === 'pick' ? 'ACTIVE PICK' : 'ACTIVE BAN';
+                    }
+
+                    const clearButton = top.querySelector('.hero-slot-clear');
+                    top.insertBefore(tag, clearButton || null);
+                });
+            }
+
 
             function isTimerRunning() {
                 return timerInterval !== null;
@@ -1940,6 +2376,8 @@
                 btnNext.classList.remove('active');
                 customSecondsInput.value = String(currentDurationSeconds);
                 updateTurnLabel();
+                updateActiveHeroSlots(step);
+                updateNextButtonAvailability();
                 updateTimerDisplay();
 
                 if (autoStart) startTimer();
@@ -1968,11 +2406,23 @@
             }
 
             function nextDraftStep() {
+                if (draftComplete) return;
+
+                const missingDoublePickSlots = getMissingCurrentDoublePickSlots();
+                if (missingDoublePickSlots.length) {
+                    updateNextButtonAvailability();
+                    const firstMissingSlot = document.getElementById(missingDoublePickSlots[0]);
+                    if (firstMissingSlot) {
+                        firstMissingSlot.classList.add('needs-selection');
+                        window.setTimeout(() => firstMissingSlot.classList.remove('needs-selection'), 650);
+                    }
+                    return;
+                }
+
                 stopTimer();
 
                 // Last Change appears only once. After that, keep the draft complete
-                // instead of cyc back and triggering another Last Change sequence.
-                if (draftComplete) return;
+                // instead of cycling back and triggering another Last Change sequence.
                 if (currentStepIndex >= DRAFT_SEQUENCE.length - 1) {
                     draftComplete = true;
                     timerSeconds = 0;
@@ -1980,6 +2430,8 @@
                     turnLabel.textContent = 'DRAFT COMPLETE';
                     btnStart.classList.remove('active');
                     btnNext.classList.remove('active');
+                    updateActiveHeroSlots(null);
+                    updateNextButtonAvailability();
                     publishDraftState();
                     return;
                 }
@@ -1999,6 +2451,8 @@
                 btnReset.classList.remove('active');
                 btnNext.classList.remove('active');
                 draftComplete = false;
+                updateNextButtonAvailability();
+                updateActiveHeroSlots();
                 publishDraftState();
             });
 
@@ -2031,6 +2485,7 @@
                     const mode = button.dataset.phase;
                     // Phase buttons are manual timer presets. Last Change is a single neutral phase.
                     draftComplete = false;
+                    updateNextButtonAvailability();
                     applyTimerMode(mode, { autoStart: false });
                 });
             });
@@ -2166,6 +2621,182 @@
                 }
             }
 
+
+            let draftHeroManifest = [];
+            let activeHeroPickerSlot = null;
+
+            function getHeroNamesUsedOutside(excludedSlot) {
+                const used = new Set();
+                document.querySelectorAll('.hero-slot').forEach(slot => {
+                    if (slot === excludedSlot) return;
+                    const select = slot.querySelector('.hero-slot-select');
+                    const value = select ? String(select.value || '').trim() : '';
+                    if (value) used.add(normalizeHeroKey(value));
+                });
+                return used;
+            }
+
+            function closeHeroPicker() {
+                const popover = document.getElementById('hero-picker-popover');
+                if (!popover) return;
+                popover.classList.remove('open');
+                popover.setAttribute('aria-hidden', 'true');
+                if (activeHeroPickerSlot) {
+                    const trigger = activeHeroPickerSlot.querySelector('.hero-selector-btn');
+                    if (trigger) trigger.setAttribute('aria-expanded', 'false');
+                }
+                activeHeroPickerSlot = null;
+            }
+
+            function renderHeroPickerResults(query = '') {
+                const results = document.getElementById('hero-picker-results');
+                const count = document.getElementById('hero-picker-count');
+                if (!results || !count || !activeHeroPickerSlot) return;
+
+                const used = getHeroNamesUsedOutside(activeHeroPickerSlot);
+                const normalizedQuery = normalizeHeroKey(query);
+                const available = draftHeroManifest.filter(hero => {
+                    const key = normalizeHeroKey(hero.name);
+                    if (used.has(key)) return false;
+                    return !normalizedQuery || key.includes(normalizedQuery);
+                });
+
+                results.replaceChildren();
+                count.textContent = `${available.length} hero${available.length === 1 ? '' : 'es'} available`;
+
+                if (!available.length) {
+                    const empty = document.createElement('div');
+                    empty.className = 'hero-picker-empty';
+                    empty.textContent = normalizedQuery
+                        ? 'No available hero matches your search.'
+                        : 'All heroes have already been picked or banned.';
+                    results.appendChild(empty);
+                    return;
+                }
+
+                available.forEach(hero => {
+                    const option = document.createElement('button');
+                    option.type = 'button';
+                    option.className = 'hero-picker-option';
+                    option.setAttribute('role', 'option');
+                    option.textContent = hero.name;
+                    option.addEventListener('click', () => {
+                        const slot = activeHeroPickerSlot;
+                        if (!slot) return;
+                        const select = slot.querySelector('.hero-slot-select');
+                        if (!select) return;
+
+                        // Recheck availability at selection time to prevent duplicate picks/bans.
+                        const latestUsed = getHeroNamesUsedOutside(slot);
+                        if (latestUsed.has(normalizeHeroKey(hero.name))) {
+                            renderHeroPickerResults(
+                                document.getElementById('hero-picker-search')?.value || ''
+                            );
+                            return;
+                        }
+
+                        select.value = hero.name;
+                        select.dispatchEvent(new Event('change', { bubbles: true }));
+                        closeHeroPicker();
+                    });
+                    results.appendChild(option);
+                });
+            }
+
+            function positionHeroPicker(trigger) {
+                const popover = document.getElementById('hero-picker-popover');
+                if (!popover || !trigger) return;
+
+                const rect = trigger.getBoundingClientRect();
+                const width = Math.min(300, window.innerWidth - 20);
+                const estimatedHeight = Math.min(390, window.innerHeight - 20);
+                const left = Math.max(10, Math.min(rect.left, window.innerWidth - width - 10));
+                const below = window.innerHeight - rect.bottom - 10;
+                const top = below >= 220 || below >= estimatedHeight
+                    ? Math.min(rect.bottom + 6, window.innerHeight - estimatedHeight - 10)
+                    : Math.max(10, rect.top - estimatedHeight - 6);
+
+                popover.style.left = `${left}px`;
+                popover.style.top = `${top}px`;
+                popover.style.width = `${width}px`;
+                popover.style.maxHeight = `${estimatedHeight}px`;
+            }
+
+            function openHeroPicker(slot, trigger) {
+                const popover = document.getElementById('hero-picker-popover');
+                const search = document.getElementById('hero-picker-search');
+                if (!popover || !search || !slot) return;
+
+                if (activeHeroPickerSlot === slot && popover.classList.contains('open')) {
+                    closeHeroPicker();
+                    return;
+                }
+
+                if (activeHeroPickerSlot) {
+                    const previousTrigger = activeHeroPickerSlot.querySelector('.hero-selector-btn');
+                    if (previousTrigger) previousTrigger.setAttribute('aria-expanded', 'false');
+                }
+                activeHeroPickerSlot = slot;
+                search.value = '';
+                positionHeroPicker(trigger);
+                renderHeroPickerResults('');
+                popover.classList.add('open');
+                popover.setAttribute('aria-hidden', 'false');
+                requestAnimationFrame(() => {
+                    search.focus();
+                    search.select();
+                });
+            }
+
+            function bindHeroPickerGlobalEvents() {
+                const popover = document.getElementById('hero-picker-popover');
+                const search = document.getElementById('hero-picker-search');
+                if (!popover || !search || popover.dataset.bound === 'true') return;
+                popover.dataset.bound = 'true';
+
+                search.addEventListener('input', () => renderHeroPickerResults(search.value));
+
+                document.addEventListener('pointerdown', event => {
+                    if (!popover.classList.contains('open')) return;
+                    if (popover.contains(event.target)) return;
+                    if (activeHeroPickerSlot && activeHeroPickerSlot.contains(event.target)) return;
+                    closeHeroPicker();
+                });
+
+                document.addEventListener('keydown', event => {
+                    if (!popover.classList.contains('open')) return;
+                    if (event.key === 'Escape') {
+                        event.preventDefault();
+                        closeHeroPicker();
+                    } else if (event.key === 'ArrowDown') {
+                        const first = document.querySelector('.hero-picker-option');
+                        if (first) {
+                            event.preventDefault();
+                            first.focus();
+                        }
+                    } else if (event.key === 'Enter' && event.target === search) {
+                        const first = document.querySelector('.hero-picker-option');
+                        if (first) {
+                            event.preventDefault();
+                            first.click();
+                        }
+                    }
+                });
+
+                window.addEventListener('resize', () => {
+                    if (popover.classList.contains('open') && activeHeroPickerSlot) {
+                        const trigger = activeHeroPickerSlot.querySelector('.hero-selector-btn');
+                        positionHeroPicker(trigger);
+                    }
+                });
+                window.addEventListener('scroll', () => {
+                    if (popover.classList.contains('open') && activeHeroPickerSlot) {
+                        const trigger = activeHeroPickerSlot.querySelector('.hero-selector-btn');
+                        positionHeroPicker(trigger);
+                    }
+                }, true);
+            }
+
             async function initializeHeroSlots() {
                 const slots = Array.from(document.querySelectorAll('.hero-slot')).map(slot => ({
                     slot,
@@ -2191,6 +2822,8 @@
                 }
 
                 heroList.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
+                draftHeroManifest = heroList;
+                bindHeroPickerGlobalEvents();
 
                 slots.forEach(({ slot, select, nameLabel, img, clearBtn, defaultHero }) => {
                     select.replaceChildren(new Option('Select', ''));
@@ -2210,6 +2843,19 @@
 
                     lastHeroSelection.set(slot.id, select.value || '');
 
+                    const selectorButton = slot.querySelector('.hero-selector-btn');
+                    if (selectorButton) {
+                        selectorButton.setAttribute('role', 'combobox');
+                        selectorButton.setAttribute('aria-haspopup', 'listbox');
+                        selectorButton.setAttribute('aria-expanded', 'false');
+                        selectorButton.addEventListener('click', event => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            openHeroPicker(slot, selectorButton);
+                            selectorButton.setAttribute('aria-expanded', 'true');
+                        });
+                    }
+
                     select.addEventListener('change', () => {
                         const previousHero = lastHeroSelection.get(slot.id) || '';
                         const nextHero = select.value || '';
@@ -2217,19 +2863,23 @@
                         const selected = heroList.find(hero => hero.name === select.value);
                         setHeroSlot(slot, select, nameLabel, img, selected || null);
                         lastHeroSelection.set(slot.id, nextHero);
+                        updateNextButtonAvailability();
                         if (typeof publishDraftState === 'function') publishDraftState();
                     });
 
                     if (clearBtn) {
                         clearBtn.addEventListener('click', event => {
                             event.stopPropagation();
+                            if (typeof closeHeroPicker === 'function') closeHeroPicker();
                             if (select.value) repickedSlots.add(slot.id);
                             resetHeroSlot(slot, select, nameLabel, img);
                             lastHeroSelection.set(slot.id, '');
+                            updateNextButtonAvailability();
                             if (typeof publishDraftState === 'function') publishDraftState();
                         });
                     }
                 });
+                updateNextButtonAvailability();
                 if (typeof publishDraftState === 'function') publishDraftState();
             }
 
@@ -2240,7 +2890,6 @@
             const draftSyncChannel = ('BroadcastChannel' in window)
                 ? new BroadcastChannel(DRAFT_SYNC_CHANNEL_NAME)
                 : null;
-            let draftComplete = false;
             const repickedSlots = new Set();
             const lastHeroSelection = new Map();
 
@@ -2274,6 +2923,7 @@
                 return {
                     src: image.getAttribute('src'),
                     syncData: image.dataset.syncData || '',
+                    syncPhoto2: image.dataset.syncPhoto2 || '',
                     display: image.style.display || ''
                 };
             }
@@ -2284,6 +2934,9 @@
 
                 if (state.syncData) image.dataset.syncData = state.syncData;
                 else delete image.dataset.syncData;
+
+                if (state.syncPhoto2) image.dataset.syncPhoto2 = state.syncPhoto2;
+                else delete image.dataset.syncPhoto2;
 
                 image.style.display = state.display;
             }
@@ -2346,8 +2999,12 @@
             }
 
             function switchTeams(options = {}) {
+                if (typeof closeHeroPicker === 'function') closeHeroPicker();
                 const swapHeroes = options.swapHeroes !== false;
                 const shouldPublish = options.publish !== false;
+                // Team Manager selectors follow the same team identity as the panels.
+                swapTeamLibrarySelections();
+                swapMatchRosterSnapshotSides();
                 // Team identity and match data.
                 [
                     ['team-name-left', 'team-name-right'],
@@ -2401,6 +3058,10 @@
                         if (rightHadRepick) repickedSlots.add(leftId);
                     }
                 }
+
+                // Recalculate the active turn after team/hero data moves sides.
+                updateActiveHeroSlots();
+                updateNextButtonAvailability();
 
                 // Publish one complete state so the display receives the swap immediately.
                 if (shouldPublish) publishDraftState();
@@ -2456,10 +3117,14 @@
                         const input = document.getElementById(`player-${side}-${slot}`);
                         const role = document.getElementById(`role-${side}-${slot}`);
                         const photo = document.getElementById(`player-photo-preview-${side}-${slot}`);
+                        const photo1 = photo && photo.dataset.syncData ? photo.dataset.syncData : '';
+                        const photo2 = photo && photo.dataset.syncPhoto2 ? photo.dataset.syncPhoto2 : '';
                         return {
                             name: input ? input.value.trim() : '',
                             role: role ? role.value : '',
-                            photo: photo && photo.dataset.syncData ? photo.dataset.syncData : ''
+                            photo: photo1,
+                            photo1,
+                            photo2
                         };
                     });
                 }
@@ -2512,6 +3177,318 @@
             }
 
 
+
+            // ------------------------------------------------------------
+            // TEAM MANAGER → DRAFT
+            // Team Manager remains the single source of truth for team rosters.
+            // Draft receives a five-player selection snapshot through this API.
+            // ------------------------------------------------------------
+            const TEAM_MANAGER_API = '/api/team-manager';
+            const teamManagerTeamsCache = [];
+            const teamManagerPresetsCache = new Map();
+
+            function teamLibraryStatus(side, message, tone = '') {
+                const node = document.getElementById(`team-library-status-${side}`);
+                if (!node) return;
+                node.textContent = message || '';
+                node.classList.remove('error', 'success');
+                if (tone) node.classList.add(tone);
+            }
+
+            async function teamManagerFetch(path) {
+                const response = await fetch(`${TEAM_MANAGER_API}${path}`, { cache: 'no-store' });
+                const payload = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    const error = new Error(payload.error || `Team Manager request failed (${response.status})`);
+                    error.status = response.status;
+                    throw error;
+                }
+                return payload;
+            }
+
+            function resolveTeamAssetUrl(url) {
+                if (!url) return '';
+                return new URL(String(url), window.location.origin).href;
+            }
+
+            function fillTeamLibraryOptions(side, selectedTeamId = '') {
+                const select = document.getElementById(`team-library-team-${side}`);
+                if (!select) return;
+                select.replaceChildren(new Option('Select saved team…', ''));
+                teamManagerTeamsCache.forEach(team => {
+                    const rosterLabel = team.activeRosterName
+                        ? ` · v${team.activeRosterVersion || '?'}`
+                        : ' · roster not ready';
+                    select.add(new Option(`${team.name}${rosterLabel}`, team.id));
+                });
+                select.value = selectedTeamId;
+                select.disabled = matchManager.status === 'in-progress' || teamManagerTeamsCache.length === 0;
+            }
+
+            function renderTeamPresetOptions(side, teamId, selectedPresetId = '') {
+                const select = document.getElementById(`team-library-preset-${side}`);
+                if (!select) return;
+                select.replaceChildren(new Option('Active roster', ''));
+                const presets = teamManagerPresetsCache.get(teamId) || [];
+                presets.forEach(preset => {
+                    select.add(new Option(
+                        `${preset.name} · v${preset.versionNumber || '?'}`,
+                        preset.id
+                    ));
+                });
+                select.disabled = !teamId || matchManager.status === 'in-progress';
+                if (selectedPresetId && Array.from(select.options).some(option => option.value === selectedPresetId)) {
+                    select.value = selectedPresetId;
+                } else {
+                    select.value = '';
+                }
+            }
+
+            async function loadTeamManagerPresets(side, teamId, selectedPresetId = '') {
+                const select = document.getElementById(`team-library-preset-${side}`);
+                if (!teamId) {
+                    renderTeamPresetOptions(side, '', '');
+                    return;
+                }
+                try {
+                    let presets = teamManagerPresetsCache.get(teamId);
+                    if (!presets) {
+                        const payload = await teamManagerFetch(`/teams/${encodeURIComponent(teamId)}/presets`);
+                        presets = Array.isArray(payload.presets) ? payload.presets : [];
+                        teamManagerPresetsCache.set(teamId, presets);
+                    }
+                    renderTeamPresetOptions(side, teamId, selectedPresetId);
+                    if (select) select.disabled = matchManager.status === 'in-progress';
+                } catch (error) {
+                    teamLibraryStatus(side, `Could not load roster presets: ${error.message}`, 'error');
+                    renderTeamPresetOptions(side, teamId, '');
+                }
+            }
+
+            async function loadTeamManagerDirectory() {
+                for (const side of ['left', 'right']) {
+                    teamLibraryStatus(side, 'Connecting to Team Manager…');
+                }
+                try {
+                    const payload = await teamManagerFetch('/teams');
+                    teamManagerTeamsCache.splice(0, teamManagerTeamsCache.length,
+                        ...(Array.isArray(payload.teams) ? payload.teams : []));
+                    for (const side of ['left', 'right']) {
+                        const teamSelect = document.getElementById(`team-library-team-${side}`);
+                        const selectedId = teamSelect ? teamSelect.value : '';
+                        fillTeamLibraryOptions(side, selectedId);
+                        if (selectedId) await loadTeamManagerPresets(side, selectedId);
+                        teamLibraryStatus(side,
+                            teamManagerTeamsCache.length
+                                ? 'Team Manager connected. Select a team and roster, then click Load Team.'
+                                : 'No saved teams found in Team Manager.');
+                    }
+                    if (typeof updateMatchManagerUI === 'function') updateMatchManagerUI();
+                } catch (error) {
+                    console.error('[Draft Control] Team Manager directory failed:', error);
+                    for (const side of ['left', 'right']) {
+                        const select = document.getElementById(`team-library-team-${side}`);
+                        if (select) {
+                            select.replaceChildren(new Option('Team Manager unavailable', ''));
+                            select.disabled = true;
+                        }
+                        teamLibraryStatus(side,
+                            `Cannot connect to Team Manager: ${error.message}. Check the Team Manager server endpoint.`,
+                            'error');
+                    }
+                }
+            }
+
+            function applyTeamManagerSelection(side, selection) {
+                if (!selection || !Array.isArray(selection.players) || selection.players.length !== 5) {
+                    throw new Error('This team does not have a complete five-player roster.');
+                }
+
+                const teamName = document.getElementById(`team-name-${side}`);
+                const coach = document.getElementById(`coach-${side}`);
+                const logo = document.getElementById(`logo-img-${side}`);
+
+                if (teamName) teamName.value = selection.name || '';
+                if (coach) coach.value = selection.coachName || '';
+
+                if (logo) {
+                    const logoUrl = resolveTeamAssetUrl(selection.logoUrl || '');
+                    if (logoUrl) {
+                        logo.src = logoUrl;
+                        logo.dataset.syncData = logoUrl;
+                        logo.style.display = 'block';
+                    } else {
+                        logo.removeAttribute('src');
+                        delete logo.dataset.syncData;
+                        logo.style.display = 'none';
+                    }
+                }
+
+                selection.players.forEach((player, index) => {
+                    const slot = index + 1;
+                    const nameInput = document.getElementById(`player-${side}-${slot}`);
+                    const roleSelect = document.getElementById(`role-${side}-${slot}`);
+                    const photoPreview = document.getElementById(`player-photo-preview-${side}-${slot}`);
+                    const uploadInput = document.getElementById(`player-photo-${side}-${slot}`);
+
+                    if (nameInput) nameInput.value = player.name || '';
+                    if (roleSelect) {
+                        const role = String(player.role || '').trim();
+                        roleSelect.value = role;
+                    }
+                    if (uploadInput) uploadInput.value = '';
+
+                    if (photoPreview) {
+                        const photo1 = resolveTeamAssetUrl(player.photo1 || '');
+                        const photo2 = resolveTeamAssetUrl(player.photo2 || '');
+                        photoPreview.onload = () => {
+                            photoPreview.style.display = 'block';
+                            if (typeof publishDraftState === 'function') publishDraftState();
+                        };
+                        photoPreview.onerror = () => {
+                            photoPreview.style.display = 'none';
+                            console.warn(`[Draft Control] Could not load ${side} player ${slot} Pose 1 PNG.`);
+                        };
+                        if (photo1) {
+                            photoPreview.dataset.syncData = photo1;
+                            photoPreview.dataset.syncPhoto2 = photo2;
+                            photoPreview.dataset.mimeType = 'image/png';
+                            photoPreview.src = photo1;
+                            photoPreview.style.display = 'block';
+                        } else if (photo2) {
+                            photoPreview.dataset.syncData = photo2;
+                            delete photoPreview.dataset.syncPhoto2;
+                            photoPreview.dataset.mimeType = 'image/png';
+                            photoPreview.src = photo2;
+                            photoPreview.style.display = 'block';
+                        } else {
+                            photoPreview.removeAttribute('src');
+                            delete photoPreview.dataset.syncData;
+                            delete photoPreview.dataset.syncPhoto2;
+                            delete photoPreview.dataset.mimeType;
+                            photoPreview.style.display = 'none';
+                        }
+                    }
+                });
+
+                if (typeof publishDraftState === 'function') publishDraftState();
+                if (typeof updateMatchManagerUI === 'function') updateMatchManagerUI();
+            }
+
+            async function loadTeamManagerSelection(side) {
+                if (matchManager.status === 'in-progress') {
+                    teamLibraryStatus(side, 'Roster is locked while a match is in progress. Finish the series before loading another team.', 'error');
+                    return;
+                }
+                const teamSelect = document.getElementById(`team-library-team-${side}`);
+                const presetSelect = document.getElementById(`team-library-preset-${side}`);
+                const loadButton = document.getElementById(`team-library-load-${side}`);
+                const teamId = teamSelect ? teamSelect.value : '';
+                const presetId = presetSelect ? presetSelect.value : '';
+                if (!teamId) {
+                    teamLibraryStatus(side, 'Select a saved team first.', 'error');
+                    return;
+                }
+
+                if (loadButton) {
+                    loadButton.disabled = true;
+                    loadButton.textContent = 'LOADING…';
+                }
+                teamLibraryStatus(side, 'Loading team profile and five-player roster…');
+                try {
+                    const query = presetId ? `?presetId=${encodeURIComponent(presetId)}` : '';
+                    const selection = await teamManagerFetch(`/teams/${encodeURIComponent(teamId)}/selection${query}`);
+                    applyTeamManagerSelection(side, selection);
+                    const rosterText = selection.rosterName
+                        ? `${selection.rosterName} · v${selection.rosterVersion}`
+                        : `Roster v${selection.rosterVersion || '?'}`;
+                    teamLibraryStatus(side,
+                        `${selection.name} loaded successfully · ${rosterText}. All five players, roles, logo, coach, and PNG poses are ready.`,
+                        'success');
+                } catch (error) {
+                    console.error(`[Draft Control] Could not load ${side} Team Manager selection:`, error);
+                    const friendly = error.status === 409
+                        ? 'This team has no complete active roster. Save and activate a five-player roster in Team Manager first.'
+                        : error.status === 404
+                            ? 'The selected team or roster preset no longer exists. Refresh Team Manager and choose again.'
+                            : error.message;
+                    teamLibraryStatus(side, friendly, 'error');
+                } finally {
+                    if (loadButton) {
+                        loadButton.disabled = matchManager.status === 'in-progress';
+                        loadButton.textContent = 'LOAD TEAM';
+                    }
+                }
+            }
+
+            function bindTeamManagerControls() {
+                for (const side of ['left', 'right']) {
+                    const teamSelect = document.getElementById(`team-library-team-${side}`);
+                    const loadButton = document.getElementById(`team-library-load-${side}`);
+                    if (teamSelect) {
+                        teamSelect.addEventListener('change', async () => {
+                            await loadTeamManagerPresets(side, teamSelect.value);
+                            teamLibraryStatus(side, teamSelect.value
+                                ? 'Choose Active Roster or a saved preset, then click Load Team.'
+                                : 'Choose a saved team to load its roster.');
+                            if (typeof updateMatchManagerUI === 'function') updateMatchManagerUI();
+                        });
+                    }
+                    if (loadButton) {
+                        loadButton.addEventListener('click', () => loadTeamManagerSelection(side));
+                    }
+                }
+                loadTeamManagerDirectory();
+            }
+
+            function swapTeamLibrarySelections() {
+                const leftTeam = document.getElementById('team-library-team-left');
+                const rightTeam = document.getElementById('team-library-team-right');
+                const leftPreset = document.getElementById('team-library-preset-left');
+                const rightPreset = document.getElementById('team-library-preset-right');
+                if (!leftTeam || !rightTeam || !leftPreset || !rightPreset) return;
+
+                const leftTeamId = leftTeam.value;
+                const rightTeamId = rightTeam.value;
+                const leftPresetId = leftPreset.value;
+                const rightPresetId = rightPreset.value;
+
+                leftTeam.value = rightTeamId;
+                rightTeam.value = leftTeamId;
+                renderTeamPresetOptions('left', rightTeamId, rightPresetId);
+                renderTeamPresetOptions('right', leftTeamId, leftPresetId);
+            }
+
+            function readCurrentRosterSnapshot() {
+                const teams = { left: readTeamState('left'), right: readTeamState('right') };
+                const players = { left: [], right: [] };
+                for (const side of ['left', 'right']) {
+                    for (let slot = 1; slot <= 5; slot += 1) {
+                        const name = document.getElementById(`player-${side}-${slot}`);
+                        const role = document.getElementById(`role-${side}-${slot}`);
+                        const photo = document.getElementById(`player-photo-preview-${side}-${slot}`);
+                        const photo1 = photo && photo.dataset.syncData ? photo.dataset.syncData : '';
+                        const photo2 = photo && photo.dataset.syncPhoto2 ? photo.dataset.syncPhoto2 : '';
+                        players[side].push({
+                            name: name ? name.value.trim() : '',
+                            role: role ? role.value : '',
+                            photo: photo1,
+                            photo1,
+                            photo2
+                        });
+                    }
+                }
+                return { teams, players };
+            }
+
+            function swapMatchRosterSnapshotSides() {
+                if (!matchManager || !matchManager.rosterSnapshot) return;
+                const snapshot = matchManager.rosterSnapshot;
+                [snapshot.teams.left, snapshot.teams.right] = [snapshot.teams.right, snapshot.teams.left];
+                [snapshot.players.left, snapshot.players.right] = [snapshot.players.right, snapshot.players.left];
+            }
+
+
             // Match Management + Draft Pick Recap archive.
             // Each finished game is written to match-archive.json through the server API.
             const matchNameInput = document.getElementById('mm-match-name');
@@ -2521,6 +3498,7 @@
             const matchHelpEl = document.getElementById('mm-help');
             const startMatchButton = document.getElementById('btn-start-match');
             const finishGameButton = document.getElementById('btn-finish-game');
+            const resetMatchButton = document.getElementById('btn-reset-match');
             const winnerPicker = document.getElementById('mm-winner-picker');
             let matchManager = {
                 matchId: '',
@@ -2562,12 +3540,28 @@
                     finishGameButton.disabled =
                         matchManager.status !== 'in-progress' || isFinishingGame;
                 }
+                if (resetMatchButton) {
+                    resetMatchButton.disabled =
+                        !matchManager.matchId || matchManager.status === 'idle' || isFinishingGame;
+                }
+                const rosterLocked = matchManager.status === 'in-progress';
+                for (const side of ['left', 'right']) {
+                    const teamSelect = document.getElementById(`team-library-team-${side}`);
+                    const presetSelect = document.getElementById(`team-library-preset-${side}`);
+                    const loadButton = document.getElementById(`team-library-load-${side}`);
+                    if (teamSelect) teamSelect.disabled = rosterLocked || teamManagerTeamsCache.length === 0;
+                    if (presetSelect) presetSelect.disabled = rosterLocked || !teamSelect || !teamSelect.value;
+                    if (loadButton) loadButton.disabled = rosterLocked || !teamSelect || !teamSelect.value;
+                }
                 if (matchHelpEl && matchManager.status === 'in-progress') {
                     matchHelpEl.textContent =
                         `Game ${matchManager.gameNumber} is active. Finish Game, then select the winner to archive this draft.`;
                 } else if (matchHelpEl && matchManager.status === 'completed') {
                     matchHelpEl.textContent =
-                        'Series completed. Start a new match to begin another series.';
+                        'Series completed. Start a new match to begin another series, or reset this test session.';
+                } else if (matchHelpEl) {
+                    matchHelpEl.textContent =
+                        'Choose Blue and Red teams from Team Library, load their rosters, then start the match.';
                 }
             }
 
@@ -2612,6 +3606,7 @@
             }
 
             function clearAllHeroSlots() {
+                if (typeof closeHeroPicker === 'function') closeHeroPicker();
                 document.querySelectorAll('.hero-slot').forEach(slot => {
                     const select = slot.querySelector('.hero-slot-select');
                     const nameLabel = slot.querySelector('.hero-selected-name');
@@ -2644,10 +3639,17 @@
             }
 
             function buildRecapRecord(winnerSide) {
-                const teams = {
+                const liveTeams = {
                     left: readTeamState('left'),
                     right: readTeamState('right')
                 };
+                const snapshot = matchManager.rosterSnapshot || null;
+                const teams = snapshot && snapshot.teams
+                    ? {
+                        left: { ...(snapshot.teams.left || liveTeams.left), score: liveTeams.left.score },
+                        right: { ...(snapshot.teams.right || liveTeams.right), score: liveTeams.right.score }
+                    }
+                    : liveTeams;
                 const winningTeam = teams[winnerSide];
                 if (winningTeam) winningTeam.score = Math.max(0, Number(winningTeam.score) || 0) + 1;
 
@@ -2660,11 +3662,18 @@
                         const playerInput = document.getElementById(`player-${side}-${slot}`);
                         const roleInput = document.getElementById(`role-${side}-${slot}`);
                         const photo = document.getElementById(`player-photo-preview-${side}-${slot}`);
-                        const player = {
+                        const photo1 = photo && photo.dataset.syncData ? photo.dataset.syncData : '';
+                        const photo2 = photo && photo.dataset.syncPhoto2 ? photo.dataset.syncPhoto2 : '';
+                        const livePlayer = {
                             name: playerInput ? playerInput.value.trim() : '',
                             role: roleInput ? roleInput.value : '',
-                            photo: photo && photo.dataset.syncData ? photo.dataset.syncData : ''
+                            photo: photo1,
+                            photo1,
+                            photo2
                         };
+                        const player = snapshot && snapshot.players && snapshot.players[side]
+                            ? (snapshot.players[side][slot - 1] || livePlayer)
+                            : livePlayer;
                         players[side].push(player);
 
                         const pick = readHeroesState(side, 'pick')[slot - 1];
@@ -2761,6 +3770,56 @@
                 }
             }
 
+            // Reset a test/dummy Match Management session without touching
+            // Team Manager data, shared overlay state, or previously archived games.
+            if (resetMatchButton) {
+                resetMatchButton.addEventListener('click', () => {
+                    if (!matchManager.matchId || matchManager.status === 'idle' || isFinishingGame) return;
+
+                    const accepted = window.confirm(
+                        'Reset this test match? The current session, score, draft picks/bans, and roster snapshot will be cleared.\\n\\nTeam Manager teams and previously archived game records will be preserved.'
+                    );
+                    if (!accepted) return;
+
+                    stopTimer();
+                    matchManager = {
+                        matchId: '',
+                        matchName: (matchNameInput.value || '').trim() || 'Match 1',
+                        gameNumber: 0,
+                        bo: getSelectedBestOf(),
+                        status: 'idle',
+                        startedAt: null,
+                        completedAt: null,
+                        winnerTeam: null,
+                        rosterSnapshot: null
+                    };
+
+                    document.getElementById('score-left').value = '0';
+                    document.getElementById('score-right').value = '0';
+                    archivedGames = [];
+                    isFinishingGame = false;
+                    winnerPicker.classList.remove('visible');
+
+                    clearAllHeroSlots();
+                    currentStepIndex = 0;
+                    draftComplete = false;
+                    applyCurrentSequenceStep({ autoStart: false });
+                    publishMatchManager();
+
+                    for (const side of ['left', 'right']) {
+                        const teamSelect = document.getElementById(`team-library-team-${side}`);
+                        const teamId = teamSelect ? teamSelect.value : '';
+                        teamLibraryStatus(
+                            side,
+                            teamId
+                                ? 'Test match reset. Team selection is unlocked. Choose a roster and click Load Team.'
+                                : 'Test match reset. Select a saved team, choose its roster, then click Load Team.',
+                            'success'
+                        );
+                    }
+                });
+            }
+
             if (startMatchButton) {
                 startMatchButton.addEventListener('click', async () => {
                     const isRestart = matchManager.status === 'in-progress';
@@ -2782,6 +3841,8 @@
 
                     document.getElementById('score-left').value = '0';
                     document.getElementById('score-right').value = '0';
+                    // Freeze team identity and roster data for every game in this match.
+                    matchManager.rosterSnapshot = readCurrentRosterSnapshot();
                     clearAllHeroSlots();
                     currentStepIndex = 0;
                     draftComplete = false;
@@ -2803,6 +3864,7 @@
                 button.addEventListener('click', () => finishGame(button.dataset.winner));
             });
 
+            bindTeamManagerControls();
             loadMatchManager();
 
             const switchTeamsButton = document.getElementById('btn-switch-teams');
@@ -2835,7 +3897,36 @@
 
             initializeHeroSlots();
 
+            // Recap Toggle Control
+            const recapToggleBtn = document.querySelector('.recap-toggle-btn');
+            if (recapToggleBtn) {
+                let recapVisible = true;
+                recapToggleBtn.addEventListener('click', () => {
+                    recapVisible = !recapVisible;
+                    recapToggleBtn.textContent = recapVisible ? '▲ HIDE RECAP' : '▼ SHOW RECAP';
+                    // Broadcast ke display untuk toggle recap
+                    if (window.MLBBOverlaySync && typeof window.MLBBOverlaySync.broadcast === 'function') {
+                        window.MLBBOverlaySync.broadcast('recap-toggle', { visible: recapVisible });
+                    }
+                });
+            }
+
         </script>
+
+        <div class="hero-picker-popover" id="hero-picker-popover" aria-hidden="true">
+            <div class="hero-picker-head">
+                <div class="hero-picker-title">Select Hero</div>
+                <div class="hero-picker-search-wrap">
+                    <span class="hero-picker-search-icon">⌕</span>
+                    <input type="search" id="hero-picker-search" class="hero-picker-search"
+                        placeholder="Type hero name..." autocomplete="off" spellcheck="false"
+                        aria-label="Search available heroes">
+                </div>
+            </div>
+            <div class="hero-picker-count" id="hero-picker-count">0 heroes available</div>
+            <div class="hero-picker-results" id="hero-picker-results" role="listbox"></div>
+        </div>
+
 </body>
 
 </html>

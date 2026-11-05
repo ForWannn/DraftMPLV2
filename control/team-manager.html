@@ -796,6 +796,352 @@
         grid-template-columns: 1fr
       }
     }
+
+    /* V1.2 usability improvements */
+    .help-banner {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 12px 14px;
+      border: 1px solid #294563;
+      background: #102033;
+      border-radius: 11px;
+      margin-bottom: 15px
+    }
+
+    .help-banner strong {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 3px
+    }
+
+    .help-banner p {
+      margin: 0;
+      color: #a9bad0;
+      font-size: 11px
+    }
+
+    .roster-row {
+      grid-template-columns: 35px minmax(220px, 1fr) 135px 76px 76px
+    }
+
+    .player-select-cell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 6px;
+      align-items: center;
+      min-width: 0
+    }
+
+    .player-select-cell .btn {
+      white-space: nowrap;
+      padding: 8px 9px
+    }
+
+    .roster-status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      background: #101a25;
+      border: 1px solid #26384b;
+      border-radius: 10px;
+      margin: 10px 0 12px
+    }
+
+    .roster-status strong {
+      font-size: 11px
+    }
+
+    .roster-status small {
+      color: var(--muted);
+      font-size: 10px
+    }
+
+    .roster-status .ready {
+      color: #70d9a5
+    }
+
+    .roster-status .incomplete {
+      color: #e8c77c
+    }
+
+    .player-card {
+      min-width: 0
+    }
+
+    .player-card .player-avatar.placeholder {
+      display: grid;
+      place-items: center;
+      color: #8292a7;
+      font-size: 10px
+    }
+
+    .player-card .player-actions {
+      display: flex;
+      gap: 5px;
+      flex-direction: column
+    }
+
+    .player-card .player-info {
+      min-width: 0
+    }
+
+    .player-card .player-info strong {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .photo-pills {
+      flex-wrap: wrap
+    }
+
+    .modal-intro {
+      color: var(--muted);
+      font-size: 11px;
+      margin: -7px 0 15px
+    }
+
+    .upload-box .required {
+      color: #ffbf72;
+      margin-left: 4px
+    }
+
+    .upload-box .upload-help {
+      font-size: 9px;
+      color: var(--muted);
+      margin-top: 7px;
+      line-height: 1.4
+    }
+
+    @media(max-width:1050px) {
+      .roster-row {
+        grid-template-columns: 30px minmax(180px, 1fr) 120px 68px 68px
+      }
+    }
+
+    @media(max-width:760px) {
+      .roster-row {
+        grid-template-columns: 28px minmax(0, 1fr) 112px
+      }
+
+      .roster-row .asset-mini {
+        display: none
+      }
+
+      .player-select-cell {
+        grid-template-columns: minmax(0, 1fr) auto
+      }
+
+      .roster-status {
+        align-items: flex-start;
+        flex-direction: column
+      }
+    }
+
+    @media(max-width:430px) {
+      .roster-row {
+        grid-template-columns: 25px minmax(0, 1fr) 94px
+      }
+
+      .player-select-cell {
+        grid-template-columns: 1fr
+      }
+
+      .player-select-cell .btn {
+        width: 100%
+      }
+    }
+
+
+    /* V1.3 destructive actions */
+    #reset-all-btn {
+      border-color: #8b3944;
+      background: #351b22;
+      color: #ffb0b7
+    }
+
+    #delete-team-btn {
+      border-color: #8b3944;
+      background: #351b22;
+      color: #ffb0b7
+    }
+
+    .player-actions .delete-player-btn {
+      border-color: #8b3944;
+      background: #351b22;
+      color: #ffb0b7
+    }
+
+    .danger-note {
+      color: #ffadb5;
+      font-size: 10px;
+      line-height: 1.4
+    }
+
+    /* V1.4 custom in-app dialogs */
+    .system-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(3, 6, 11, .78);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px)
+    }
+
+    .system-modal-backdrop.open {
+      display: flex;
+      animation: dialog-backdrop-in .16s ease-out
+    }
+
+    .system-modal {
+      width: min(460px, 100%);
+      padding: 22px;
+      border: 1px solid #344255;
+      border-radius: 17px;
+      background: linear-gradient(180deg, #182230, #111821);
+      box-shadow: 0 28px 90px rgba(0, 0, 0, .58);
+      transform: translateY(8px) scale(.985);
+      animation: dialog-card-in .2s cubic-bezier(.2, .8, .2, 1) forwards
+    }
+
+    .system-modal-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px
+    }
+
+    .system-modal-icon {
+      width: 38px;
+      height: 38px;
+      flex: none;
+      display: grid;
+      place-items: center;
+      border: 1px solid #31557a;
+      border-radius: 12px;
+      background: #142b43;
+      color: #8dc4ff;
+      font-size: 18px;
+      font-weight: 900
+    }
+
+    .system-modal-icon.danger {
+      border-color: #713640;
+      background: #351d24;
+      color: #ff9da7
+    }
+
+    .system-modal-title {
+      margin: 0;
+      color: var(--text);
+      font-size: 14px;
+      letter-spacing: .7px;
+      font-weight: 850
+    }
+
+    .system-modal-message {
+      margin: 0;
+      color: #b6c2d1;
+      font-size: 12px;
+      line-height: 1.65;
+      white-space: pre-line
+    }
+
+    .system-modal-input-wrap {
+      margin-top: 15px
+    }
+
+    .system-modal-input-wrap label {
+      display: block;
+      margin-bottom: 7px;
+      color: #9baabd;
+      font-size: 10px;
+      letter-spacing: .8px;
+      font-weight: 800
+    }
+
+    .system-modal-input {
+      width: 100%;
+      min-height: 42px;
+      padding: 10px 12px;
+      border: 1px solid #34465b;
+      border-radius: 9px;
+      outline: none;
+      background: #0b121b;
+      color: var(--text);
+      font: inherit
+    }
+
+    .system-modal-input:focus {
+      border-color: #318ded;
+      box-shadow: 0 0 0 3px #2585ef20
+    }
+
+    .system-modal-hint {
+      margin-top: 8px;
+      color: #e5bd7b;
+      font-size: 10px;
+      line-height: 1.5
+    }
+
+    .system-modal-error {
+      min-height: 15px;
+      margin-top: 6px;
+      color: #ff929d;
+      font-size: 10px
+    }
+
+    .system-modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 20px
+    }
+
+    .system-modal-actions .btn {
+      min-width: 92px
+    }
+
+    .system-modal-actions .btn.modal-danger {
+      border-color: #923f4a;
+      background: linear-gradient(135deg, #a43e4b, #762b37);
+      color: #fff
+    }
+
+    @keyframes dialog-backdrop-in {
+      from {
+        opacity: 0
+      }
+
+      to {
+        opacity: 1
+      }
+    }
+
+    @keyframes dialog-card-in {
+      to {
+        transform: translateY(0) scale(1)
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+
+      .system-modal-backdrop.open,
+      .system-modal {
+        animation: none
+      }
+
+      .system-modal {
+        transform: none
+      }
+    }
   </style>
 </head>
 
@@ -811,9 +1157,10 @@
       </div>
       <div class="top-actions">
         <div class="status"><i class="dot"></i><span id="server-status">Connecting to server…</span></div><button
-          class="btn ghost" id="export-btn">Export JSON</button><button class="btn ghost" id="import-btn">Import
-          JSON</button><input id="import-file" type="file" accept="application/json,.json" hidden><button
-          class="btn primary" id="new-team-btn">＋ New Team</button>
+          class="btn danger small" id="reset-all-btn" title="Permanently remove all local Team Manager data">Reset
+          All</button><button class="btn ghost" id="export-btn">Export JSON</button><button class="btn ghost"
+          id="import-btn">Import JSON</button><input id="import-file" type="file" accept="application/json,.json"
+          hidden><button class="btn primary" id="new-team-btn">＋ New Team</button>
       </div>
     </header>
     <div class="layout">
@@ -834,11 +1181,18 @@
               <p>Permanent team identity and broadcast information.</p>
             </div>
             <div class="actions"><button class="btn danger small" id="archive-team-btn" disabled>Archive</button><button
-                class="btn primary" id="save-team-btn" disabled>Save Team</button></div>
+                class="btn danger small" id="delete-team-btn" disabled>Delete Team</button><button class="btn primary"
+                id="save-team-btn" disabled>Save Team</button></div>
           </div>
           <div id="team-empty" class="empty-state"><strong>Select or create a team</strong>Team profiles and rosters are
             stored permanently in the Team Library.</div>
           <div id="team-editor" class="hidden">
+            <div class="help-banner"><span>ⓘ</span>
+              <div><strong>Quick workflow</strong>
+                <p>Isi identitas tim, lalu tambahkan pemain melalui tombol <b>＋ Add Player</b> di setiap slot roster.
+                  Nama dan dua foto PNG akan tersimpan ke Player Library dan dapat digunakan kembali di tim lain.</p>
+              </div>
+            </div>
             <div class="form-grid">
               <div class="field"><label for="team-name">TEAM NAME</label><input id="team-name" maxlength="80"
                   placeholder="e.g. ONIC Esports"></div>
@@ -862,16 +1216,18 @@
               <h3>ROSTER VERSIONING</h3><span id="roster-version-label">No active roster yet</span>
             </div>
             <div style="display:flex;gap:8px;align-items:end;flex-wrap:wrap;margin-bottom:13px">
-              <div class="field" style="min-width:230px;flex:1"><label for="roster-history">LOAD SAVED
+              <div class="field" style="min-width:230px;flex:1"><label for="roster-history">SAVED ROSTER
                   VERSION</label><select id="roster-history"></select></div>
-              <button class="btn" id="load-roster-btn" type="button">Load Version</button>
+              <button class="btn" id="load-roster-btn" type="button">Load to Editor</button>
               <div class="field" style="min-width:230px;flex:1"><label for="roster-name">NEW VERSION NAME</label><input
                   id="roster-name" maxlength="80" placeholder="e.g. MPL Season 18 Main Roster"></div>
             </div>
+            <div class="roster-status" id="roster-status"><strong>0 / 5 players assigned</strong><small>0 / 10 PNG poses
+                ready</small></div>
             <div class="roster-list" id="roster-list"></div>
-            <div class="roster-footer"><span class="hint">A saved roster creates a new immutable version. Previous
-                versions remain archived.</span><button class="btn primary" id="save-roster-btn">Save New Roster
-                Version</button></div>
+            <div class="roster-footer"><span class="hint">Load to Editor only fills the five slots. Save New Roster
+                Version creates and activates a new immutable version.</span><button class="btn primary"
+                id="save-roster-btn" disabled>Save New Roster Version</button></div>
             <div class="divider"></div>
             <div class="section-title">
               <h3>ROSTER PRESETS</h3><span>Reusable lineup shortcuts</span>
@@ -889,7 +1245,7 @@
           <div class="panel-head">
             <div>
               <h2>PLAYER LIBRARY</h2>
-              <p>One player profile can be reused across teams and roster versions.</p>
+              <p>Database pemain global. Buat profil di sini atau langsung dari tombol Add Player pada slot roster.</p>
             </div>
             <div class="actions"><input id="player-search" placeholder="Search player…"
                 style="max-width:180px;background:#0c121a;border:1px solid #2a3544;border-radius:9px;padding:9px;color:var(--text)"><button
@@ -908,6 +1264,8 @@
         <h2 id="player-modal-title">ADD PLAYER</h2><button type="button" class="btn ghost small"
           id="close-player-modal">✕</button>
       </div>
+      <p class="modal-intro" id="player-modal-intro">Buat profil pemain sekali saja. Profil ini dapat dipakai di
+        beberapa tim dan roster. Untuk pemain baru, kedua foto PNG transparan wajib diunggah sebelum disimpan.</p>
       <input type="hidden" id="player-id">
       <div class="form-grid" style="grid-template-columns:2fr 1fr;margin-bottom:15px">
         <div class="field"><label for="player-name">PLAYER NAME</label><input id="player-name" maxlength="80" required
@@ -922,60 +1280,358 @@
           </select></div>
       </div>
       <div class="modal-grid">
-        <div class="upload-box"><label>POSE 1 · PRIMARY</label>
+        <div class="upload-box"><label>POSE 1 · PRIMARY <span class="required">*</span></label>
           <div class="upload-preview" id="pose1-preview">PNG TRANSPARENT</div><input id="pose1-file" type="file"
             accept="image/png">
+          <div class="upload-help" id="pose1-help">Pose utama · PNG dengan alpha transparency.</div>
         </div>
-        <div class="upload-box"><label>POSE 2 · ALTERNATIVE</label>
+        <div class="upload-box"><label>POSE 2 · ALTERNATIVE <span class="required">*</span></label>
           <div class="upload-preview" id="pose2-preview">PNG TRANSPARENT</div><input id="pose2-file" type="file"
             accept="image/png">
+          <div class="upload-help" id="pose2-help">Pose alternatif · PNG dengan alpha transparency.</div>
         </div>
       </div>
-      <p class="hint">Both poses must be transparent PNG files with an alpha channel. Original PNG bytes are stored
-        without JPEG conversion. Existing assets are retained when replaced to protect historical match references.</p>
+      <p class="hint">Pilih file PNG asli. Tidak ada konversi JPG. Saat mengedit pemain, foto lama tetap dipakai jika
+        kamu tidak memilih file pengganti. Foto baru akan diperiksa alpha transparency oleh server.</p>
       <div class="modal-actions"><button type="button" class="btn" id="cancel-player-btn">Cancel</button><button
           type="submit" class="btn primary" id="save-player-btn">Save Player</button></div>
     </form>
   </div>
+
+  <div class="system-modal-backdrop" id="system-modal" aria-hidden="true">
+    <section class="system-modal" role="dialog" aria-modal="true" aria-labelledby="system-modal-title">
+      <div class="system-modal-head">
+        <div class="system-modal-icon" id="system-modal-icon">i</div>
+        <h2 class="system-modal-title" id="system-modal-title">NOTICE</h2>
+      </div>
+      <p class="system-modal-message" id="system-modal-message"></p>
+      <div class="system-modal-input-wrap hidden" id="system-modal-input-wrap">
+        <label id="system-modal-input-label" for="system-modal-input">INPUT</label>
+        <input class="system-modal-input" id="system-modal-input" type="text" autocomplete="off">
+        <div class="system-modal-hint hidden" id="system-modal-hint"></div>
+        <div class="system-modal-error" id="system-modal-error"></div>
+      </div>
+      <div class="system-modal-actions"><button type="button" class="btn"
+          id="system-modal-cancel">Cancel</button><button type="button" class="btn primary"
+          id="system-modal-confirm">OK</button></div>
+    </section>
+  </div>
+
   <div class="toast" id="toast"></div>
   <script>
     (() => {
       'use strict';
       const API = '/api/team-manager';
       const ROLES = ['Jungler', 'Roam', 'EXP', 'Gold', 'Mid'];
-      let teams = [], players = [], selectedTeamId = null, selectedTeam = null, editingPlayerId = null;
+      let teams = [], players = [], selectedTeamId = null, selectedTeam = null, editingPlayerId = null, pendingAssignSlot = null;
       let rosterDraft = Array.from({ length: 5 }, () => ({ playerId: '', role: '' }));
+      const previewObjectUrls = { pose1: null, pose2: null };
       const $ = id => document.getElementById(id);
+
+      let activeSystemDialogResolve = null;
+      function closeSystemDialog(result = null) {
+        const backdrop = $('system-modal');
+        if (!backdrop || !backdrop.classList.contains('open')) return;
+        backdrop.classList.remove('open'); backdrop.setAttribute('aria-hidden', 'true');
+        document.removeEventListener('keydown', handleSystemDialogKeydown);
+        const resolve = activeSystemDialogResolve; activeSystemDialogResolve = null;
+        if (resolve) resolve(result);
+      }
+      function handleSystemDialogKeydown(event) {
+        if (event.key === 'Escape') { event.preventDefault(); closeSystemDialog(null); }
+        else if (event.key === 'Enter' && !$('system-modal-input-wrap').classList.contains('hidden')) {
+          event.preventDefault(); $('system-modal-confirm').click();
+        }
+      }
+      function showSystemDialog(options = {}) {
+        const { type = 'alert', title = 'NOTICE', message = '', confirmText = 'OK', cancelText = 'Cancel', placeholder = 'Enter value…', defaultValue = '', inputLabel = 'VALUE', requireText = '', danger = false } = options;
+        if (activeSystemDialogResolve) closeSystemDialog(null);
+        return new Promise(resolve => {
+          activeSystemDialogResolve = resolve;
+          const promptMode = type === 'prompt', confirmMode = type === 'confirm' || promptMode;
+          const backdrop = $('system-modal'), inputWrap = $('system-modal-input-wrap'), input = $('system-modal-input');
+          const icon = $('system-modal-icon');
+          icon.textContent = danger ? '!' : (promptMode ? '✎' : (confirmMode ? '?' : 'i'));
+          icon.className = `system-modal-icon${danger ? ' danger' : ''}`;
+          $('system-modal-title').textContent = title; $('system-modal-message').textContent = message;
+          $('system-modal-confirm').textContent = confirmText;
+          $('system-modal-confirm').classList.toggle('modal-danger', !!danger);
+          $('system-modal-cancel').textContent = cancelText;
+          $('system-modal-cancel').classList.toggle('hidden', !confirmMode);
+          inputWrap.classList.toggle('hidden', !promptMode);
+          $('system-modal-input-label').textContent = inputLabel;
+          $('system-modal-hint').textContent = requireText ? `For confirmation, type exactly: ${requireText}` : '';
+          $('system-modal-hint').classList.toggle('hidden', !requireText);
+          $('system-modal-error').textContent = ''; input.value = defaultValue; input.placeholder = placeholder;
+          $('system-modal-confirm').onclick = () => {
+            if (promptMode) {
+              const value = input.value.trim();
+              if (!value) { $('system-modal-error').textContent = 'This field is required.'; input.focus(); return; }
+              if (requireText && value !== requireText) { $('system-modal-error').textContent = `Please type "${requireText}" exactly.`; input.focus(); return; }
+              closeSystemDialog(value);
+            } else closeSystemDialog(true);
+          };
+          $('system-modal-cancel').onclick = () => closeSystemDialog(null);
+          backdrop.onclick = event => { if (event.target === backdrop) closeSystemDialog(confirmMode ? null : true); };
+          backdrop.classList.add('open'); backdrop.setAttribute('aria-hidden', 'false');
+          document.addEventListener('keydown', handleSystemDialogKeydown);
+          requestAnimationFrame(() => promptMode ? input.focus() : $('system-modal-confirm').focus());
+        });
+      }
       const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
       const api = async (url, options = {}) => { const response = await fetch(url, options); let data = {}; try { data = await response.json() } catch (_) { } if (!response.ok) throw new Error(data.error || `Request failed (${response.status})`); return data };
       const jsonOptions = (method, body) => ({ method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-      function toast(message, error = false) { const el = $('toast'); el.textContent = message; el.classList.toggle('error', error); el.classList.add('show'); clearTimeout(toast.timer); toast.timer = setTimeout(() => el.classList.remove('show'), 3600) }
+      function toast(message, error = false) {
+        if (error) { showSystemDialog({ type: 'alert', title: 'OPERATION FAILED', message: String(message), confirmText: 'Understood', danger: true }); return; }
+        const el = $('toast'); el.textContent = message; el.classList.remove('error'); el.classList.add('show');
+        clearTimeout(toast.timer); toast.timer = setTimeout(() => el.classList.remove('show'), 3000);
+      }
       function setServerStatus(ok) { $('server-status').textContent = ok ? 'Server connected' : 'Server unavailable'; document.querySelector('.dot').style.background = ok ? 'var(--green)' : 'var(--red)' }
       async function loadAll() { try { const [teamData, playerData] = await Promise.all([api(`${API}/teams`), api(`${API}/players`)]); teams = teamData.teams || []; players = playerData.players || []; setServerStatus(true); renderTeams(); renderPlayers(); if (selectedTeamId) { const exists = teams.some(t => t.id === selectedTeamId); if (exists) await selectTeam(selectedTeamId); else clearTeam() } else if (teams.length) await selectTeam(teams[0].id); else clearTeam() } catch (e) { setServerStatus(false); toast(e.message, true) } }
       function renderTeams() { const q = $('team-search').value.toLowerCase(); const filtered = teams.filter(t => t.name.toLowerCase().includes(q) || t.shortName.toLowerCase().includes(q)); $('team-count').textContent = `${teams.length} TEAM${teams.length === 1 ? '' : 'S'}`; $('team-list').innerHTML = filtered.length ? filtered.map(t => `<button class="team-item ${t.id === selectedTeamId ? 'active' : ''}" data-team="${esc(t.id)}"><span class="team-logo">${t.logoUrl ? `<img src="${esc(t.logoUrl)}" alt="">` : 'TM'}</span><span class="team-meta"><strong>${esc(t.name)}</strong><small>${esc(t.shortName || 'No short name')} · ${t.activeRosterName ? `v${t.activeRosterVersion}` : 'Roster not set'}</small></span></button>`).join('') : '<div class="empty">No teams found.</div>'; document.querySelectorAll('[data-team]').forEach(b => b.addEventListener('click', () => selectTeam(b.dataset.team))) }
       async function selectTeam(id) { try { const data = await api(`${API}/teams/${encodeURIComponent(id)}`); selectedTeam = data.team; selectedTeamId = id; renderTeams(); renderTeamEditor() } catch (e) { toast(e.message, true) } }
-      function clearTeam() { selectedTeam = null; selectedTeamId = null; $('team-empty').classList.remove('hidden'); $('team-editor').classList.add('hidden'); $('save-team-btn').disabled = true; $('archive-team-btn').disabled = true; renderTeams() }
-      function renderTeamEditor() { if (!selectedTeam) return; $('team-empty').classList.add('hidden'); $('team-editor').classList.remove('hidden'); $('save-team-btn').disabled = false; $('archive-team-btn').disabled = false; $('team-name').value = selectedTeam.name || ''; $('team-short').value = selectedTeam.shortName || ''; $('team-coach').value = selectedTeam.coachName || ''; $('logo-preview').innerHTML = selectedTeam.logoUrl ? `<img src="${esc(selectedTeam.logoUrl)}" alt="Team logo">` : 'NO LOGO'; $('roster-version-label').textContent = selectedTeam.activeRoster ? `v${selectedTeam.activeRoster.versionNumber} · ${selectedTeam.activeRoster.name}` : 'No active roster yet'; $('roster-name').value = ''; const members = selectedTeam.activeRoster?.members || []; rosterDraft = Array.from({ length: 5 }, (_, i) => ({ playerId: members[i]?.playerId || '', role: members[i]?.role || '' })); renderRoster(); renderPresets() }
-      function renderRoster() { const options = '<option value="">Select player</option>' + players.map(p => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join(''); $('roster-list').innerHTML = rosterDraft.map((m, i) => { const player = players.find(p => p.id === m.playerId); const photos = player?.photos || {}; return `<div class="roster-row"><span class="slot">${i + 1}</span><select data-roster-player="${i}">${options}</select><select data-roster-role="${i}"><option value="">Role</option>${ROLES.map(r => `<option value="${r}">${r}</option>`).join('')}</select><div class="asset-mini">${photos.pose1 ? `<img class="mini-img" src="${esc(photos.pose1)}" alt="">` : '<span class="mini-img"></span>'}<span class="asset-label">POSE 1</span></div><div class="asset-mini">${photos.pose2 ? `<img class="mini-img" src="${esc(photos.pose2)}" alt="">` : '<span class="mini-img"></span>'}<span class="asset-label">POSE 2</span></div></div>` }).join(''); rosterDraft.forEach((m, i) => { const p = $(`[data-roster-player="${i}"]`), r = $(`[data-roster-role="${i}"]`); p.value = m.playerId; r.value = m.role; p.addEventListener('change', () => { rosterDraft[i].playerId = p.value; const chosen = players.find(x => x.id === p.value); if (!rosterDraft[i].role && chosen?.defaultRole) { rosterDraft[i].role = chosen.defaultRole; renderRoster() } else renderRoster() }); r.addEventListener('change', () => rosterDraft[i].role = r.value) }) }
-      function renderPresets() { const versions = selectedTeam?.rosterVersions || []; $('preset-roster').innerHTML = versions.map(v => `<option value="${esc(v.id)}">v${v.versionNumber} · ${esc(v.name)}</option>`).join('') || '<option value="">No roster versions</option>'; $('roster-history').innerHTML = versions.map(v => `<option value="${esc(v.id)}">v${v.versionNumber} · ${esc(v.name)}${v.status === 'active' ? ' (ACTIVE)' : ''}</option>`).join('') || '<option value="">No saved versions</option>'; const presets = selectedTeam?.presets || []; $('preset-list').innerHTML = presets.length ? presets.map(p => `<div class="preset-card"><button class="btn danger small" data-delete-preset="${esc(p.id)}">×</button><button class="btn small" data-load-preset="${esc(p.rosterVersionId)}" style="float:right;margin-right:5px">Load</button><strong>${esc(p.name)}</strong><small>Roster: ${esc(p.rosterVersionId)}</small></div>`).join('') : '<div class="hint">No presets saved for this team.</div>'; document.querySelectorAll('[data-delete-preset]').forEach(b => b.addEventListener('click', async () => { if (!confirm('Delete this preset?')) return; try { await api(`${API}/presets/${b.dataset.deletePreset}`, { method: 'DELETE' }); await selectTeam(selectedTeamId); toast('Preset deleted') } catch (e) { toast(e.message, true) } })); document.querySelectorAll('[data-load-preset]').forEach(b => b.addEventListener('click', () => loadRosterVersion(b.dataset.loadPreset))) }
-      async function loadRosterVersion(versionId) { if (!selectedTeam) return; try { const data = await api(`${API}/teams/${selectedTeam.id}/rosters`); const roster = (data.rosters || []).find(r => r.id === versionId); if (!roster) throw new Error('Roster version not found'); rosterDraft = Array.from({ length: 5 }, (_, i) => ({ playerId: roster.members[i]?.playerId || '', role: roster.members[i]?.role || '' })); $('roster-name').value = `${roster.name} Copy`; renderRoster(); toast(`Loaded v${roster.versionNumber}. Save as a new version to activate it.`) } catch (e) { toast(e.message, true) } }
+      function clearTeam() { selectedTeam = null; selectedTeamId = null; $('team-empty').classList.remove('hidden'); $('team-editor').classList.add('hidden'); $('save-team-btn').disabled = true; $('archive-team-btn').disabled = true; $('delete-team-btn').disabled = true; renderTeams() }
+      function renderTeamEditor() { if (!selectedTeam) return; $('team-empty').classList.add('hidden'); $('team-editor').classList.remove('hidden'); $('save-team-btn').disabled = false; $('archive-team-btn').disabled = false; $('delete-team-btn').disabled = false; $('team-name').value = selectedTeam.name || ''; $('team-short').value = selectedTeam.shortName || ''; $('team-coach').value = selectedTeam.coachName || ''; $('logo-preview').innerHTML = selectedTeam.logoUrl ? `<img src="${esc(selectedTeam.logoUrl)}" alt="Team logo">` : 'NO LOGO'; $('roster-version-label').textContent = selectedTeam.activeRoster ? `v${selectedTeam.activeRoster.versionNumber} · ${selectedTeam.activeRoster.name}` : 'No active roster yet'; $('roster-name').value = ''; const members = selectedTeam.activeRoster?.members || []; rosterDraft = Array.from({ length: 5 }, (_, i) => ({ playerId: members[i]?.playerId || '', role: members[i]?.role || '', snapshotName: members[i]?.playerId ? '' : (members[i]?.name || ''), snapshotPhotos: members[i]?.photos || null })); renderRoster(); renderPresets() }
+      function renderRoster() {
+        const activePlayers = players.filter(p => p.status !== 'inactive');
+        const options = '<option value="">Select player from library…</option>' + activePlayers.map(p => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('');
+        $('roster-list').innerHTML = rosterDraft.map((m, i) => {
+          const player = players.find(p => p.id === m.playerId);
+          const photos = player?.photos || m.snapshotPhotos || {};
+          const pose1 = !!photos.pose1, pose2 = !!photos.pose2;
+          const snapshotOption = (!m.playerId && m.snapshotName) ? `<option value="" selected>Deleted from library: ${esc(m.snapshotName)} (snapshot)</option>` : '<option value="">Select player from library…</option>';
+          return `<div class="roster-row">
+      <span class="slot">${i + 1}</span>
+      <div class="player-select-cell">
+        <select data-roster-player="${i}" aria-label="Select player for slot ${i + 1}">${snapshotOption}${activePlayers.map(p => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('')}</select>
+        <button type="button" class="btn small" data-add-player-slot="${i}">＋ Add Player</button>
+      </div>
+      <select data-roster-role="${i}" aria-label="Role for slot ${i + 1}">
+        <option value="">Select role</option>${ROLES.map(r => `<option value="${r}">${r}</option>`).join('')}
+      </select>
+      <div class="asset-mini" title="${pose1 ? 'Pose 1 ready' : 'Pose 1 missing'}">
+        ${pose1 ? `<img class="mini-img" src="${esc(photos.pose1)}" alt="">` : '<span class="mini-img"></span>'}
+        <span class="asset-label">POSE 1</span>
+      </div>
+      <div class="asset-mini" title="${pose2 ? 'Pose 2 ready' : 'Pose 2 missing'}">
+        ${pose2 ? `<img class="mini-img" src="${esc(photos.pose2)}" alt="">` : '<span class="mini-img"></span>'}
+        <span class="asset-label">POSE 2</span>
+      </div>
+    </div>`;
+        }).join('');
+        rosterDraft.forEach((m, i) => {
+          // $() is an ID-only helper. Use querySelector for data-* attribute selectors.
+          const p = document.querySelector(`[data-roster-player="${i}"]`);
+          const r = document.querySelector(`[data-roster-role="${i}"]`);
+          if (!p || !r) {
+            console.error(`[Team Manager] Roster controls missing for slot ${i + 1}.`);
+            return;
+          }
+          p.value = m.playerId;
+          r.value = m.role;
+          p.addEventListener('change', () => {
+            rosterDraft[i].playerId = p.value;
+            const chosen = players.find(x => x.id === p.value);
+            rosterDraft[i].role = chosen?.defaultRole || '';
+            rosterDraft[i].snapshotName = ''; rosterDraft[i].snapshotPhotos = null;
+            renderRoster();
+          });
+          r.addEventListener('change', () => {
+            rosterDraft[i].role = r.value;
+            updateRosterStatus();
+          });
+        });
+        document.querySelectorAll('[data-add-player-slot]').forEach(button => {
+          button.addEventListener('click', () => openPlayerModal(null, Number(button.dataset.addPlayerSlot)));
+        });
+        updateRosterStatus();
+      }
+      function updateRosterStatus() {
+        const assigned = rosterDraft.filter(m => m.playerId).length;
+        let readyPoses = 0, readyPlayers = 0;
+        rosterDraft.forEach(m => {
+          const player = players.find(p => p.id === m.playerId);
+          if (!player) return;
+          const count = Number(!!player.photos?.pose1) + Number(!!player.photos?.pose2);
+          readyPoses += count;
+          if (count === 2) readyPlayers++;
+        });
+        const rolesReady = rosterDraft.every(m => !m.playerId || !!m.role);
+        const unique = new Set(rosterDraft.filter(m => m.playerId).map(m => m.playerId)).size === assigned;
+        const ready = assigned === 5 && readyPlayers === 5 && rolesReady && unique;
+        $('roster-status').innerHTML = `<strong class="${ready ? 'ready' : 'incomplete'}">${assigned} / 5 players assigned · ${readyPlayers} / 5 players photo-complete</strong><small>${readyPoses} / 10 PNG poses ready${!unique ? ' · Duplicate player detected' : ''}${!rolesReady ? ' · Role missing' : ''}</small>`;
+        $('save-roster-btn').disabled = !ready;
+        $('save-roster-btn').title = ready ? 'Save a new immutable roster version' : 'Fill all five slots, choose roles, and upload both PNG poses for every player.';
+      }
+      function renderPresets() { const versions = selectedTeam?.rosterVersions || []; $('preset-roster').innerHTML = versions.map(v => `<option value="${esc(v.id)}">v${v.versionNumber} · ${esc(v.name)}</option>`).join('') || '<option value="">No roster versions</option>'; $('roster-history').innerHTML = versions.map(v => `<option value="${esc(v.id)}">v${v.versionNumber} · ${esc(v.name)}${v.status === 'active' ? ' (ACTIVE)' : ''}</option>`).join('') || '<option value="">No saved versions</option>'; const presets = selectedTeam?.presets || []; $('preset-list').innerHTML = presets.length ? presets.map(p => { const version = versions.find(v => v.id === p.rosterVersionId); return `<div class="preset-card"><button class="btn danger small" data-delete-preset="${esc(p.id)}" title="Delete preset">×</button><button class="btn small" data-load-preset="${esc(p.rosterVersionId)}" style="float:right;margin-right:5px">Load to Editor</button><strong>${esc(p.name)}</strong><small>${version ? `v${version.versionNumber} · ${esc(version.name)}` : 'Linked roster unavailable'}</small></div>` }).join('') : '<div class="hint">No presets saved for this team.</div>'; document.querySelectorAll('[data-delete-preset]').forEach(b => b.addEventListener('click', async () => { if (!(await showSystemDialog({ type: 'confirm', title: 'DELETE PRESET', message: 'Delete this roster preset? The saved roster version itself will remain available.', confirmText: 'Delete', danger: true }))) return; try { await api(`${API}/presets/${b.dataset.deletePreset}`, { method: 'DELETE' }); await selectTeam(selectedTeamId); toast('Preset deleted') } catch (e) { toast(e.message, true) } })); document.querySelectorAll('[data-load-preset]').forEach(b => b.addEventListener('click', () => loadRosterVersion(b.dataset.loadPreset))) }
+      async function loadRosterVersion(versionId) { if (!selectedTeam) return; try { const data = await api(`${API}/teams/${selectedTeam.id}/rosters`); const roster = (data.rosters || []).find(r => r.id === versionId); if (!roster) throw new Error('Roster version not found'); rosterDraft = Array.from({ length: 5 }, (_, i) => ({ playerId: roster.members[i]?.playerId || '', role: roster.members[i]?.role || '', snapshotName: roster.members[i]?.playerId ? '' : (roster.members[i]?.name || ''), snapshotPhotos: roster.members[i]?.photos || null })); $('roster-name').value = `${roster.name} Copy`; renderRoster(); toast(`Loaded v${roster.versionNumber}. Save as a new version to activate it.`) } catch (e) { toast(e.message, true) } }
       async function saveTeam() { if (!selectedTeam) return; try { const data = await api(`${API}/teams/${selectedTeam.id}`, jsonOptions('PUT', { name: $('team-name').value, shortName: $('team-short').value, coachName: $('team-coach').value, logoUrl: selectedTeam.logoUrl || '' })); selectedTeam = data.team; await refreshTeamsOnly(); renderTeamEditor(); toast('Team profile saved') } catch (e) { toast(e.message, true) } }
       async function refreshTeamsOnly() { const data = await api(`${API}/teams`); teams = data.teams || []; renderTeams() }
       async function uploadLogo() { const file = $('team-logo-file').files[0]; if (!file || !selectedTeam) return; if (!/^image\/(png|jpeg|webp|svg\+xml)$/.test(file.type)) { toast('Choose a PNG, JPG, WEBP, or SVG logo.', true); return } try { const up = await fetch(`/upload?name=${encodeURIComponent(file.name)}`, { method: 'POST', headers: { 'Content-Type': file.type }, body: file }); const result = await up.json(); if (!up.ok || !result.url) throw new Error(result.error || 'Logo upload failed'); const data = await api(`${API}/teams/${selectedTeam.id}`, jsonOptions('PUT', { name: $('team-name').value, shortName: $('team-short').value, coachName: $('team-coach').value, logoUrl: result.url })); selectedTeam = data.team; renderTeamEditor(); await refreshTeamsOnly(); toast('Team logo uploaded') } catch (e) { toast(e.message, true) } finally { $('team-logo-file').value = '' } }
-      async function saveRoster() { if (!selectedTeam) return; const members = rosterDraft.map((m, i) => ({ slotNumber: i + 1, playerId: m.playerId, role: m.role })); if (members.some(m => !m.playerId || !m.role)) { toast('Complete all five player slots and roles first.', true); return } if (new Set(members.map(m => m.playerId)).size !== 5) { toast('A player can only occupy one slot in a roster.', true); return } try { const data = await api(`${API}/teams/${selectedTeam.id}/rosters`, jsonOptions('POST', { name: $('roster-name').value || `Roster ${((selectedTeam.rosterVersions || []).length) + 1}`, members })); selectedTeam = data.team; renderTeamEditor(); await refreshTeamsOnly(); toast(`Roster version v${data.roster.versionNumber} saved and activated`) } catch (e) { toast(e.message, true) } }
+      async function saveRoster() { if (!selectedTeam) return; const members = rosterDraft.map((m, i) => ({ slotNumber: i + 1, playerId: m.playerId, role: m.role })); if (members.some(m => !m.playerId || !m.role)) { toast('Complete all five player slots and roles first.', true); return } if (rosterDraft.some(m => { const p = players.find(x => x.id === m.playerId); return !p?.photos?.pose1 || !p?.photos?.pose2 })) { toast('Every roster player must have both transparent PNG poses uploaded.', true); return } if (new Set(members.map(m => m.playerId)).size !== 5) { toast('A player can only occupy one slot in a roster.', true); return } try { const data = await api(`${API}/teams/${selectedTeam.id}/rosters`, jsonOptions('POST', { name: $('roster-name').value || `Roster ${((selectedTeam.rosterVersions || []).length) + 1}`, members })); selectedTeam = data.team; renderTeamEditor(); await refreshTeamsOnly(); toast(`Roster version v${data.roster.versionNumber} saved and activated`) } catch (e) { toast(e.message, true) } }
       async function addPreset() { if (!selectedTeam) return; const name = $('preset-name').value.trim(), rosterVersionId = $('preset-roster').value; if (!name || !rosterVersionId) { toast('Enter a preset name and choose a roster version.', true); return } try { await api(`${API}/teams/${selectedTeam.id}/presets`, jsonOptions('POST', { name, rosterVersionId })); $('preset-name').value = ''; await selectTeam(selectedTeam.id); toast('Roster preset saved') } catch (e) { toast(e.message, true) } }
-      function renderPlayers() { const q = $('player-search').value.toLowerCase(); const list = players.filter(p => p.name.toLowerCase().includes(q)); $('player-grid').innerHTML = list.length ? list.map(p => `<article class="player-card"><img class="player-avatar" src="${esc(p.photos?.pose1 || p.photos?.pose2 || '')}" alt=""><div class="player-info"><strong>${esc(p.name)}</strong><small>${esc(p.defaultRole || 'Role not set')}</small><div class="photo-pills"><span class="pill ${p.photos?.pose1 ? '' : 'missing'}">POSE 1 ${p.photos?.pose1 ? '✓' : '—'}</span><span class="pill ${p.photos?.pose2 ? '' : 'missing'}">POSE 2 ${p.photos?.pose2 ? '✓' : '—'}</span></div></div><div style="display:flex;gap:5px;flex-direction:column"><button class="btn small" data-edit-player="${esc(p.id)}">Edit</button><button class="btn danger small" data-archive-player="${esc(p.id)}">×</button></div></article>`).join('') : '<div class="empty">No players in the library. Add a player to begin.</div>'; document.querySelectorAll('[data-edit-player]').forEach(b => b.addEventListener('click', () => openPlayerModal(b.dataset.editPlayer))); document.querySelectorAll('[data-archive-player]').forEach(b => b.addEventListener('click', async () => { if (!confirm('Archive this player? Existing roster history will be retained.')) return; try { await api(`${API}/players/${b.dataset.archivePlayer}`, { method: 'DELETE' }); await loadPlayers(); toast('Player archived') } catch (e) { toast(e.message, true) } })) }
+      function renderPlayers() {
+        const q = $('player-search').value.toLowerCase();
+        const list = players.filter(p => p.name.toLowerCase().includes(q));
+        $('player-grid').innerHTML = list.length ? list.map(p => {
+          const pose1 = !!p.photos?.pose1, pose2 = !!p.photos?.pose2;
+          const assigned = teams.reduce((count, team) => count + (team.activeRoster?.members || []).filter(m => m.playerId === p.id).length, 0);
+          return `<article class="player-card">
+      ${pose1 ? `<img class="player-avatar" src="${esc(p.photos.pose1)}" alt="${esc(p.name)}">` : `<div class="player-avatar placeholder">NO PHOTO</div>`}
+      <div class="player-info"><strong>${esc(p.name)}</strong><small>${esc(p.defaultRole || 'Role not set')} · ${p.status === 'inactive' ? 'Archived' : 'Active'}</small>
+      <div class="photo-pills"><span class="pill ${pose1 ? '' : 'missing'}">POSE 1 ${pose1 ? '✓' : '—'}</span><span class="pill ${pose2 ? '' : 'missing'}">POSE 2 ${pose2 ? '✓' : '—'}</span></div>
+      <small>${assigned ? `Used in ${assigned} active roster slot(s)` : 'Not assigned to an active roster'}</small></div>
+      <div class="player-actions"><button class="btn small" data-edit-player="${esc(p.id)}">Edit</button><button class="btn danger small" data-archive-player="${esc(p.id)}">Archive</button><button class="btn danger small delete-player-btn" data-delete-player="${esc(p.id)}">Delete</button></div>
+    </article>`;
+        }).join('') : '<div class="empty">No players found. Click Add Player to create the first profile.</div>';
+        document.querySelectorAll('[data-edit-player]').forEach(b => b.addEventListener('click', () => openPlayerModal(b.dataset.editPlayer)));
+        document.querySelectorAll('[data-archive-player]').forEach(b => b.addEventListener('click', async () => {
+          if (!(await showSystemDialog({ type: 'confirm', title: 'ARCHIVE PLAYER', message: 'Archive this player? Existing roster history will be retained.', confirmText: 'Archive', danger: true }))) return;
+          try { await api(`${API}/players/${b.dataset.archivePlayer}`, { method: 'DELETE' }); await loadPlayers(); toast('Player archived') }
+          catch (e) { toast(e.message, true) }
+        }));
+        document.querySelectorAll('[data-delete-player]').forEach(b => b.addEventListener('click', async () => {
+          const player = players.find(p => p.id === b.dataset.deletePlayer);
+          if (!player) return;
+          const confirmation = await showSystemDialog({ type: 'prompt', title: 'PERMANENTLY DELETE PLAYER', message: `This permanently deletes ${player.name} from Player Library. Historical roster snapshots will be retained.`, inputLabel: 'CONFIRMATION', placeholder: 'Type DELETE PLAYER', requireText: 'DELETE PLAYER', confirmText: 'Delete Player', danger: true });
+          if (confirmation !== 'DELETE PLAYER') return;
+          try {
+            const result = await api(`${API}/players/${encodeURIComponent(player.id)}/permanent`, { method: 'DELETE' });
+            await loadPlayers();
+            if (selectedTeamId) await selectTeam(selectedTeamId);
+
+            toast(`Player deleted. ${result.preservedRosterSnapshots} historical roster snapshot(s) retained.`);
+          } catch (e) { toast(e.message, true) }
+        }));
+      }
       async function loadPlayers() { const data = await api(`${API}/players`); players = data.players || []; renderPlayers(); if (selectedTeam) renderRoster() }
-      function openPlayerModal(id = null) { editingPlayerId = id; const player = id ? players.find(p => p.id === id) : null; $('player-modal-title').textContent = player ? 'EDIT PLAYER' : 'ADD PLAYER'; $('player-id').value = id || ''; $('player-name').value = player?.name || ''; $('player-role').value = player?.defaultRole || ''; for (const pose of ['pose1', 'pose2']) { $(`${pose}-file`).value = ''; const url = player?.photos?.[pose]; $(`${pose}-preview`).innerHTML = url ? `<img src="${esc(url)}" alt="${pose}">` : 'PNG TRANSPARENT' } $('player-modal').classList.add('open') }
-      function closePlayerModal() { $('player-modal').classList.remove('open'); editingPlayerId = null }
-      function previewUpload(pose, file) { if (!file) return; if (file.type !== 'image/png') { toast('Only PNG files are accepted for player poses.', true); $(`${pose}-file`).value = ''; return } const url = URL.createObjectURL(file); $(`${pose}-preview`).innerHTML = `<img src="${url}" alt="Preview">` }
-      async function uploadPose(playerId, pose, file) { if (!file) return; const response = await fetch(`${API}/players/${encodeURIComponent(playerId)}/photos/${pose}`, { method: 'POST', headers: { 'Content-Type': 'image/png' }, body: file }); const data = await response.json().catch(() => ({})); if (!response.ok) throw new Error(data.error || `Upload ${pose} failed`); return data }
-      async function savePlayer(event) { event.preventDefault(); const name = $('player-name').value.trim(), defaultRole = $('player-role').value; if (!name) { toast('Player name is required.', true); return } const pose1 = $('pose1-file').files[0], pose2 = $('pose2-file').files[0]; if (pose1 && pose1.type !== 'image/png' || pose2 && pose2.type !== 'image/png') { toast('Both poses must be PNG files.', true); return } try { let playerId = editingPlayerId; if (playerId) { await api(`${API}/players/${playerId}`, jsonOptions('PUT', { name, defaultRole })) } else { const data = await api(`${API}/players`, jsonOptions('POST', { name, defaultRole })); playerId = data.player.id } if (pose1) await uploadPose(playerId, 'pose1', pose1); if (pose2) await uploadPose(playerId, 'pose2', pose2); await loadPlayers(); closePlayerModal(); toast('Player profile saved') } catch (e) { toast(e.message, true) } }
-      $('new-team-btn').addEventListener('click', async () => { const name = prompt('Enter team name:'); if (!name?.trim()) return; try { const data = await api(`${API}/teams`, jsonOptions('POST', { name })); await refreshTeamsOnly(); await selectTeam(data.team.id); $('team-name').focus(); toast('Team created. Complete the profile and roster.') } catch (e) { toast(e.message, true) } });
-      $('save-team-btn').addEventListener('click', saveTeam); $('archive-team-btn').addEventListener('click', async () => { if (!selectedTeam || !confirm(`Archive ${selectedTeam.name}?`)) return; try { await api(`${API}/teams/${selectedTeam.id}`, { method: 'DELETE' }); selectedTeamId = null; await refreshTeamsOnly(); if (teams.length) await selectTeam(teams[0].id); else clearTeam(); toast('Team archived') } catch (e) { toast(e.message, true) } });
+      function openPlayerModal(id = null, assignSlot = null) {
+        editingPlayerId = id;
+        pendingAssignSlot = Number.isInteger(assignSlot) ? assignSlot : null;
+        const player = id ? players.find(p => p.id === id) : null;
+        $('player-modal-title').textContent = player ? 'EDIT PLAYER' : 'ADD PLAYER';
+        $('player-modal-intro').textContent = player
+          ? 'Perbarui profil pemain. Foto lama tetap digunakan jika tidak memilih file pengganti.'
+          : 'Tambahkan pemain ke Player Library. Kedua foto PNG transparan wajib diunggah untuk pemain baru.';
+        $('player-id').value = id || '';
+        $('player-name').value = player?.name || '';
+        $('player-role').value = player?.defaultRole || '';
+        for (const pose of ['pose1', 'pose2']) {
+          $(`${pose}-file`).value = '';
+          if (previewObjectUrls[pose]) { URL.revokeObjectURL(previewObjectUrls[pose]); previewObjectUrls[pose] = null }
+          const url = player?.photos?.[pose];
+          $(`${pose}-preview`).innerHTML = url ? `<img src="${esc(url)}" alt="${pose}">` : 'PNG TRANSPARENT';
+          $(`${pose}-help`).textContent = url ? 'Current photo saved · choose a file only to replace it.' : 'Required · PNG with alpha transparency.';
+        }
+        $('save-player-btn').disabled = false;
+        $('save-player-btn').textContent = 'Save Player';
+        $('player-modal').classList.add('open');
+        $('player-name').focus();
+      }
+      function closePlayerModal() {
+        $('player-modal').classList.remove('open');
+        editingPlayerId = null;
+        pendingAssignSlot = null;
+        for (const pose of ['pose1', 'pose2']) {
+          if (previewObjectUrls[pose]) { URL.revokeObjectURL(previewObjectUrls[pose]); previewObjectUrls[pose] = null }
+        }
+      }
+      function previewUpload(pose, file) {
+        if (!file) return;
+        if (file.type !== 'image/png') {
+          toast('Only PNG files are accepted for player poses.', true);
+          $(`${pose}-file`).value = '';
+          return;
+        }
+        if (previewObjectUrls[pose]) URL.revokeObjectURL(previewObjectUrls[pose]);
+        previewObjectUrls[pose] = URL.createObjectURL(file);
+        $(`${pose}-preview`).innerHTML = `<img src="${previewObjectUrls[pose]}" alt="Preview ${pose}">`;
+        $(`${pose}-help`).textContent = `Selected: ${file.name} · ${(file.size / 1024 / 1024).toFixed(2)} MB · server will verify transparency.`;
+      }
+      async function uploadPose(playerId, pose, file) {
+        if (!file) return;
+        const response = await fetch(`${API}/players/${encodeURIComponent(playerId)}/photos/${pose}`, {
+          method: 'POST', headers: { 'Content-Type': 'image/png' }, body: file
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || `Upload ${pose} failed (${response.status})`);
+        return data;
+      }
+      async function savePlayer(event) {
+        event.preventDefault();
+        const name = $('player-name').value.trim(), defaultRole = $('player-role').value;
+        if (!name) { toast('Player name is required.', true); return }
+        const pose1 = $('pose1-file').files[0], pose2 = $('pose2-file').files[0];
+        if ((pose1 && pose1.type !== 'image/png') || (pose2 && pose2.type !== 'image/png')) {
+          toast('Both poses must be PNG files.', true); return;
+        }
+        const existing = editingPlayerId ? players.find(p => p.id === editingPlayerId) : null;
+        if (!existing && (!pose1 || !pose2)) {
+          toast('A new player needs both Pose 1 and Pose 2 PNG files.', true); return;
+        }
+        if (existing && (!pose1 && !existing.photos?.pose1 || !pose2 && !existing.photos?.pose2)) {
+          toast('Upload the missing pose before saving this player.', true); return;
+        }
+        const saveButton = $('save-player-btn');
+        saveButton.disabled = true; saveButton.textContent = 'Saving…';
+        try {
+          let playerId = editingPlayerId;
+          if (playerId) {
+            await api(`${API}/players/${encodeURIComponent(playerId)}`, jsonOptions('PUT', { name, defaultRole }));
+          } else {
+            const data = await api(`${API}/players`, jsonOptions('POST', { name, defaultRole }));
+            playerId = data.player.id;
+            // Keep the new ID in the modal so a failed photo upload can be retried
+            // without creating duplicate player records.
+            editingPlayerId = playerId;
+            $('player-id').value = playerId;
+            $('player-modal-title').textContent = 'COMPLETE PLAYER PHOTOS';
+          }
+          if (pose1) await uploadPose(playerId, 'pose1', pose1);
+          if (pose2) await uploadPose(playerId, 'pose2', pose2);
+          await loadPlayers();
+          if (pendingAssignSlot !== null) {
+            const chosen = players.find(p => p.id === playerId);
+            rosterDraft[pendingAssignSlot] = { playerId, role: chosen?.defaultRole || '' };
+            renderRoster();
+          }
+          const wasAssignedToSlot = pendingAssignSlot !== null;
+          closePlayerModal();
+          toast(wasAssignedToSlot ? 'Player saved and assigned to roster slot.' : 'Player profile saved.');
+        } catch (e) {
+          saveButton.disabled = false; saveButton.textContent = 'Save Player';
+          toast(e.message, true);
+        }
+      }
+      $('new-team-btn').addEventListener('click', async () => { const name = await showSystemDialog({ type: 'prompt', title: 'CREATE NEW TEAM', message: 'Enter the official team name to create a new Team Library profile.', inputLabel: 'TEAM NAME', placeholder: 'e.g. ONIC Esports', confirmText: 'Create Team' }); if (!name) return; try { const data = await api(`${API}/teams`, jsonOptions('POST', { name })); await refreshTeamsOnly(); await selectTeam(data.team.id); $('team-name').focus(); toast('Team created. Complete the profile and roster.') } catch (e) { toast(e.message, true) } });
+      $('save-team-btn').addEventListener('click', saveTeam); $('archive-team-btn').addEventListener('click', async () => { if (!selectedTeam) return; const accepted = await showSystemDialog({ type: 'confirm', title: 'ARCHIVE TEAM', message: `Archive ${selectedTeam.name}? The team record will be retained but removed from the active Team Library.`, confirmText: 'Archive Team', danger: true }); if (!accepted) return; try { await api(`${API}/teams/${selectedTeam.id}`, { method: 'DELETE' }); selectedTeamId = null; await refreshTeamsOnly(); if (teams.length) await selectTeam(teams[0].id); else clearTeam(); toast('Team archived') } catch (e) { toast(e.message, true) } });
+      $('delete-team-btn').addEventListener('click', async () => {
+        if (!selectedTeam) return;
+        const teamName = selectedTeam.name;
+        const confirmation = await showSystemDialog({ type: 'prompt', title: 'PERMANENTLY DELETE TEAM', message: `Permanently delete ${teamName}, all its roster versions, and presets? Player Library records will remain.`, inputLabel: 'CONFIRMATION', placeholder: 'Type DELETE TEAM', requireText: 'DELETE TEAM', confirmText: 'Delete Team', danger: true });
+        if (confirmation !== 'DELETE TEAM') return;
+        try {
+          const result = await api(`${API}/teams/${encodeURIComponent(selectedTeam.id)}/permanent`, { method: 'DELETE' });
+          selectedTeamId = null; await refreshTeamsOnly();
+          if (teams.length) await selectTeam(teams[0].id); else clearTeam();
+
+          toast(`Team deleted with ${result.deleted.rosterVersions} roster version(s) and ${result.deleted.presets} preset(s).`);
+        } catch (e) { toast(e.message, true) }
+      });
+      $('reset-all-btn').addEventListener('click', async () => {
+        const confirmation = await showSystemDialog({ type: 'prompt', title: 'RESET ALL TEAM DATA', message: 'This permanently deletes every Team Manager team, player, roster version, preset, audit log, and Team Manager-owned uploaded photo/logo. Draft Control state, Countdown state, and Match Archive are not deleted.', inputLabel: 'FINAL CONFIRMATION', placeholder: 'Type RESET ALL TEAM DATA', requireText: 'RESET ALL TEAM DATA', confirmText: 'Reset Everything', danger: true });
+        if (confirmation !== 'RESET ALL TEAM DATA') return;
+        try {
+          const result = await api(`${API}/reset`, jsonOptions('POST', { confirmText: confirmation }));
+          selectedTeamId = null; selectedTeam = null;
+          await loadAll();
+          toast(`Team Manager reset complete. ${result.removedFiles} local asset(s) removed; ${result.preservedFiles} shared/archived asset(s) kept.`);
+        } catch (e) { toast(e.message, true) }
+      });
       $('team-logo-file').addEventListener('change', uploadLogo); $('save-roster-btn').addEventListener('click', saveRoster); $('load-roster-btn').addEventListener('click', () => loadRosterVersion($('roster-history').value)); $('add-preset-btn').addEventListener('click', addPreset); $('new-player-btn').addEventListener('click', () => openPlayerModal()); $('close-player-modal').addEventListener('click', closePlayerModal); $('cancel-player-btn').addEventListener('click', closePlayerModal); $('player-form').addEventListener('submit', savePlayer); $('pose1-file').addEventListener('change', e => previewUpload('pose1', e.target.files[0])); $('pose2-file').addEventListener('change', e => previewUpload('pose2', e.target.files[0])); $('team-search').addEventListener('input', renderTeams); $('player-search').addEventListener('input', renderPlayers);
       $('export-btn').addEventListener('click', () => { window.location.href = `${API}/export` }); $('import-btn').addEventListener('click', () => $('import-file').click()); $('import-file').addEventListener('change', async e => { const file = e.target.files[0]; if (!file) return; try { const backup = JSON.parse(await file.text()); const result = await api(`${API}/import`, jsonOptions('POST', backup)); await loadAll(); toast(`Imported ${result.imported.teams} teams and ${result.imported.players} players. Copy uploads folder too for images.`) } catch (err) { toast(err.message, true) } finally { e.target.value = '' } });
       loadAll();
+
     })();
   </script>
 </body>

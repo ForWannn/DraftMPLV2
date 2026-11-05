@@ -111,6 +111,48 @@ ensureTeamColumn('roster_members', 'player_name_snapshot', 'TEXT');
 ensureTeamColumn('roster_members', 'photo1_snapshot', 'TEXT');
 ensureTeamColumn('roster_members', 'photo2_snapshot', 'TEXT');
 
+
+// V1.3 migration: a player may be removed from the global library while historical
+// roster snapshots retain their copied name, role, and image URLs. The nullable
+// player_id therefore uses ON DELETE SET NULL instead of blocking deletion.
+{
+    const playerIdColumn = teamDb.pragma('table_info(roster_members)').find(column => column.name === 'player_id');
+    if (playerIdColumn && playerIdColumn.notnull) {
+        teamDb.pragma('foreign_keys = OFF');
+        try {
+            teamDb.exec('BEGIN IMMEDIATE');
+            teamDb.exec(`
+                CREATE TABLE roster_members_v3 (
+                    roster_version_id TEXT NOT NULL REFERENCES roster_versions(id) ON DELETE CASCADE,
+                    slot_number INTEGER NOT NULL CHECK (slot_number BETWEEN 1 AND 5),
+                    player_id TEXT REFERENCES players(id) ON DELETE SET NULL,
+                    role TEXT NOT NULL,
+                    player_name_snapshot TEXT,
+                    photo1_snapshot TEXT,
+                    photo2_snapshot TEXT,
+                    PRIMARY KEY (roster_version_id, slot_number),
+                    UNIQUE(roster_version_id, player_id)
+                );
+                INSERT INTO roster_members_v3
+                    (roster_version_id, slot_number, player_id, role,
+                     player_name_snapshot, photo1_snapshot, photo2_snapshot)
+                SELECT roster_version_id, slot_number, player_id, role,
+                       player_name_snapshot, photo1_snapshot, photo2_snapshot
+                FROM roster_members;
+                DROP TABLE roster_members;
+                ALTER TABLE roster_members_v3 RENAME TO roster_members;
+                CREATE INDEX IF NOT EXISTS idx_roster_members_player ON roster_members(player_id);
+            `);
+            teamDb.exec('COMMIT');
+        } catch (migrationError) {
+            try { teamDb.exec('ROLLBACK'); } catch (_) { }
+            throw migrationError;
+        } finally {
+            teamDb.pragma('foreign_keys = ON');
+        }
+    }
+}
+
 const TEAM_ROLES = new Set(['Jungler', 'Roam', 'EXP', 'Gold', 'Mid']);
 const nowIso = () => new Date().toISOString();
 const newId = prefix => `${prefix}-${crypto.randomUUID()}`;
@@ -134,14 +176,14 @@ const getRosterDetail = rosterId => {
             rm.slot_number,
             rm.role,
             p.id AS player_id,
-            COALESCE(rm.player_name_snapshot, p.name) AS player_name,
-            p.status AS player_status,
+            COALESCE(rm.player_name_snapshot, p.name, 'Deleted Player') AS player_name,
+            COALESCE(p.status, 'deleted_snapshot') AS player_status,
             COALESCE(rm.photo1_snapshot,
                 (SELECT image_url FROM player_photos WHERE player_id = rm.player_id AND pose_key = 'pose1')) AS photo1,
             COALESCE(rm.photo2_snapshot,
                 (SELECT image_url FROM player_photos WHERE player_id = rm.player_id AND pose_key = 'pose2')) AS photo2
         FROM roster_members rm
-        JOIN players p ON p.id = rm.player_id
+        LEFT JOIN players p ON p.id = rm.player_id
         WHERE rm.roster_version_id = ?
         ORDER BY rm.slot_number
     `).all(rosterId).map(member => ({
@@ -241,6 +283,43 @@ const server = http.createServer(app);
 // Match archive payloads can include compressed player portraits and team logos.
 app.use(express.json({ limit: '50mb' }));
 
+
+// Only remove files whose resolved paths remain inside the local uploads directory.
+// URLs referenced by active overlay state or the match archive are deliberately kept.
+const safeUploadPathFromUrl = imageUrl => {
+    if (typeof imageUrl !== 'string' || !imageUrl.startsWith('/uploads/')) return null;
+    let pathname;
+    try { pathname = decodeURIComponent(new URL(imageUrl, 'http://localhost').pathname); }
+    catch (_) { return null; }
+    if (!pathname.startsWith('/uploads/')) return null;
+    const absolute = path.resolve(UPLOADS_DIR, pathname.slice('/uploads/'.length));
+    const uploadsRoot = path.resolve(UPLOADS_DIR) + path.sep;
+    return absolute.startsWith(uploadsRoot) ? absolute : null;
+};
+const urlUsedOutsideTeamManager = imageUrl => {
+    const sharedState = JSON.stringify({ state, matchArchive });
+    return sharedState.includes(imageUrl);
+};
+const unlinkTeamManagerAsset = imageUrl => {
+    const absolute = safeUploadPathFromUrl(imageUrl);
+    if (!absolute || !fs.existsSync(absolute) || urlUsedOutsideTeamManager(imageUrl)) return false;
+    fs.unlinkSync(absolute);
+    return true;
+};
+const deleteTeamLogoIfUnreferenced = (imageUrl, excludingTeamId) => {
+    if (!imageUrl) return false;
+    const otherTeamUse = teamDb.prepare(
+        'SELECT 1 FROM teams WHERE logo_url=? AND id<>? LIMIT 1'
+    ).get(imageUrl, excludingTeamId);
+    if (otherTeamUse) return false;
+    const playerUse = teamDb.prepare(
+        `SELECT 1 FROM player_photos WHERE image_url=?
+         UNION SELECT 1 FROM roster_members WHERE photo1_snapshot=? OR photo2_snapshot=? LIMIT 1`
+    ).get(imageUrl, imageUrl, imageUrl);
+    if (playerUse) return false;
+    return unlinkTeamManagerAsset(imageUrl);
+};
+
 app.post('/upload', express.raw({ type: '*/*', limit: '300mb' }), (req, res) => {
     if (!req.body || !req.body.length) {
         return res.status(400).json({ error: 'empty' });
@@ -306,7 +385,7 @@ app.post('/upload', express.raw({ type: '*/*', limit: '300mb' }), (req, res) => 
 
 // --------------------------- TEAM MANAGER API ---------------------------
 app.get('/api/team-manager/health', (req, res) => {
-    res.json({ ok: true, database: 'team-library.sqlite', schemaVersion: 2, rosterSnapshots: true });
+    res.json({ ok: true, database: 'team-library.sqlite', schemaVersion: 3, rosterSnapshots: true, permanentDelete: true, resetAll: true });
 });
 
 app.get('/api/team-manager/teams', (req, res) => {
@@ -369,6 +448,31 @@ app.delete('/api/team-manager/teams/:teamId', (req, res) => {
     res.json({ ok: true });
 });
 
+
+// Permanent deletion removes the team, all roster versions, and presets.
+// Global Player Library records are intentionally retained.
+app.delete('/api/team-manager/teams/:teamId/permanent', (req, res) => {
+    const existing = teamDb.prepare('SELECT * FROM teams WHERE id=?').get(req.params.teamId);
+    if (!existing) return res.status(404).json({ error: 'team_not_found' });
+    const rosterCount = teamDb.prepare('SELECT COUNT(*) AS count FROM roster_versions WHERE team_id=?').get(existing.id).count;
+    const presetCount = teamDb.prepare('SELECT COUNT(*) AS count FROM team_presets WHERE team_id=?').get(existing.id).count;
+    const logoUrl = existing.logo_url;
+    const removeTeam = teamDb.transaction(() => {
+        teamDb.prepare('DELETE FROM team_presets WHERE team_id=?').run(existing.id);
+        teamDb.prepare(`DELETE FROM roster_members WHERE roster_version_id IN
+            (SELECT id FROM roster_versions WHERE team_id=?)`).run(existing.id);
+        teamDb.prepare('DELETE FROM roster_versions WHERE team_id=?').run(existing.id);
+        teamDb.prepare('DELETE FROM teams WHERE id=?').run(existing.id);
+        auditTeamChange('team', existing.id, 'permanently_deleted', {
+            name: existing.name, rosterVersionsDeleted: rosterCount, presetsDeleted: presetCount
+        });
+    });
+    try { removeTeam(); }
+    catch (error) { return res.status(409).json({ error: 'team_delete_failed', detail: error.message }); }
+    const logoRemoved = deleteTeamLogoIfUnreferenced(logoUrl, existing.id);
+    res.json({ ok: true, deleted: { team: 1, rosterVersions: rosterCount, presets: presetCount }, logoRemoved });
+});
+
 app.get('/api/team-manager/players', (req, res) => {
     const q = cleanText(req.query.q, 80).toLowerCase();
     const rows = teamDb.prepare(`
@@ -415,6 +519,41 @@ app.delete('/api/team-manager/players/:playerId', (req, res) => {
     teamDb.prepare("UPDATE players SET status='inactive', deleted_at=?, updated_at=? WHERE id=?").run(now, now, existing.id);
     auditTeamChange('player', existing.id, 'archived');
     res.json({ ok: true });
+});
+
+
+// Permanently remove a Player Library profile. Roster rows keep their immutable
+// snapshots; their player_id becomes NULL via the V1.3 schema migration.
+app.delete('/api/team-manager/players/:playerId/permanent', (req, res) => {
+    const existing = teamDb.prepare('SELECT * FROM players WHERE id=?').get(req.params.playerId);
+    if (!existing) return res.status(404).json({ error: 'player_not_found' });
+    const photoRows = teamDb.prepare('SELECT image_url FROM player_photos WHERE player_id=?').all(existing.id);
+    const rosterReferences = teamDb.prepare('SELECT COUNT(*) AS count FROM roster_members WHERE player_id=?').get(existing.id).count;
+    const deletePlayer = teamDb.transaction(() => {
+        teamDb.prepare('DELETE FROM players WHERE id=?').run(existing.id);
+        auditTeamChange('player', existing.id, 'permanently_deleted', {
+            name: existing.name, preservedRosterSnapshots: rosterReferences
+        });
+    });
+    try { deletePlayer(); }
+    catch (error) { return res.status(409).json({ error: 'player_delete_failed', detail: error.message }); }
+
+    let removedPhotos = 0;
+    let preservedPhotos = 0;
+    for (const row of photoRows) {
+        const snapshotUse = teamDb.prepare(
+            'SELECT 1 FROM roster_members WHERE photo1_snapshot=? OR photo2_snapshot=? LIMIT 1'
+        ).get(row.image_url, row.image_url);
+        if (snapshotUse || urlUsedOutsideTeamManager(row.image_url)) {
+            preservedPhotos++;
+            continue;
+        }
+        if (unlinkTeamManagerAsset(row.image_url)) removedPhotos++;
+    }
+    res.json({
+        ok: true, deleted: { player: 1 }, preservedRosterSnapshots: rosterReferences,
+        removedPhotos, preservedPhotos
+    });
 });
 
 // Upload pose1 / pose2 as original transparent PNG bytes. Old assets are retained
@@ -635,6 +774,70 @@ app.post('/api/team-manager/import', (req, res) => {
     res.json({
         ok: true, imported: { teams: backup.teams.length, players: backup.players.length, rosters: backup.rosters.length, presets: backup.presets.length },
         note: 'Import merges records by ID. Copy the matching uploads folder to restore image files.'
+    });
+});
+
+
+// Destructive Team Manager reset. It clears Team Manager tables and owned assets only.
+// The shared state.json and match-archive.json are never modified.
+app.post('/api/team-manager/reset', (req, res) => {
+    if (req.body?.confirmText !== 'RESET ALL TEAM DATA') {
+        return res.status(400).json({ error: 'reset_confirmation_required' });
+    }
+
+    const counts = {
+        teams: teamDb.prepare('SELECT COUNT(*) AS count FROM teams').get().count,
+        players: teamDb.prepare('SELECT COUNT(*) AS count FROM players').get().count,
+        rosterVersions: teamDb.prepare('SELECT COUNT(*) AS count FROM roster_versions').get().count,
+        presets: teamDb.prepare('SELECT COUNT(*) AS count FROM team_presets').get().count,
+        photos: teamDb.prepare('SELECT COUNT(*) AS count FROM player_photos').get().count
+    };
+    const logoUrls = [...new Set(teamDb.prepare('SELECT logo_url FROM teams WHERE logo_url<>""').all().map(row => row.logo_url))];
+    const protectedText = JSON.stringify({ state, matchArchive });
+    // Avoid deleting a file that is also referenced by player-photo or roster snapshot data.
+    const teamManagerImageRefs = new Set([
+        ...teamDb.prepare('SELECT image_url AS url FROM player_photos').all().map(row => row.url),
+        ...teamDb.prepare('SELECT photo1_snapshot AS url FROM roster_members WHERE photo1_snapshot IS NOT NULL').all().map(row => row.url),
+        ...teamDb.prepare('SELECT photo2_snapshot AS url FROM roster_members WHERE photo2_snapshot IS NOT NULL').all().map(row => row.url)
+    ]);
+    const playerAssetFiles = fs.existsSync(TEAM_PLAYER_UPLOAD_DIR)
+        ? fs.readdirSync(TEAM_PLAYER_UPLOAD_DIR, { withFileTypes: true })
+            .filter(entry => entry.isFile())
+            .map(entry => ({
+                name: entry.name, url: `/uploads/team-manager/players/${entry.name}`,
+                path: path.join(TEAM_PLAYER_UPLOAD_DIR, entry.name)
+            }))
+        : [];
+
+    const clearAll = teamDb.transaction(() => {
+        teamDb.prepare('DELETE FROM team_presets').run();
+        teamDb.prepare('DELETE FROM roster_members').run();
+        teamDb.prepare('DELETE FROM roster_versions').run();
+        teamDb.prepare('DELETE FROM player_photos').run();
+        teamDb.prepare('DELETE FROM players').run();
+        teamDb.prepare('DELETE FROM teams').run();
+        teamDb.prepare('DELETE FROM audit_logs').run();
+    });
+
+    try { clearAll(); }
+    catch (error) { return res.status(500).json({ error: 'team_manager_reset_failed', detail: error.message }); }
+
+    let removedFiles = 0;
+    let preservedFiles = 0;
+    for (const imageUrl of logoUrls) {
+        if (protectedText.includes(imageUrl) || teamManagerImageRefs.has(imageUrl)) { preservedFiles++; continue; }
+        if (unlinkTeamManagerAsset(imageUrl)) removedFiles++;
+    }
+    for (const file of playerAssetFiles) {
+        if (protectedText.includes(file.url)) { preservedFiles++; continue; }
+        if (fs.existsSync(file.path)) {
+            fs.unlinkSync(file.path);
+            removedFiles++;
+        }
+    }
+    res.json({
+        ok: true, reset: counts, removedFiles, preservedFiles,
+        message: 'Team Manager data was reset. Shared overlay state and match archive were preserved.'
     });
 });
 
