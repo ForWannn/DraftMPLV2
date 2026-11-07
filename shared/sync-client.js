@@ -8,6 +8,7 @@
     const listeners = new Map();
     const subscribedChannels = new Set();
     const pendingPublishes = new Map();
+    const lastRevisions = new Map();
     let socket = null;
     let reconnectTimer = null;
     let manuallyClosed = false;
@@ -59,16 +60,20 @@
         }
 
         socket.addEventListener('open', () => {
+            lastRevisions.clear();
             notifyStatus('connected');
             subscribedChannels.forEach(channel => {
                 sendRaw({ type: 'overlay:subscribe', channel });
             });
 
-            // Keep only the most recent pending state per channel.
+            // A subscribed channel is server-authoritative after reconnect.
+            // Do not replay an offline full snapshot over a newer shared state.
             for (const [channel, payload] of pendingPublishes.entries()) {
-                sendRaw({ type: 'overlay:publish', channel, payload });
+                if (!subscribedChannels.has(channel)) {
+                    sendRaw({ type: 'overlay:publish', channel, payload });
+                }
+                pendingPublishes.delete(channel);
             }
-            pendingPublishes.clear();
         });
 
         socket.addEventListener('message', event => {
@@ -80,6 +85,11 @@
             }
 
             if (message.type !== 'overlay:state' || !message.channel) return;
+            const incomingRevision = Number(message.revision) || 0;
+            const knownRevision = Number(lastRevisions.get(message.channel)) || 0;
+            if (incomingRevision < knownRevision) return;
+            lastRevisions.set(message.channel, incomingRevision);
+
             const channelListeners = listeners.get(message.channel);
             if (!channelListeners) return;
 
@@ -103,7 +113,7 @@
 
         socket.addEventListener('error', () => {
             notifyStatus('error', 'WebSocket connection failed.');
-            try { socket.close(); } catch (_) {}
+            try { socket.close(); } catch (_) { }
         });
     }
 
@@ -113,10 +123,24 @@
         }
 
         if (!sendRaw({ type: 'overlay:publish', channel, payload })) {
-            // Coalesce queued updates to avoid replaying stale intermediate states.
+            // Keep only the newest offline update. It is discarded on reconnect
+            // for subscribed channels, where the server snapshot takes precedence.
             pendingPublishes.set(channel, payload);
             connect();
+            return false;
         }
+        return true;
+    }
+
+    function seed(channel, payload) {
+        if (typeof channel !== 'string' || !/^[a-z0-9_-]{1,64}$/i.test(channel)) {
+            throw new Error('Invalid MLBB overlay channel.');
+        }
+        if (!sendRaw({ type: 'overlay:seed', channel, payload })) {
+            connect();
+            return false;
+        }
+        return true;
     }
 
     function subscribe(channel, callback) {
@@ -154,6 +178,7 @@
     global.MLBBOverlaySync = {
         connect,
         publish,
+        seed,
         subscribe,
         getStatus: () => socket && socket.readyState === WebSocket.OPEN
             ? 'connected'

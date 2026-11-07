@@ -2383,13 +2383,13 @@
                 if (autoStart) startTimer();
             }
 
-            function startTimer() {
+            function startTimer(options = {}) {
                 if (timerInterval !== null || timerSeconds <= 0) return;
 
                 btnReset.classList.remove('active');
                 btnNext.classList.remove('active');
                 btnStart.classList.add('active');
-                publishDraftState();
+                if (options.publish !== false) publishDraftState();
                 timerInterval = setInterval(() => {
                     if (timerSeconds > 0) {
                         timerSeconds -= 1;
@@ -2403,6 +2403,23 @@
                     }
                     publishDraftState();
                 }, 1000);
+            }
+
+            function maybeAdvanceAfterHeroSelection(slotId, selectedHero) {
+                if (draftComplete || !selectedHero) return;
+
+                const step = DRAFT_SEQUENCE[currentStepIndex];
+                if (!step || !Array.isArray(step.slots) || !step.slots.includes(slotId)) return;
+                if (step.phase !== 'ban' && step.phase !== 'pick') return;
+
+                // Advance only after every slot assigned to this turn has a hero.
+                const allTurnSlotsFilled = step.slots.every(activeSlotId => {
+                    const activeSlot = document.getElementById(activeSlotId);
+                    const activeSelect = activeSlot?.querySelector('.hero-slot-select');
+                    return Boolean(activeSelect && String(activeSelect.value || '').trim());
+                });
+
+                if (allTurnSlotsFilled) nextDraftStep();
             }
 
             function nextDraftStep() {
@@ -2864,6 +2881,7 @@
                         setHeroSlot(slot, select, nameLabel, img, selected || null);
                         lastHeroSelection.set(slot.id, nextHero);
                         updateNextButtonAvailability();
+                        if (nextHero) maybeAdvanceAfterHeroSelection(slot.id, nextHero);
                         if (typeof publishDraftState === 'function') publishDraftState();
                     });
 
@@ -2880,7 +2898,18 @@
                     }
                 });
                 updateNextButtonAvailability();
-                if (typeof publishDraftState === 'function') publishDraftState();
+                heroManifestReady = true;
+
+                if (pendingRemoteDraftState?.payload) {
+                    applyRemoteDraftState(pendingRemoteDraftState.payload, pendingRemoteDraftState.meta || {});
+                    pendingRemoteDraftState = null;
+                    draftSyncReady = true;
+                } else if (serverReportedEmptyDraft && !draftSyncReady) {
+                    draftSyncReady = true;
+                    publishDraftState({ seedIfEmpty: true });
+                } else if (draftSyncReady && typeof publishDraftState === 'function') {
+                    publishDraftState();
+                }
             }
 
 
@@ -2892,6 +2921,12 @@
                 : null;
             const repickedSlots = new Set();
             const lastHeroSelection = new Map();
+            let draftSyncReady = false;
+            let applyingRemoteDraftState = false;
+            let heroManifestReady = false;
+            let pendingRemoteDraftState = null;
+            let serverReportedEmptyDraft = false;
+            let latestDraftRevision = 0;
 
             function readTeamState(side) {
                 const name = document.getElementById(`team-name-${side}`);
@@ -3105,8 +3140,10 @@
                 return { side, label };
             }
 
-            function publishDraftState() {
-                // Function may be called by inputs after this script section initializes.
+            function publishDraftState(options = {}) {
+                // Do not publish local defaults before the server snapshot arrives.
+                // Applying a remote snapshot must never echo it back to the server.
+                if (!draftSyncReady || applyingRemoteDraftState) return;
                 if (typeof timerSeconds === 'undefined' || typeof currentStepIndex === 'undefined') return;
                 const stepInfo = getSyncSideAndLabel();
                 const activeBO = getSelectedBestOf();
@@ -3158,6 +3195,7 @@
                         repickedSlots: Array.from(repickedSlots)
                     },
                     phase: currentTimerMode,
+                    sequenceIndex: currentStepIndex,
                     side: stepInfo.side,
                     label: stepInfo.label,
                     duration: Math.max(1, Number(currentDurationSeconds) || 45),
@@ -3172,10 +3210,208 @@
 
                 // Kirim state draft ke server WebSocket.
                 if (window.MLBBOverlaySync) {
-                    window.MLBBOverlaySync.publish('draft', state);
+                    if (options.seedIfEmpty && typeof window.MLBBOverlaySync.seed === 'function') {
+                        window.MLBBOverlaySync.seed('draft', state);
+                    } else {
+                        window.MLBBOverlaySync.publish('draft', state);
+                    }
                 }
             }
 
+
+
+
+            function applyRemoteDraftState(remoteState, meta = {}) {
+                if (!remoteState || remoteState.type !== 'mlbb-draft-state') return;
+                if (!heroManifestReady) {
+                    pendingRemoteDraftState = { payload: remoteState, meta };
+                    return;
+                }
+
+                applyingRemoteDraftState = true;
+                try {
+                    latestDraftRevision = Math.max(latestDraftRevision, Number(meta.revision) || 0);
+
+                    for (const side of ['left', 'right']) {
+                        const team = remoteState.teams?.[side] || {};
+                        const teamName = document.getElementById(`team-name-${side}`);
+                        const coach = document.getElementById(`coach-${side}`);
+                        const score = document.getElementById(`score-${side}`);
+                        const logo = document.getElementById(`logo-img-${side}`);
+
+                        if (teamName) teamName.value = team.name || '';
+                        if (coach) coach.value = team.coach || '';
+                        if (score) score.value = String(Math.max(0, Number(team.score) || 0));
+                        if (logo) {
+                            const logoUrl = team.logo || '';
+                            if (logoUrl) {
+                                logo.src = logoUrl;
+                                logo.dataset.syncData = logoUrl;
+                                logo.style.display = 'block';
+                            } else {
+                                logo.removeAttribute('src');
+                                delete logo.dataset.syncData;
+                                logo.style.display = 'none';
+                            }
+                        }
+
+                        const sidePlayers = remoteState.players?.[side] || [];
+                        for (let index = 0; index < 5; index += 1) {
+                            const slot = index + 1;
+                            const player = sidePlayers[index] || {};
+                            const nameInput = document.getElementById(`player-${side}-${slot}`);
+                            const roleSelect = document.getElementById(`role-${side}-${slot}`);
+                            const photo = document.getElementById(`player-photo-preview-${side}-${slot}`);
+
+                            if (nameInput) nameInput.value = player.name || '';
+                            if (roleSelect) roleSelect.value = player.role || '';
+                            if (photo) {
+                                const photo1 = player.photo1 || player.photo || '';
+                                const photo2 = player.photo2 || '';
+                                photo.onload = () => { photo.style.display = 'block'; };
+                                photo.onerror = () => { photo.style.display = 'none'; };
+                                if (photo1) {
+                                    if (photo.getAttribute('src') !== photo1) photo.src = photo1;
+                                    photo.dataset.syncData = photo1;
+                                    photo.style.display = 'block';
+                                } else {
+                                    photo.removeAttribute('src');
+                                    delete photo.dataset.syncData;
+                                    photo.style.display = 'none';
+                                }
+                                if (photo2) photo.dataset.syncPhoto2 = photo2;
+                                else delete photo.dataset.syncPhoto2;
+                            }
+                        }
+
+                        for (const phase of ['ban', 'pick']) {
+                            const selectedHeroes = remoteState.heroes?.[side]?.[phase] || [];
+                            for (let index = 0; index < 5; index += 1) {
+                                const slot = document.getElementById(`${side}-${phase}-slot-${index + 1}`);
+                                if (!slot) continue;
+                                const select = slot.querySelector('.hero-slot-select');
+                                const nameLabel = slot.querySelector('.hero-selected-name');
+                                const image = slot.querySelector('.hero-slot-img');
+                                const selected = selectedHeroes[index];
+
+                                if (!select || !nameLabel) continue;
+                                if (!selected) {
+                                    resetHeroSlot(slot, select, nameLabel, image);
+                                } else {
+                                    const manifestHero = draftHeroManifest.find(hero =>
+                                        normalizeHeroKey(hero.name) === normalizeHeroKey(selected.name)
+                                    );
+                                    if (manifestHero) {
+                                        select.value = manifestHero.name;
+                                        setHeroSlot(slot, select, nameLabel, image, manifestHero);
+                                    } else {
+                                        select.value = selected.name || '';
+                                        nameLabel.textContent = selected.name || 'Select';
+                                        slot.classList.toggle('has-hero', Boolean(selected.name));
+                                        if (image && selected.image) {
+                                            image.src = selected.image;
+                                            image.alt = selected.name || '';
+                                            image.style.display = 'block';
+                                        }
+                                    }
+                                }
+                                lastHeroSelection.set(slot.id, select.value || '');
+                            }
+                        }
+                    }
+
+                    const bestOf = Number(remoteState.bestOf) || 3;
+                    document.querySelectorAll('.bo-btn').forEach(button => {
+                        button.classList.toggle('active', Number(button.dataset.bo) === bestOf);
+                    });
+
+                    repickedSlots.clear();
+                    (remoteState.pickMeta?.repickedSlots || []).forEach(slotId => repickedSlots.add(slotId));
+
+                    if (Number.isInteger(Number(remoteState.sequenceIndex))) {
+                        currentStepIndex = Math.max(0, Math.min(DRAFT_SEQUENCE.length - 1, Number(remoteState.sequenceIndex)));
+                    } else if (remoteState.label) {
+                        const matchingStep = DRAFT_SEQUENCE.findIndex(step => step.label === remoteState.label);
+                        if (matchingStep >= 0) currentStepIndex = matchingStep;
+                    }
+
+                    currentTimerMode = remoteState.phase || DRAFT_SEQUENCE[currentStepIndex]?.phase || 'pick';
+                    currentDurationSeconds = Math.max(1, Number(remoteState.duration) || PHASE_DURATIONS[currentTimerMode] || 45);
+                    customDurationForCurrentStep = null;
+                    timerSeconds = Math.max(0, Number(remoteState.remaining) || 0);
+                    draftComplete = Boolean(remoteState.complete);
+                    if (customSecondsInput) customSecondsInput.value = String(currentDurationSeconds);
+
+                    updatePhaseButtons(currentTimerMode);
+                    updateTurnLabel();
+                    updateActiveHeroSlots();
+                    updateNextButtonAvailability();
+                    updateTimerDisplay();
+
+                    if (remoteState.running && timerSeconds > 0) {
+                        if (timerInterval === null) startTimer({ publish: false });
+                    } else {
+                        stopTimer();
+                    }
+
+                    if (matchManager && remoteState.matchId !== undefined) {
+                        matchManager.matchId = remoteState.matchId || '';
+                        matchManager.matchName = remoteState.matchName || matchManager.matchName;
+                        matchManager.gameNumber = Number(remoteState.gameNumber) || 0;
+                        updateMatchManagerUI();
+                    }
+                } finally {
+                    applyingRemoteDraftState = false;
+                }
+            }
+
+            function handleServerDraftSnapshot(payload, meta = {}) {
+                if (payload && payload.type === 'mlbb-draft-state') {
+                    pendingRemoteDraftState = { payload, meta };
+                    if (heroManifestReady) {
+                        applyRemoteDraftState(payload, meta);
+                        pendingRemoteDraftState = null;
+                        draftSyncReady = true;
+                    }
+                    return;
+                }
+
+                // Empty server state is seeded only after the hero manifest has loaded.
+                serverReportedEmptyDraft = true;
+                if (heroManifestReady && !draftSyncReady) {
+                    draftSyncReady = true;
+                    publishDraftState();
+                }
+            }
+
+            // Subscribe before any local defaults are published.
+            if (window.MLBBOverlaySync &&
+                typeof window.MLBBOverlaySync.subscribe === 'function') {
+                window.MLBBOverlaySync.subscribe('draft', handleServerDraftSnapshot);
+            }
+
+            // Keep the recap toggle label synchronized on every operator console.
+            let sharedRecapVisible = true;
+            function applySharedRecapVisibility(payload) {
+                if (!payload || typeof payload.visible !== 'boolean') return;
+                sharedRecapVisible = payload.visible;
+                const button = document.querySelector('.recap-toggle-btn');
+                if (button) button.textContent = sharedRecapVisible ? '▲ HIDE RECAP' : '▼ SHOW RECAP';
+            }
+            if (window.MLBBOverlaySync &&
+                typeof window.MLBBOverlaySync.subscribe === 'function') {
+                window.MLBBOverlaySync.subscribe('recap-toggle', applySharedRecapVisibility);
+            }
+
+            // Match Management state is shared across all operator consoles.
+            if (window.MLBBOverlaySync &&
+                typeof window.MLBBOverlaySync.subscribe === 'function') {
+                window.MLBBOverlaySync.subscribe('match-management', payload => {
+                    if (!payload || typeof payload !== 'object') return;
+                    matchManager = { ...matchManager, ...payload };
+                    updateMatchManagerUI();
+                });
+            }
 
 
             // ------------------------------------------------------------
@@ -3901,25 +4137,22 @@
             // Publish through the same sync API used by draft and recap data.
             const recapToggleBtn = document.querySelector('.recap-toggle-btn');
             if (recapToggleBtn) {
-                let recapVisible = true;
-
                 const publishRecapVisibility = () => {
                     if (window.MLBBOverlaySync &&
                         typeof window.MLBBOverlaySync.publish === 'function') {
                         window.MLBBOverlaySync.publish('recap-toggle', {
-                            visible: recapVisible
+                            visible: sharedRecapVisible
                         });
                     }
                 };
 
                 recapToggleBtn.addEventListener('click', () => {
-                    recapVisible = !recapVisible;
-                    recapToggleBtn.textContent = recapVisible ? '▲ HIDE RECAP' : '▼ SHOW RECAP';
+                    sharedRecapVisible = !sharedRecapVisible;
+                    applySharedRecapVisibility({ visible: sharedRecapVisible });
                     publishRecapVisibility();
                 });
 
-                // Send the initial state so the display and control start in sync.
-                publishRecapVisibility();
+                // The server snapshot initializes this button; do not publish a local default.
             }
 
         </script>

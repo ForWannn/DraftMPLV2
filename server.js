@@ -960,7 +960,10 @@ function publishOverlayState(channel, payload, sender) {
 
     // Only clients subscribed to this overlay receive its updates.
     wss.clients.forEach(client => {
-        if (client.readyState === OPEN &&
+        // The sender already has its local state. Excluding it avoids redundant
+        // self-echoes while every other subscribed control/display receives the update.
+        if (client !== sender &&
+            client.readyState === OPEN &&
             client.overlayChannels &&
             client.overlayChannels.has(channel)) {
             sendJson(client, message);
@@ -1013,6 +1016,28 @@ wss.on('connection', ws => {
                 return;
             }
             publishOverlayState(channel, message.payload, ws);
+            return;
+        }
+
+        // Atomically initialize a channel only when no shared snapshot exists.
+        // This prevents two newly opened controls from overwriting one another's
+        // initial state while their hero manifests are still loading.
+        if (message.type === 'overlay:seed') {
+            const channel = message.channel;
+            if (!isValidChannel(channel) || !Object.prototype.hasOwnProperty.call(message, 'payload')) {
+                return;
+            }
+            if (Object.prototype.hasOwnProperty.call(state.overlays, channel)) {
+                sendJson(ws, {
+                    type: 'overlay:state',
+                    channel,
+                    payload: state.overlays[channel],
+                    revision: Number(state.overlayRevisions[channel]) || 0,
+                    now: Date.now()
+                });
+            } else {
+                publishOverlayState(channel, message.payload, ws);
+            }
             return;
         }
 

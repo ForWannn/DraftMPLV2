@@ -7,6 +7,13 @@
     <title>DRAFT PICK</title>
     <link rel="stylesheet" href="/ASSETS/css/style.css">
     <style>
+        :root {
+            /* Player photo timing controls. Edit these values to tune the reveal. */
+            --player-photo-slide-duration: 600ms;
+            --player-photo-fade-duration: 200ms;
+            --player-photo-pose-duration: 300ms;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -46,19 +53,19 @@
             opacity: 1;
             transform: translateX(0);
             transition:
-                transform 2000ms cubic-bezier(0.22, 0.75, 0.25, 1),
-                opacity 550ms ease;
+                transform 350ms cubic-bezier(0.22, 0.75, 0.25, 1),
+                opacity 250ms ease;
             will-change: transform, opacity;
         }
 
         .draft-container .recap-container.hidden .draft-pick-recap.left {
             transform: translateX(-105%);
-            opacity: 1;
+            opacity: 0;
         }
 
         .draft-container .recap-container.hidden .draft-pick-recap.right {
             transform: translateX(105%);
-            opacity: 1;
+            opacity: 0;
         }
 
         .draft-container .recap-container.hidden {
@@ -145,14 +152,12 @@
         .draft-container .recap-container .draft-pick-recap .pick-recap,
         .draft-container .recap-container .draft-pick-recap .ban-recap {
             position: relative;
-            flex: 1 1 1;
+            flex: 1 1 0;
             min-width: 0;
             overflow: hidden;
-            background-color: #17191d;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            /* border: 1px solid rgba(255, 255, 255, .12);2 */
             box-sizing: border-box;
         }
 
@@ -167,15 +172,9 @@
         .recap-role-icon {
             position: absolute;
             z-index: 2;
-            top: 0px;
-            left: 0px;
-            max-width: 15px;
-            max-height: 15px;
-            padding: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.88);
         }
 
         .recap-pick-bar,
@@ -185,16 +184,6 @@
             left: 0;
             right: 0;
             bottom: 0;
-            min-height: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Eixample ExtraBold';
-            font-size: 12px;
-            line-height: 1;
-            letter-spacing: .3px;
-            color: #fff;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, .5);
         }
 
         .recap-pick-bar {
@@ -291,7 +280,6 @@
             width: 100%;
             height: calc(245px - 215px);
             font-size: 20px;
-            font-weight: 700;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -361,6 +349,7 @@
             background: url('/assets/HEROES/aamon-splash.png');
             background-size: cover;
             background-repeat: no-repeat;
+            filter: grayscale(100%);
         }
 
         .draft-container .top .ban-container .ban-hero::after {
@@ -656,6 +645,7 @@
             height: 80px;
             /* border-radius: 50%; */
             background: rgba(255, 255, 255, 0.96);
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -800,6 +790,19 @@
             background-repeat: no-repeat;
         }
 
+        /* Hero artwork sits above the player portrait and role icon. */
+        .draft-container .bottom .pick-container .pick-image::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            background-image: var(--pick-hero-art, none);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            pointer-events: none;
+        }
+
         /* Large role icon is the default placeholder, centered in the image area. */
         .draft-container .bottom .pick-container .player-role-icon {
             position: absolute;
@@ -856,9 +859,9 @@
             transform-origin: center bottom;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .14));
             transition:
-                transform 1000ms cubic-bezier(.22, .8, .25, 1),
-                opacity 500ms ease,
-                visibility 0s linear 1000ms;
+                transform var(--player-photo-slide-duration) cubic-bezier(.22, .8, .25, 1),
+                opacity var(--player-photo-fade-duration) ease,
+                visibility 0s linear var(--player-photo-slide-duration);
             pointer-events: none;
         }
 
@@ -876,15 +879,15 @@
             visibility: visible;
             transform: translate(-50%, 0);
             transition:
-                transform 500ms cubic-bezier(.22, .8, .25, 1),
-                opacity 500ms ease,
+                transform var(--player-photo-slide-duration) cubic-bezier(.22, .8, .25, 1),
+                opacity var(--player-photo-fade-duration) ease,
                 visibility 0s;
         }
 
         /* Team Manager stores two transparent poses. Cross-fade takes 0.5s total. */
         .draft-container .bottom .pick-container .pick-hero.is-revealed.has-player-photo .player-photo.is-fading {
             opacity: 0 !important;
-            transition: opacity 500ms ease !important;
+            transition: opacity var(--player-photo-fade-duration) ease !important;
         }
 
         .draft-container .bottom .pick-container .pick-hero .players-name {
@@ -1206,6 +1209,11 @@
             if (!element) return;
             const imageUrl = hero && hero.image ? hero.image : '';
             setImageBackground(element, imageUrl, 'none');
+            if (element.classList.contains('pick-image')) {
+                const resolved = imageUrl ? resolveDisplayAssetUrl(imageUrl) : '';
+                const safe = String(resolved).replace(/["\\]/g, '\\$&');
+                element.style.setProperty('--pick-hero-art', resolved ? `url("${safe}")` : 'none');
+            }
             element.dataset.heroName = hero && hero.name ? hero.name : '';
             element.setAttribute('aria-label', hero && hero.name ? hero.name : 'Empty hero slot');
         }
@@ -1340,6 +1348,15 @@
             photo.classList.remove('is-fading');
         }
 
+        function getPlayerPhotoTimingMs(variableName, fallback) {
+            const raw = getComputedStyle(document.documentElement)
+                .getPropertyValue(variableName).trim();
+            if (!raw) return fallback;
+            const value = Number.parseFloat(raw);
+            if (!Number.isFinite(value)) return fallback;
+            return raw.endsWith('s') && !raw.endsWith('ms') ? value * 1000 : value;
+        }
+
         function startPlayerPhotoCycle(photo) {
             if (!photo || photo._poseCycleStarted || photo._poseCycleDone) return;
 
@@ -1348,17 +1365,19 @@
             if (!pose1 || !pose2 || pose1 === pose2) return;
 
             // The cycle runs once per active pick: pose 1 â†’ pose 2 â†’ pose 1.
-            // The initial slide-up is handled by the CSS reveal transition (1 second).
+            // Timing is configured through the CSS variables at the top of this file.
+            const fadeMs = getPlayerPhotoTimingMs('--player-photo-fade-duration', 500);
+            const poseMs = getPlayerPhotoTimingMs('--player-photo-pose-duration', 1000);
             photo._poseCycleStarted = true;
             photo._poseCycleState = 'pose1';
             photo.dataset.poseIndex = '0';
             photo.src = pose1;
 
-            // Keep pose 1 visible for 1 second after its slide-up has completed.
+            // Keep pose 1 visible for the configured pose duration after slide-up.
             photo._poseFadeTimer = window.setTimeout(() => {
                 if (!photo.isConnected) return;
 
-                // Fade pose 1 out for 0.5 second, then show pose 2.
+                // Fade pose 1 out, then show pose 2.
                 photo.classList.add('is-fading');
                 photo._poseFadeTimer2 = window.setTimeout(() => {
                     if (!photo.isConnected) return;
@@ -1368,7 +1387,7 @@
                     photo.dataset.poseIndex = '1';
                     requestAnimationFrame(() => photo.classList.remove('is-fading'));
 
-                    // Keep pose 2 visible for 1 second, then return to pose 1.
+                    // Keep pose 2 visible for the configured pose duration, then return to pose 1.
                     photo._poseFadeTimer3 = window.setTimeout(() => {
                         if (!photo.isConnected) return;
 
@@ -1388,10 +1407,10 @@
                             photo._poseFadeTimer = null;
                             photo._poseFadeTimer2 = null;
                             photo._poseFadeTimer3 = null;
-                        }, 500);
-                    }, 1000);
-                }, 500);
-            }, 1000);
+                        }, fadeMs);
+                    }, poseMs);
+                }, fadeMs);
+            }, poseMs);
         }
 
         function updatePickSide(side, picks, players) {
@@ -1575,7 +1594,7 @@
                             if (card.isConnected && card.classList.contains('is-active-pick')) {
                                 startPlayerPhotoCycle(photo);
                             }
-                        }, 1000);
+                        }, getPlayerPhotoTimingMs('--player-photo-slide-duration', 1000));
                     }
                 }, delay);
             });
@@ -1630,9 +1649,10 @@
                         role.style.backgroundSize = 'contain';
                         role.style.backgroundRepeat = 'no-repeat';
                         role.style.backgroundPosition = 'center';
-                        role.style.width = '15Px';
-                        role.style.height = '15px';
-                        role.style.backgroundColor = 'rgba(255, 255, 255, 1)';
+                        role.style.width = '25px';
+                        role.style.height = '25px';
+                        role.style.backgroundColor = 'rgba(255,255,255,1)';
+
                         const roleKey = String(hero.role).trim().toLowerCase();
                         const normalized = roleKey === 'jungler' || roleKey === 'jungle' || roleKey === 'jg' ? 'jungler' :
                             roleKey === 'roam' || roleKey === 'roamer' || roleKey === 'tank' ? 'roam' :
