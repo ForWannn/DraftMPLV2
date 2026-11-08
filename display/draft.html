@@ -645,7 +645,6 @@
             height: 80px;
             /* border-radius: 50%; */
             background: rgba(255, 255, 255, 0.96);
-            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -902,6 +901,7 @@
             justify-content: center;
             gap: 5px;
             font-size: 16px;
+            font-weight: 700;
         }
 
         .draft-container .bottom .pick-container .pick-hero .player-name-text {
@@ -1262,11 +1262,42 @@
             }
         }
 
-        function renderArrowSide(side) {
-            // Both videos stay in fixed positions. Only active state changes instantly.
-            // Last Change is neutral, so both indicators are active.
-            arrowLeft.classList.toggle('active', side === 'left' || side === 'both');
-            arrowRight.classList.toggle('active', side === 'right' || side === 'both');
+        let lastChangeArrowsStarted = false;
+
+        function renderArrowSide(side, state = {}) {
+            // Last Change starts both arrow videos from the same playback position.
+            const phaseText = String(state.phase || '').toLowerCase().replace(/[_\s]+/g, '-');
+            const labelText = String(state.label || '').toLowerCase();
+            const isLastChange = phaseText.includes('last-change') ||
+                /last\s*change/.test(labelText);
+
+            arrowLeft.classList.toggle('active', isLastChange || side === 'left' || side === 'both');
+            arrowRight.classList.toggle('active', isLastChange || side === 'right' || side === 'both');
+
+            if (isLastChange && !lastChangeArrowsStarted) {
+                lastChangeArrowsStarted = true;
+
+                // Reset both videos first, then request playback in the same frame.
+                [arrowLeft, arrowRight].forEach(arrow => {
+                    try {
+                        arrow.pause();
+                        arrow.currentTime = 0;
+                    } catch (_) { }
+                });
+
+                requestAnimationFrame(() => {
+                    [arrowLeft, arrowRight].forEach(arrow => {
+                        const playPromise = arrow.play();
+                        if (playPromise && typeof playPromise.catch === 'function') {
+                            playPromise.catch(error => {
+                                console.warn('[Draft Display] Phase arrow playback failed:', error);
+                            });
+                        }
+                    });
+                });
+            } else if (!isLastChange) {
+                lastChangeArrowsStarted = false;
+            }
         }
 
         function updateBanSide(side, bans) {
@@ -1744,7 +1775,7 @@
 
             timerValue.textContent = String(Math.max(0, Math.floor(Number(state.remaining) || 0))).padStart(2, '0');
             phaseLabel.textContent = state.label || (state.phase || 'DRAFT').replace('-', ' ').toUpperCase();
-            renderArrowSide(state.side || 'left');
+            renderArrowSide(state.side || 'left', state);
 
             const duration = Math.max(1, Number(state.duration) || 45);
             const remaining = Math.max(0, Math.min(duration, Number(state.remaining) || 0));
