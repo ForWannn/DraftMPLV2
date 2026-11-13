@@ -53,19 +53,16 @@
             opacity: 1;
             transform: translateX(0);
             transition:
-                transform 350ms cubic-bezier(0.22, 0.75, 0.25, 1),
-                opacity 250ms ease;
+                transform 1300ms cubic-bezier(0.22, 0.75, 0.25, 1);
             will-change: transform, opacity;
         }
 
         .draft-container .recap-container.hidden .draft-pick-recap.left {
             transform: translateX(-105%);
-            opacity: 0;
         }
 
         .draft-container .recap-container.hidden .draft-pick-recap.right {
             transform: translateX(105%);
-            opacity: 0;
         }
 
         .draft-container .recap-container.hidden {
@@ -605,6 +602,11 @@
             opacity: 1;
         }
 
+        /* Hidden during the 2.7s Pick/Ban transition pause (timer + arrows). */
+        .draft-container .bottom .mid .timer-row.transition-hidden {
+            visibility: hidden;
+        }
+
         .draft-container .bottom .mid .phase-label {
             min-height: 12px;
             font-size: 10px;
@@ -700,6 +702,7 @@
         }
 
         .draft-container .bottom .mid .match-text {
+            opacity: 0;
             font-size: 17px;
             color: #17181c;
             font-family: 'Eixample Extrabold';
@@ -707,6 +710,7 @@
         }
 
         .draft-container .bottom .mid .sponsor-text {
+            opacity: 0;
             font-size: 15px;
             color: #17181c;
             font-family: 'Eixample Extrabold';
@@ -1128,6 +1132,7 @@
         const phaseLabel = document.getElementById('draft-phase-label');
         const arrowLeft = document.getElementById('draft-phase-arrow-left');
         const arrowRight = document.getElementById('draft-phase-arrow-right');
+        const timerRowEl = document.getElementById('draft-timer-row');
         const mapThumbEl = document.getElementById('selected-map-thumb');
         let lastReceivedState = null;
 
@@ -1262,42 +1267,11 @@
             }
         }
 
-        let lastChangeArrowsStarted = false;
-
-        function renderArrowSide(side, state = {}) {
-            // Last Change starts both arrow videos from the same playback position.
-            const phaseText = String(state.phase || '').toLowerCase().replace(/[_\s]+/g, '-');
-            const labelText = String(state.label || '').toLowerCase();
-            const isLastChange = phaseText.includes('last-change') ||
-                /last\s*change/.test(labelText);
-
-            arrowLeft.classList.toggle('active', isLastChange || side === 'left' || side === 'both');
-            arrowRight.classList.toggle('active', isLastChange || side === 'right' || side === 'both');
-
-            if (isLastChange && !lastChangeArrowsStarted) {
-                lastChangeArrowsStarted = true;
-
-                // Reset both videos first, then request playback in the same frame.
-                [arrowLeft, arrowRight].forEach(arrow => {
-                    try {
-                        arrow.pause();
-                        arrow.currentTime = 0;
-                    } catch (_) { }
-                });
-
-                requestAnimationFrame(() => {
-                    [arrowLeft, arrowRight].forEach(arrow => {
-                        const playPromise = arrow.play();
-                        if (playPromise && typeof playPromise.catch === 'function') {
-                            playPromise.catch(error => {
-                                console.warn('[Draft Display] Phase arrow playback failed:', error);
-                            });
-                        }
-                    });
-                });
-            } else if (!isLastChange) {
-                lastChangeArrowsStarted = false;
-            }
+        function renderArrowSide(side) {
+            // Both videos stay in fixed positions. Only active state changes instantly.
+            // Last Change is neutral, so both indicators are active.
+            arrowLeft.classList.toggle('active', side === 'left' || side === 'both');
+            arrowRight.classList.toggle('active', side === 'right' || side === 'both');
         }
 
         function updateBanSide(side, bans) {
@@ -1737,7 +1711,99 @@
             }
         }
 
+        const DRAFT_PHASE_TRANSITION_DELAY_MS = 2700;
+        let displayedDraftPhaseKey = null;
+        let displayedDraftPhaseState = null;
+        let pendingDraftPhaseState = null;
+        let pendingDraftPhaseTimer = null;
+
+        function getDraftPhaseKey(state) {
+            if (!state) return '';
+            const phase = String(state.phase || '').trim().toLowerCase();
+            const label = String(state.label || '').trim().toLowerCase();
+            return `${phase}|${label}`;
+        }
+
+        function isLastChangeState(state) {
+            const phase = String(state && state.phase || '').toLowerCase().replace(/[_\\s]+/g, '-');
+            const label = String(state && state.label || '').toLowerCase();
+            return phase.includes('last-change') || /last\\s*change/.test(label);
+        }
+
+        // Hero ban/pick changes are shown instantly, even while the 2.7s phase
+        // transition pause is holding back the timer, arrows and phase label.
+        function applyHeroesDuringPause(state) {
+            if (!state || state.type !== 'mlbb-draft-state') return;
+            const heroes = state.heroes || {};
+            const players = state.players || {};
+            for (const side of ['left', 'right']) {
+                const sideHeroes = heroes[side] || {};
+                updateBanSide(side, sideHeroes.ban || []);
+                updatePickSide(side, sideHeroes.pick || [], players[side] || []);
+            }
+            updatePickRevealStates(displayedDraftPhaseState || state);
+        }
+
         function applyDraftState(state) {
+            if (!state || state.type !== 'mlbb-draft-state') return;
+
+            const nextPhaseKey = getDraftPhaseKey(state);
+            const isInitialState = displayedDraftPhaseKey === null;
+            const phaseChanged = !isInitialState && nextPhaseKey !== displayedDraftPhaseKey;
+            const involvesLastChange = isLastChangeState(state) ||
+                (displayedDraftPhaseState && isLastChangeState(displayedDraftPhaseState));
+
+            // Last Change is immediate. Cancel any pending Pick/Ban transition delay.
+            if (isLastChangeState(state)) {
+                if (pendingDraftPhaseTimer !== null) {
+                    window.clearTimeout(pendingDraftPhaseTimer);
+                    pendingDraftPhaseTimer = null;
+                }
+                pendingDraftPhaseState = null;
+                if (timerRowEl) timerRowEl.classList.remove('transition-hidden');
+                displayedDraftPhaseKey = nextPhaseKey;
+                displayedDraftPhaseState = state;
+                applyDraftStateImmediately(state);
+                return;
+            }
+
+            if (phaseChanged && !isInitialState && !involvesLastChange) {
+                // Keep only the newest incoming state while the 2.7-second transition pause runs.
+                pendingDraftPhaseState = state;
+                if (timerRowEl) timerRowEl.classList.add('transition-hidden');
+                applyHeroesDuringPause(state);
+
+                if (pendingDraftPhaseTimer !== null) {
+                    window.clearTimeout(pendingDraftPhaseTimer);
+                }
+
+                pendingDraftPhaseTimer = window.setTimeout(() => {
+                    const latestState = pendingDraftPhaseState;
+                    pendingDraftPhaseState = null;
+                    pendingDraftPhaseTimer = null;
+
+                    if (!latestState) return;
+                    displayedDraftPhaseKey = getDraftPhaseKey(latestState);
+                    displayedDraftPhaseState = latestState;
+                    applyDraftStateImmediately(latestState);
+                    if (timerRowEl) timerRowEl.classList.remove('transition-hidden');
+                }, DRAFT_PHASE_TRANSITION_DELAY_MS);
+                return;
+            }
+
+            // Timer/state updates belonging to the currently displayed phase remain immediate.
+            if (pendingDraftPhaseTimer !== null) {
+                pendingDraftPhaseState = state;
+                applyHeroesDuringPause(state);
+                return;
+            }
+
+            displayedDraftPhaseKey = nextPhaseKey;
+            displayedDraftPhaseState = state;
+            applyDraftStateImmediately(state);
+        }
+
+        function applyDraftStateImmediately(state) {
             if (!state || state.type !== 'mlbb-draft-state') return;
             lastReceivedState = state;
 
@@ -1775,7 +1841,7 @@
 
             timerValue.textContent = String(Math.max(0, Math.floor(Number(state.remaining) || 0))).padStart(2, '0');
             phaseLabel.textContent = state.label || (state.phase || 'DRAFT').replace('-', ' ').toUpperCase();
-            renderArrowSide(state.side || 'left', state);
+            renderArrowSide(state.side || 'left');
 
             const duration = Math.max(1, Number(state.duration) || 45);
             const remaining = Math.max(0, Math.min(duration, Number(state.remaining) || 0));

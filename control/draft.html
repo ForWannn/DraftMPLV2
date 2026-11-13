@@ -2302,6 +2302,16 @@
                 return timerInterval !== null;
             }
 
+            const PHASE_TRANSITION_DELAY_MS = 2700;
+            let pendingPhaseStartTimeout = null;
+
+            function clearPendingPhaseStart() {
+                if (pendingPhaseStartTimeout !== null) {
+                    clearTimeout(pendingPhaseStartTimeout);
+                    pendingPhaseStartTimeout = null;
+                }
+            }
+
             function stopTimer() {
                 if (timerInterval !== null) {
                     clearInterval(timerInterval);
@@ -2345,6 +2355,7 @@
 
                 if (!Object.prototype.hasOwnProperty.call(PHASE_DURATIONS, mode)) return;
 
+                clearPendingPhaseStart();
                 stopTimer();
                 currentTimerMode = mode;
                 if (resetCustomOverride) customDurationForCurrentStep = null;
@@ -2366,6 +2377,7 @@
                 if (!step) return;
 
                 const autoStart = options.autoStart !== false;
+                clearPendingPhaseStart();
                 customDurationForCurrentStep = null;
                 currentTimerMode = step.phase;
                 currentDurationSeconds = PHASE_DURATIONS[step.phase] || PHASE_DURATIONS.pick;
@@ -2384,6 +2396,7 @@
             }
 
             function startTimer(options = {}) {
+                clearPendingPhaseStart();
                 if (timerInterval !== null || timerSeconds <= 0) return;
 
                 btnReset.classList.remove('active');
@@ -2436,6 +2449,7 @@
                     return;
                 }
 
+                clearPendingPhaseStart();
                 stopTimer();
 
                 // Last Change appears only once. After that, keep the draft complete
@@ -2454,14 +2468,31 @@
                 }
 
                 currentStepIndex += 1;
-                applyCurrentSequenceStep({ autoStart: true });
+                const nextStep = DRAFT_SEQUENCE[currentStepIndex];
+                if (nextStep && nextStep.phase === 'last-change') {
+                    // Last Change starts immediately, no transition pause.
+                    applyCurrentSequenceStep({ autoStart: true });
+                    publishDraftState();
+                    return;
+                }
+
+                // Pick/Ban -> next Pick/Ban: hold the timer at full duration for 2.7s
+                // (the display hides timer + arrows during this pause), then start it.
+                applyCurrentSequenceStep({ autoStart: false });
                 publishDraftState();
+                const stepIndexAtSchedule = currentStepIndex;
+                pendingPhaseStartTimeout = setTimeout(() => {
+                    pendingPhaseStartTimeout = null;
+                    if (draftComplete || currentStepIndex !== stepIndexAtSchedule) return;
+                    startTimer();
+                }, PHASE_TRANSITION_DELAY_MS);
             }
 
             btnStart.addEventListener('click', startTimer);
             btnNext.addEventListener('click', nextDraftStep);
 
             btnReset.addEventListener('click', () => {
+                clearPendingPhaseStart();
                 stopTimer();
                 timerSeconds = currentDurationSeconds;
                 updateTimerDisplay();
@@ -2482,6 +2513,7 @@
                 }
 
                 customSecondsInput.setCustomValidity('');
+                clearPendingPhaseStart();
                 stopTimer();
                 customDurationForCurrentStep = seconds;
                 currentDurationSeconds = seconds;
